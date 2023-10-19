@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.156">
+<meta name="generator" content="quarto-1.4.429">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -22,7 +22,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -57,7 +57,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../site_libs/quarto-nav/headroom.min.js"></script>
 <script src="../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
@@ -79,12 +79,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "collapse-after": 3,
   "panel-placement": "end",
   "type": "overlay",
-  "limit": 20,
+  "limit": 50,
   "keyboard-shortcut": [
     "f",
     "/",
     "s"
   ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -103,7 +104,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script type="module" src="../site_libs/quarto-ojs/quarto-ojs-runtime.js"></script>
 <link href="../site_libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
@@ -125,23 +126,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="../website/index.html" rel="" target="" aria-current="page">
- <span class="menu-text">Accueil</span></a>
+    <a class="nav-link active" href="../website/index.html" aria-current="page"> 
+<span class="menu-text">Accueil</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../website/eval-liasses.html" rel="" target="">
- <span class="menu-text">Évaluation de liasses</span></a>
+    <a class="nav-link" href="../website/eval-liasses.html"> 
+<span class="menu-text">Évaluation de liasses</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../website/lmnp.html" rel="" target="">
- <span class="menu-text">LMNP</span></a>
+    <a class="nav-link" href="../website/lmnp.html"> 
+<span class="menu-text">LMNP</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/ThomasFaria/codif-ape-API" rel="" target=""><i class="bi bi-github" role="img" aria-label="GitHub">
+    <a class="nav-link" href="https://github.com/ThomasFaria/codif-ape-API"> <i class="bi bi-github" role="img" aria-label="GitHub">
 </i> 
- <span class="menu-text"></span></a>
+<span class="menu-text"></span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -163,7 +164,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#résultats-du-modèle-sur-les-tests" id="toc-résultats-du-modèle-sur-les-tests" class="nav-link" data-scroll-target="#résultats-du-modèle-sur-les-tests">Résultats du modèle sur les tests</a></li>
   <li><a href="#licence" id="toc-licence" class="nav-link" data-scroll-target="#licence">Licence</a></li>
   </ul>
-<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/ThomasFaria/codif-ape-API/edit/main/website/index.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/ThomasFaria/codif-ape-API/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/ThomasFaria/codif-ape-API/edit/main/website/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/ThomasFaria/codif-ape-API/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -183,7 +184,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
   
 
+
 </header>
+
 
 <div class="cell">
 <div class="sourceCode cell-code hidden" id="cb1" data-startfrom="6" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 5;"><span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">md</span><span class="vs">`</span></span>
@@ -366,9 +369,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="unnumbered anchored" data-anchor-id="licence">Licence</h2>
 <p>This work is licensed under the <a href="http://www.apache.org/licenses/">Apache License 2.0</a>.</p>
 <p>See the code on <a href="https://github.com/ThomasFaria/codif-ape-API">Github</a>.</p>
-<div id="984640e7" class="cell" data-execution_count="3">
+<div id="487b45ed" class="cell" data-execution_count="3">
 <div class="cell-output cell-output-display">
-<script type="ojs-define">{"contents": [{"name": "infos", "value": {"Message": "Codification de l'APE", "Model_name": "test", "Model_version": "6", "Metrics": {"accuracy_level_1": 0.9473872921099008, "accuracy_level_2": 0.9276556245286303, "accuracy_level_3": 0.9047393283795724, "accuracy_level_4": 0.8928344192867611, "accuracy_level_5": 0.8832477219705609, "accuracy_level_1_gu": 0.896, "accuracy_level_2_gu": 0.86176, "accuracy_level_3_gu": 0.83776, "accuracy_level_4_gu": 0.81216, "accuracy_level_5_gu": 0.7952, "Test 1 - Result": "Failed", "Test 1 - IC": 0.06711284071207047, "Test 2 - Result": "Passed", "Test 2 - IC": 0.971754252910614, "Test 3 - Result": "Passed", "Test 3 - IC": 0.996638834476471, "Test 4 - Result": "Failed", "Test 4 - IC": 0.1287868618965149, "Test 5 - Result": "Failed", "Test 5 - IC": 0.00877581350505352, "Test 6 - Result": "Passed", "Test 6 - IC": 1.0, "Test 7 - Result": "Passed", "Test 7 - IC": 1.0, "Test 8 - Result": "Failed", "Test 8 - IC": 0.0006263342802412808, "Test 9 - Result": "Passed", "Test 9 - IC": 0.021637558937072754, "Test 10 - Result": "Passed", "Test 10 - IC": 0.06525485962629318, "Test 11 - Result": "Passed", "Test 11 - IC": 0.41045087575912476, "Test 12 - Result": "Passed", "Test 12 - IC": 0.5260260105133057, "Test 13 - Result": "Failed", "Test 13 - IC": 0.8932856321334839, "Test 14 - Result": "Passed", "Test 14 - IC": 0.8962660431861877, "Test 15 - Result": "Passed", "Test 15 - IC": 0.9156824946403503, "Test 16 - Result": "Passed", "Test 16 - IC": 0.7273944020271301, "Test 17 - Result": "Failed", "Test 17 - IC": 0.7617872953414917, "Test 18 - Result": "Passed", "Test 18 - IC": 0.6423113346099854, "Test 19 - Result": "Passed", "Test 19 - IC": 0.8876739144325256, "Test 20 - Result": "Passed", "Test 20 - IC": 0.9989995360374451}}}]}</script>
+<script type="ojs-define">{"contents": [{"name": "infos", "value": {"Message": "Codification de l'APE", "Model_name": "FastText-APE", "Model_version": "Production", "Metrics": {"accuracy_level_1": 0.9473872921099008, "accuracy_level_2": 0.9276556245286303, "accuracy_level_3": 0.9047393283795724, "accuracy_level_4": 0.8928344192867611, "accuracy_level_5": 0.8832477219705609, "accuracy_level_1_gu": 0.896, "accuracy_level_2_gu": 0.86176, "accuracy_level_3_gu": 0.83776, "accuracy_level_4_gu": 0.81216, "accuracy_level_5_gu": 0.7952, "Test 1 - Result": "Failed", "Test 1 - IC": 0.06711284071207047, "Test 2 - Result": "Passed", "Test 2 - IC": 0.971754252910614, "Test 3 - Result": "Passed", "Test 3 - IC": 0.996638834476471, "Test 4 - Result": "Failed", "Test 4 - IC": 0.1287868618965149, "Test 5 - Result": "Failed", "Test 5 - IC": 0.00877581350505352, "Test 6 - Result": "Passed", "Test 6 - IC": 1.0, "Test 7 - Result": "Passed", "Test 7 - IC": 1.0, "Test 8 - Result": "Failed", "Test 8 - IC": 0.0006263342802412808, "Test 9 - Result": "Passed", "Test 9 - IC": 0.021637558937072754, "Test 10 - Result": "Passed", "Test 10 - IC": 0.06525485962629318, "Test 11 - Result": "Passed", "Test 11 - IC": 0.41045087575912476, "Test 12 - Result": "Passed", "Test 12 - IC": 0.5260260105133057, "Test 13 - Result": "Failed", "Test 13 - IC": 0.8932856321334839, "Test 14 - Result": "Passed", "Test 14 - IC": 0.8962660431861877, "Test 15 - Result": "Passed", "Test 15 - IC": 0.9156824946403503, "Test 16 - Result": "Passed", "Test 16 - IC": 0.7273944020271301, "Test 17 - Result": "Failed", "Test 17 - IC": 0.7617872953414917, "Test 18 - Result": "Passed", "Test 18 - IC": 0.6423113346099854, "Test 19 - Result": "Passed", "Test 19 - IC": 0.8876739144325256, "Test 20 - Result": "Passed", "Test 20 - IC": 0.9989995360374451}}}]}</script>
 </div>
 </div>
 <div class="cell">
@@ -519,18 +522,57 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
   const xrefs = window.document.querySelectorAll('a.quarto-xref');
   const processXRef = (id, note) => {
-    if (id.startsWith('sec-')) {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    const typesetMath = (el) => {
+      if (window.MathJax) {
+        // MathJax Typeset
+        window.MathJax.typeset([el]);
+      } else if (window.katex) {
+        // KaTeX Render
+        var mathElements = el.getElementsByClassName("math");
+        var macros = [];
+        for (var i = 0; i < mathElements.length; i++) {
+          var texText = mathElements[i].firstChild;
+          if (mathElements[i].tagName == "SPAN") {
+            window.katex.render(texText.data, mathElements[i], {
+              displayMode: mathElements[i].classList.contains('display'),
+              throwOnError: false,
+              macros: macros,
+              fleqn: false
+            });
+          }
+        }
+      }
+    }
+    if (id === null || id.startsWith('sec-')) {
       // Special case sections, only their first couple elements
       const container = document.createElement("div");
       if (note.children && note.children.length > 2) {
         for (let i = 0; i < 2; i++) {
           container.appendChild(note.children[i].cloneNode(true));
         }
+        typesetMath(container);
         return container.innerHTML
       } else {
+        typesetMath(note);
         return note.innerHTML;
       }
     } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      typesetMath(note);
       return note.innerHTML;
     }
   }
@@ -540,27 +582,56 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       instance.disable();
       let url = xref.getAttribute('href');
       let hash = undefined; 
-      try { hash = new URL(url).hash; } catch {}
-      const id = hash.replace(/^#\/?/, "");
-      const note = window.document.getElementById(id);
-      if (note !== null) {
-        try {
-          const html = processXRef(id, note);
-          instance.setContent(html);
-        } finally {
-          instance.enable();
-          instance.show();
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
         }
       } else {
-        // See if we can fetch this
-        fetch(url.split('#')[0])
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
         .then(res => res.text())
         .then(html => {
           const parser = new DOMParser();
           const htmlDoc = parser.parseFromString(html, "text/html");
-          const note = htmlDoc.getElementById(id);
+          const note = htmlDoc.querySelector('main.content');
           if (note !== null) {
-            const html = processXRef(id, note);
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
             instance.setContent(html);
           } 
         }).finally(() => {
@@ -638,6 +709,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {

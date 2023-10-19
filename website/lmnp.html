@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.156">
+<meta name="generator" content="quarto-1.4.429">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -22,7 +22,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -57,7 +57,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../site_libs/quarto-nav/headroom.min.js"></script>
 <script src="../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
@@ -79,12 +79,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "collapse-after": 3,
   "panel-placement": "end",
   "type": "overlay",
-  "limit": 20,
+  "limit": 50,
   "keyboard-shortcut": [
     "f",
     "/",
     "s"
   ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -103,7 +104,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script type="module" src="../site_libs/quarto-ojs/quarto-ojs-runtime.js"></script>
 <link href="../site_libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
@@ -124,23 +125,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../website/index.html" rel="" target="">
- <span class="menu-text">Accueil</span></a>
+    <a class="nav-link" href="../website/index.html"> 
+<span class="menu-text">Accueil</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../website/eval-liasses.html" rel="" target="">
- <span class="menu-text">Évaluation de liasses</span></a>
+    <a class="nav-link" href="../website/eval-liasses.html"> 
+<span class="menu-text">Évaluation de liasses</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="../website/lmnp.html" rel="" target="" aria-current="page">
- <span class="menu-text">LMNP</span></a>
+    <a class="nav-link active" href="../website/lmnp.html" aria-current="page"> 
+<span class="menu-text">LMNP</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/ThomasFaria/codif-ape-API" rel="" target=""><i class="bi bi-github" role="img" aria-label="GitHub">
+    <a class="nav-link" href="https://github.com/ThomasFaria/codif-ape-API"> <i class="bi bi-github" role="img" aria-label="GitHub">
 </i> 
- <span class="menu-text"></span></a>
+<span class="menu-text"></span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -174,7 +175,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
   
 
+
 </header>
+
 
 <div class="cell">
 <div class="sourceCode cell-code hidden" id="cb1" data-startfrom="6" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 5;"><span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>grid <span class="op">=</span> <span class="cf">await</span> <span class="fu">html</span><span class="vs">`&lt;div style="</span></span>
@@ -307,7 +310,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <!-- Annexes  -->
-<div id="a38e3ed4" class="cell" data-execution_count="8">
+<div id="e574c2b2" class="cell" data-execution_count="8">
 <div class="cell-output cell-output-display">
 <script type="ojs-define">{"contents": [{"name": "data_lmnp", "value": {"text_description": ["LOUEUR EN MEUBLE NON PROFESSIONNEL", "LOUEUR EN MEUBLE NON PROFESSIONNEL", "LOUEUR EN MEUBLE NON PROFESSIONNEL", "LOUEUR EN MEUBLE NON PROFESSIONNEL", "LOUEUR EN MEUBLE NON PROFESSIONNEL", "LOUEUR EN MEUBLE NON PROFESSIONNEL", "LOUEUR EN MEUBLE NON PROFESSIONNEL", "LOUEUR EN MEUBLE NON PROFESSIONNEL", "LOUEUR EN MEUBLE NON PROFESSIONNEL", "LOUEUR EN MEUBLE NON PROFESSIONNEL", "LOUEUR EN MEUBLE NON PROFESSIONNEL", "LOUEUR MEUBLE NON PROFESSIONNEL", "LOUEUR MEUBLE NON PROFESSIONNEL", "LOUEUR MEUBLE NON PROFESSIONNEL", "LOUEUR MEUBLE NON PROFESSIONNEL", "LOUEUR MEUBLE NON PROFESSIONNEL", "LOUEUR MEUBLE NON PROFESSIONNEL", "LOUEUR MEUBLE NON PROFESSIONNEL", "LOUEUR MEUBLE NON PROFESSIONNEL", "LOUEUR MEUBLE NON PROFESSIONNEL", "LOUEUR MEUBLE NON PROFESSIONNEL", "LOUEUR MEUBLE NON PROFESSIONNEL", "LMNP", "LMNP", "LMNP", "LMNP", "LMNP", "LMNP", "LMNP", "LMNP", "LMNP", "LMNP", "LMNP"], "type_": ["", "L", "E", "X", "S", "I", "C", "R", "G", "D", "Y", "", "L", "E", "X", "S", "I", "C", "R", "G", "D", "Y", "", "L", "E", "X", "S", "I", "C", "R", "G", "D", "Y"], "nature": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""], "surface": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""], "event": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""], "True": ["6820A", "6820A", "6820A", "6820A", "6820A", "6820A", "5520Z", "5520Z", "5520Z", "5520Z", "5520Z", "6820A", "6820A", "6820A", "6820A", "6820A", "6820A", "5520Z", "5520Z", "5520Z", "5520Z", "5520Z", "6820A", "6820A", "6820A", "6820A", "6820A", "6820A", "5520Z", "5520Z", "5520Z", "5520Z", "5520Z"], "Pr\u00e9diction": ["6820A", "6820A", "6820A", "6820A", "6820A", "6820A", "5520Z", "6820A", "5520Z", "6820A", "5520Z", "6820A", "6820A", "6820A", "6820A", "6820A", "6820A", "5520Z", "6820A", "5520Z", "6820A", "5520Z", "6820A", "6820A", "6820A", "6820A", "6820A", "6820A", "5520Z", "6820A", "6820A", "6820A", "6820A"], "Score": [0.9995557951, 0.9952801485, 0.9670613464, 0.9928146792, 0.8471976058, 1.0000000136, 0.8306465149, 0.5589182079, 0.4182616174, 0.9369323135, 0.4162441939, 0.9995557951, 0.9952801485, 0.9670613464, 0.9928146792, 0.8471976058, 1.0000000136, 0.8306465149, 0.5589182079, 0.4182616174, 0.9369323135, 0.4162441939, 1.0000000136, 0.9937101142, 0.9988243189, 0.9867743346, 0.9553191202, 1.0000000136, 0.9992903432, 0.939913346, 0.8299815431, 0.9603611963, 0.7916047913], "Libell\u00e9": ["Location de logements", "Location de logements", "Location de logements", "Location de logements", "Location de logements", "Location de logements", "H\u00e9bergement touristique et autre h\u00e9bergement de courte dur\u00e9e", "Location de logements", "H\u00e9bergement touristique et autre h\u00e9bergement de courte dur\u00e9e", "Location de logements", "H\u00e9bergement touristique et autre h\u00e9bergement de courte dur\u00e9e", "Location de logements", "Location de logements", "Location de logements", "Location de logements", "Location de logements", "Location de logements", "H\u00e9bergement touristique et autre h\u00e9bergement de courte dur\u00e9e", "Location de logements", "H\u00e9bergement touristique et autre h\u00e9bergement de courte dur\u00e9e", "Location de logements", "H\u00e9bergement touristique et autre h\u00e9bergement de courte dur\u00e9e", "Location de logements", "Location de logements", "Location de logements", "Location de logements", "Location de logements", "Location de logements", "H\u00e9bergement touristique et autre h\u00e9bergement de courte dur\u00e9e", "Location de logements", "Location de logements", "Location de logements", "Location de logements"], "Error": [false, false, false, false, false, false, false, true, false, true, false, false, false, false, false, false, false, false, true, false, true, false, false, false, false, false, false, false, false, true, true, true, true]}}]}</script>
 </div>
@@ -445,18 +448,57 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
   const xrefs = window.document.querySelectorAll('a.quarto-xref');
   const processXRef = (id, note) => {
-    if (id.startsWith('sec-')) {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    const typesetMath = (el) => {
+      if (window.MathJax) {
+        // MathJax Typeset
+        window.MathJax.typeset([el]);
+      } else if (window.katex) {
+        // KaTeX Render
+        var mathElements = el.getElementsByClassName("math");
+        var macros = [];
+        for (var i = 0; i < mathElements.length; i++) {
+          var texText = mathElements[i].firstChild;
+          if (mathElements[i].tagName == "SPAN") {
+            window.katex.render(texText.data, mathElements[i], {
+              displayMode: mathElements[i].classList.contains('display'),
+              throwOnError: false,
+              macros: macros,
+              fleqn: false
+            });
+          }
+        }
+      }
+    }
+    if (id === null || id.startsWith('sec-')) {
       // Special case sections, only their first couple elements
       const container = document.createElement("div");
       if (note.children && note.children.length > 2) {
         for (let i = 0; i < 2; i++) {
           container.appendChild(note.children[i].cloneNode(true));
         }
+        typesetMath(container);
         return container.innerHTML
       } else {
+        typesetMath(note);
         return note.innerHTML;
       }
     } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      typesetMath(note);
       return note.innerHTML;
     }
   }
@@ -466,27 +508,56 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       instance.disable();
       let url = xref.getAttribute('href');
       let hash = undefined; 
-      try { hash = new URL(url).hash; } catch {}
-      const id = hash.replace(/^#\/?/, "");
-      const note = window.document.getElementById(id);
-      if (note !== null) {
-        try {
-          const html = processXRef(id, note);
-          instance.setContent(html);
-        } finally {
-          instance.enable();
-          instance.show();
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
         }
       } else {
-        // See if we can fetch this
-        fetch(url.split('#')[0])
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
         .then(res => res.text())
         .then(html => {
           const parser = new DOMParser();
           const htmlDoc = parser.parseFromString(html, "text/html");
-          const note = htmlDoc.getElementById(id);
+          const note = htmlDoc.querySelector('main.content');
           if (note !== null) {
-            const html = processXRef(id, note);
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
             instance.setContent(html);
           } 
         }).finally(() => {
@@ -564,6 +635,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -631,7 +728,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/ThomasFaria/codif-ape-API/edit/main/website/lmnp.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/ThomasFaria/codif-ape-API/issues/new" class="toc-action">Report an issue</a></p></div></div></div>
+    <div class="toc-actions"><ul><li><a href="https://github.com/ThomasFaria/codif-ape-API/edit/main/website/lmnp.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/ThomasFaria/codif-ape-API/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item">

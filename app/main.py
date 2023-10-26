@@ -1,6 +1,7 @@
 """
 Main file for the API.
 """
+import logging
 import os
 from contextlib import asynccontextmanager
 from pathlib import Path
@@ -145,11 +146,18 @@ codification_ape_app.add_middleware(
     allow_headers=["*"],
 )
 
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    handlers=[
+        logging.FileHandler("app.log"),
+        logging.StreamHandler(),
+    ],
+)
+
 
 @codification_ape_app.get("/", tags=["Welcome"])
-def show_welcome_page(
-    credentials: Annotated[HTTPBasicCredentials, Depends(optional_security)]
-):
+def show_welcome_page(credentials: Annotated[HTTPBasicCredentials, Depends(optional_security)]):
     """
     Show welcome page with model name and version.
     """
@@ -203,13 +211,13 @@ async def predict(
         dict: Response containing APE codes.
     """
 
-    query = preprocess_query(
-        text_feature, type_liasse, nature, surface, event, nb_echos_max
-    )
+    query = preprocess_query(text_feature, type_liasse, nature, surface, event, nb_echos_max)
 
     predictions = model.predict(query)
 
     response = process_response(predictions, 0, nb_echos_max, prob_min, libs)
+
+    logging.info(f"""{{Query : {query["query"]}, Response: {response}}}""")
 
     return response
 
@@ -240,6 +248,8 @@ async def predict_batch(
         process_response(predictions, i, nb_echos_max, prob_min, libs)
         for i in range(len(predictions[0]))
     ]
+
+    logging.info(f"""{{Query : {query["query"]}, Response: {response}}}""")
 
     return response
 
@@ -275,9 +285,7 @@ async def eval_batch(
         columns=["Probability", "IC", "Prediction"],
     )
 
-    df[["Probability", "IC"]] = df[["Probability", "IC"]].applymap(
-        lambda x: 1 if x > 1 else x
-    )
+    df[["Probability", "IC"]] = df[["Probability", "IC"]].applymap(lambda x: 1 if x > 1 else x)
 
     df["Code"] = liasses.code
     df["Result"] = df["Code"] == df["Prediction"]

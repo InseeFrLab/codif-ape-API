@@ -4,19 +4,19 @@ Main file for the API.
 import os
 from contextlib import asynccontextmanager
 from pathlib import Path
-from typing import Annotated, List
+from typing import List
 
 import numpy as np
 import pandas as pd
 import yaml
-from fastapi import Depends, FastAPI
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.security import HTTPBasicCredentials
+
+# from fastapi.security import HTTPBasicCredentials
 from mlflow import MlflowClient
 from pydantic import BaseModel
 
-from app.utils import (
-    get_current_username,
+from app.utils import (  # get_current_username,
     get_model,
     preprocess_batch,
     preprocess_query,
@@ -148,7 +148,7 @@ codification_ape_app.add_middleware(
 
 @codification_ape_app.get("/", tags=["Welcome"])
 def show_welcome_page(
-    credentials: Annotated[HTTPBasicCredentials, Depends(get_current_username)]
+    # credentials: Annotated[HTTPBasicCredentials, Depends(get_current_username)]
 ):
     """
     Show welcome page with model name and version.
@@ -175,9 +175,9 @@ def show_welcome_page(
 
 @codification_ape_app.get("/predict", tags=["Predict"])
 async def predict(
-    credentials: Annotated[
-        HTTPBasicCredentials, Depends(get_current_username)
-    ],
+    # credentials: Annotated[
+    #     HTTPBasicCredentials, Depends(get_current_username)
+    # ],
     text_feature: str,
     type_liasse: str | None = None,
     nature: str | None = None,
@@ -205,9 +205,7 @@ async def predict(
         dict: Response containing APE codes.
     """
 
-    query = preprocess_query(
-        text_feature, type_liasse, nature, surface, event, nb_echos_max
-    )
+    query = preprocess_query(text_feature, type_liasse, nature, surface, event, nb_echos_max)
 
     predictions = model.predict(query)
 
@@ -218,9 +216,9 @@ async def predict(
 
 @codification_ape_app.post("/predict-batch", tags=["Predict"])
 async def predict_batch(
-    credentials: Annotated[
-        HTTPBasicCredentials, Depends(get_current_username)
-    ],
+    # credentials: Annotated[
+    #     HTTPBasicCredentials, Depends(get_current_username)
+    # ],
     liasses: Liasses,
     nb_echos_max: int = 5,
     prob_min: float = 0.01,
@@ -250,9 +248,9 @@ async def predict_batch(
 
 @codification_ape_app.post("/evaluation", tags=["Evaluate"])
 async def eval_batch(
-    credentials: Annotated[
-        HTTPBasicCredentials, Depends(get_current_username)
-    ],
+    # credentials: Annotated[
+    #     HTTPBasicCredentials, Depends(get_current_username)
+    # ],
     liasses: LiassesEvaluation,
 ):
     """
@@ -282,7 +280,7 @@ async def eval_batch(
     )
 
     df[["Probability", "IC"]] = df[["Probability", "IC"]].applymap(lambda x: 1 if x > 1 else x)
-    
+
     df["Code"] = liasses.code
     df["Result"] = df["Code"] == df["Prediction"]
     df["Lib"] = liasses.text_description

@@ -16,8 +16,8 @@ from mlflow import MlflowClient
 from pydantic import BaseModel
 
 from app.utils import (
-    get_current_username,
     get_model,
+    optional_security,
     preprocess_batch,
     preprocess_query,
     process_response,
@@ -148,7 +148,7 @@ codification_ape_app.add_middleware(
 
 @codification_ape_app.get("/", tags=["Welcome"])
 def show_welcome_page(
-    credentials: Annotated[HTTPBasicCredentials, Depends(get_current_username)]
+    credentials: Annotated[HTTPBasicCredentials, Depends(optional_security)]
 ):
     """
     Show welcome page with model name and version.
@@ -175,9 +175,7 @@ def show_welcome_page(
 
 @codification_ape_app.get("/predict", tags=["Predict"])
 async def predict(
-    credentials: Annotated[
-        HTTPBasicCredentials, Depends(get_current_username)
-    ],
+    credentials: Annotated[HTTPBasicCredentials, Depends(optional_security)],
     text_feature: str,
     type_liasse: str | None = None,
     nature: str | None = None,
@@ -218,9 +216,7 @@ async def predict(
 
 @codification_ape_app.post("/predict-batch", tags=["Predict"])
 async def predict_batch(
-    credentials: Annotated[
-        HTTPBasicCredentials, Depends(get_current_username)
-    ],
+    credentials: Annotated[HTTPBasicCredentials, Depends(optional_security)],
     liasses: Liasses,
     nb_echos_max: int = 5,
     prob_min: float = 0.01,
@@ -250,9 +246,7 @@ async def predict_batch(
 
 @codification_ape_app.post("/evaluation", tags=["Evaluate"])
 async def eval_batch(
-    credentials: Annotated[
-        HTTPBasicCredentials, Depends(get_current_username)
-    ],
+    credentials: Annotated[HTTPBasicCredentials, Depends(optional_security)],
     liasses: LiassesEvaluation,
 ):
     """
@@ -281,8 +275,10 @@ async def eval_batch(
         columns=["Probability", "IC", "Prediction"],
     )
 
-    df[["Probability", "IC"]] = df[["Probability", "IC"]].applymap(lambda x: 1 if x > 1 else x)
-    
+    df[["Probability", "IC"]] = df[["Probability", "IC"]].applymap(
+        lambda x: 1 if x > 1 else x
+    )
+
     df["Code"] = liasses.code
     df["Result"] = df["Code"] == df["Prediction"]
     df["Lib"] = liasses.text_description

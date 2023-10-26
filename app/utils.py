@@ -1,11 +1,11 @@
 import os
 import re
-from typing import Annotated
+from typing import Optional
 
 import mlflow
 import numpy as np
 import pandas as pd
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, Request, status
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 
 security = HTTPBasic()
@@ -42,18 +42,25 @@ def get_model(model_name: str, model_version: str) -> object:
         ) from error
 
 
-def get_current_username(
-    credentials: Annotated[HTTPBasicCredentials, Depends(security)]
-):
+async def optional_security(request: Request):
+    if os.getenv("AUTH_API") == "True":
+        return await security(request)
+    else:
+        return None
 
-    if not (credentials.username == os.getenv("API_USERNAME")) or not (
-        credentials.password == os.getenv("API_PASSWORD")
-    ):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Authentification failed",
-            headers={"WWW-Authenticate": "Basic"},
-        )
+
+def get_current_username(
+    credentials: Optional[HTTPBasicCredentials] = Depends(optional_security),
+):
+    if os.getenv("AUTH_API") == "True":
+        if not (credentials.username == os.getenv("API_USERNAME")) or not (
+            credentials.password == os.getenv("API_PASSWORD")
+        ):
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Authentification failed",
+                headers={"WWW-Authenticate": "Basic"},
+            )
     return credentials.username
 
 

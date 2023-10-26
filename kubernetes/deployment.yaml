@@ -41,6 +41,8 @@ spec:
               value: FastText-APE
             - name: MLFLOW_MODEL_VERSION
               value: Production
+            - name: AUTH_API
+              value: "True"
           resources:
             limits:
               memory: "20Gi"

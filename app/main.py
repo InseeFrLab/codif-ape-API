@@ -150,7 +150,7 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
     handlers=[
-        logging.FileHandler("app.log"),
+        logging.FileHandler("codification_ape_log_file.log"),
         logging.StreamHandler(),
     ],
 )
@@ -217,7 +217,9 @@ async def predict(
 
     response = process_response(predictions, 0, nb_echos_max, prob_min, libs)
 
-    logging.info(f"""{{Query : {query["query"]}, Response: {response}}}""")
+    # Logging
+    query_to_log = {key: value[0] for key, value in query["query"].items()}
+    logging.info(f"{{'Query': {query_to_log}, 'Response': {response}}}")
 
     return response
 
@@ -239,7 +241,6 @@ async def predict_batch(
         dict: Response containing APE codes.
     """
 
-    #
     query = preprocess_batch(liasses.dict(), nb_echos_max)
 
     predictions = model.predict(query)
@@ -249,7 +250,11 @@ async def predict_batch(
         for i in range(len(predictions[0]))
     ]
 
-    logging.info(f"""{{Query : {query["query"]}, Response: {response}}}""")
+    # Logging
+    for line in range(len(query["TEXT_FEATURE"])):
+        query_line = {key: value[line] for key, value in query.items()}
+        response_line = response[line]
+        logging.info(f"{{'Query': {query_line}, 'Response': {response_line}}}")
 
     return response
 
@@ -292,6 +297,3 @@ async def eval_batch(
     df["Lib"] = liasses.text_description
 
     return df.to_dict()
-
-
-# LOG libellé pré traité

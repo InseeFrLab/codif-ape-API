@@ -15,10 +15,11 @@ spec:
             command:
             - /bin/sh
             - -c
-            - wget https://raw.githubusercontent.com/InseeFrLab/codif-ape-API/main/utils/transform_logs.py &&
-            - wget https://raw.githubusercontent.com/InseeFrLab/codif-ape-API/main/utils/transform_logs.sh &&
-            - chmod +x transform_logs.sh &&
-            - ./transform_logs.sh
+            - | 
+              wget https://raw.githubusercontent.com/InseeFrLab/codif-ape-API/main/utils/transform_logs.py &&
+              wget https://raw.githubusercontent.com/InseeFrLab/codif-ape-API/main/utils/transform_logs.sh &&
+              chmod +x transform_logs.sh &&
+              ./transform_logs.sh
             env:
             # env var for s3 connexion
             - name: AWS_S3_ENDPOINT

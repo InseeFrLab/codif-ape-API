@@ -1,4 +1,4 @@
-NAMESPACE=user-tfaria
+NAMESPACE=projet-ape
 POD_NAME=$(kubectl get pods -l app=codification-ape-model-deployment --no-headers -o custom-columns=":metadata.name")
 PATH_TO_LOGS=/api
 LOCAL_PATH_LOGS=codification_ape_log_file.log

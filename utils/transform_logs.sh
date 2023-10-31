@@ -1,6 +1,6 @@
 NAMESPACE=user-tfaria
-POD_NAME=vscode-python-533592-0
-PATH_TO_LOGS=/home/onyxia/work/codif-ape-API
+POD_NAME=$(kubectl get pods -l app=codification-ape-model-deployment --no-headers -o custom-columns=":metadata.name")
+PATH_TO_LOGS=/api
 LOCAL_PATH_LOGS=codification_ape_log_file.log
 START_DATE=$(date +'%Y-%m-%d 00:00:00')
 END_DATE=$(date +'%Y-%m-%d %H:%M:%S')

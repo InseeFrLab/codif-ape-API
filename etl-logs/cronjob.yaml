@@ -19,5 +19,21 @@ spec:
             - wget https://raw.githubusercontent.com/InseeFrLab/codif-ape-API/main/utils/transform_logs.sh &&
             - chmod +x transform_logs.sh &&
             - ./transform_logs.sh
+            env:
+            # env var for s3 connexion
+            - name: AWS_S3_ENDPOINT
+              value: https://minio.lab.sspcloud.fr
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: my-s3-creds
+                  key: accessKey
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: my-s3-creds
+                  key: secretKey
+            - name: AWS_DEFAULT_REGION
+              value: us-east-1
           restartPolicy: Never
           serviceAccountName: get-logs-api

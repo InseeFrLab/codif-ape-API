@@ -1,0 +1,23 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: get-logs-api
+spec:
+  schedule: "0 3 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: get-logs-api
+            image: inseefrlab/onyxia-python-minimal:py3.10.9
+            imagePullPolicy: IfNotPresent
+            command:
+            - /bin/sh
+            - -c
+            - wget https://raw.githubusercontent.com/InseeFrLab/codif-ape-API/main/utils/transform_logs.py &&
+            - wget https://raw.githubusercontent.com/InseeFrLab/codif-ape-API/main/utils/transform_logs.sh &&
+            - chmod +x transform_logs.sh &&
+            - ./transform_logs.sh
+          restartPolicy: Never
+          serviceAccountName: get-logs-api

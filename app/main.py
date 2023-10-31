@@ -251,8 +251,9 @@ async def predict_batch(
     ]
 
     # Logging
-    for line in range(len(query["TEXT_FEATURE"])):
-        query_line = {key: value[line] for key, value in query.items()}
+    print(query["query"]["TEXT_FEATURE"])
+    for line in range(len(query["query"]["TEXT_FEATURE"])):
+        query_line = {key: value[line] for key, value in query["query"].items()}
         response_line = response[line]
         logging.info(f"{{'Query': {query_line}, 'Response': {response_line}}}")
 

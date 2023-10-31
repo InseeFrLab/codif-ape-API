@@ -31,9 +31,7 @@ def get_model(model_name: str, model_version: str) -> object:
     """
 
     try:
-        model = mlflow.pyfunc.load_model(
-            model_uri=f"models:/{model_name}/{model_version}"
-        )
+        model = mlflow.pyfunc.load_model(model_uri=f"models:/{model_name}/{model_version}")
         return model
     except Exception as error:
         raise Exception(
@@ -92,8 +90,7 @@ def preprocess_query(
 
     """
     type_liasse, nature, surface, event = (
-        np.nan if v is None else v
-        for v in (type_liasse, nature, surface, event)
+        np.nan if v is None else v for v in (type_liasse, nature, surface, event)
     )
 
     list_ok = [
@@ -133,8 +130,7 @@ def preprocess_query(
     check_format_features([event], "event", r"^\d{2}[PMF]$")
 
     type_liasse, nature, surface, event = (
-        "NaN" if not isinstance(v, str) else v
-        for v in (type_liasse, nature, surface, event)
+        "NaN" if not isinstance(v, str) else v for v in (type_liasse, nature, surface, event)
     )
 
     query = {
@@ -176,8 +172,7 @@ def preprocess_batch(query: dict, nb_echos_max: int) -> dict:
         raise HTTPException(
             status_code=400,
             detail=(
-                "The text_description is missing for some liasses."
-                f"See line(s): {*matches,}"
+                "The text_description is missing for some liasses." f"See line(s): {*matches,}"
             ),
         )
 
@@ -267,31 +262,23 @@ def process_response(
     if predictions[1][liasse_nb][-1] < prob_min:
         k = np.min(
             [
-                np.argmax(
-                    np.logical_not(predictions[1][liasse_nb] > prob_min)
-                ),
+                np.argmax(np.logical_not(predictions[1][liasse_nb] > prob_min)),
                 nb_echos_max,
             ]
         )
 
     output_dict = {
-        rank_pred
-        + 1: {
-            "code": predictions[0][liasse_nb][rank_pred].replace(
-                "__label__", ""
-            ),
+        str(rank_pred + 1): {
+            "code": predictions[0][liasse_nb][rank_pred].replace("__label__", ""),
             "probabilite": float(predictions[1][liasse_nb][rank_pred]),
-            "libelle": libs[
-                predictions[0][liasse_nb][rank_pred].replace("__label__", "")
-            ],
+            "libelle": libs[predictions[0][liasse_nb][rank_pred].replace("__label__", "")],
         }
         for rank_pred in range(k)
     }
 
     try:
         response = output_dict | {
-            "IC": output_dict[1]["probabilite"]
-            - float(predictions[1][liasse_nb][1])
+            "IC": output_dict["1"]["probabilite"] - float(predictions[1][liasse_nb][1])
         }
         return response
     except KeyError:
@@ -305,9 +292,7 @@ def process_response(
         )
 
 
-def check_format_features(
-    values: list, feature: str, regex: str, list_ok: list = None
-) -> None:
+def check_format_features(values: list, feature: str, regex: str, list_ok: list = None) -> None:
     """
     Check the format of values for a specific feature using regex pattern.
 

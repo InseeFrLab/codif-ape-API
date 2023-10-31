@@ -4,6 +4,7 @@ PATH_TO_LOGS=/api
 LOCAL_PATH_LOGS=codification_ape_log_file.log
 START_DATE=$(date +'%Y-%m-%d 00:00:00')
 END_DATE=$(date +'%Y-%m-%d %H:%M:%S')
+export MC_HOST_s3=https://$AWS_ACCESS_KEY_ID:$AWS_SECRET_ACCESS_KEY@$AWS_S3_ENDPOINT
 
 kubectl cp $NAMESPACE/$POD_NAME:$PATH_TO_LOGS/codification_ape_log_file.log $LOCAL_PATH_LOGS
 

@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: get-logs-api
+  name: get-logs-api-test
 spec:
   schedule: "0 3 * * *"
   jobTemplate:
@@ -10,20 +10,24 @@ spec:
         spec:
           containers:
           - name: get-logs-api
-            image: inseefrlab/onyxia-python-minimal:py3.10.9
+            image: inseefrlab/onyxia-python-datascience:py3.10.9
             imagePullPolicy: IfNotPresent
             command:
             - /bin/sh
             - -c
             - | 
+              cd /tmp &&
               wget https://raw.githubusercontent.com/InseeFrLab/codif-ape-API/main/utils/transform_logs.py &&
               wget https://raw.githubusercontent.com/InseeFrLab/codif-ape-API/main/utils/transform_logs.sh &&
               chmod +x transform_logs.sh &&
               ./transform_logs.sh
+            volumeMounts:
+              - name: tmp
+                mountPath: "/tmp"
             env:
             # env var for s3 connexion
             - name: AWS_S3_ENDPOINT
-              value: https://minio.lab.sspcloud.fr
+              value: minio.lab.sspcloud.fr
             - name: AWS_ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef:
@@ -38,3 +42,6 @@ spec:
               value: us-east-1
           restartPolicy: Never
           serviceAccountName: get-logs-api
+          volumes:
+          - name: tmp
+            emptyDir: {}

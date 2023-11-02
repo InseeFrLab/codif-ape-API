@@ -1,12 +1,13 @@
-import pandas as pd
-from dateutil import parser
-from pandas import json_normalize
 import ast
+import os
 import sys
+
+import pandas as pd
 import pyarrow as pa
 import pyarrow.parquet as pq
 import s3fs
-import os
+from dateutil import parser
+from pandas import json_normalize
 
 
 def upload_logs(log_file_path: str, start_time: str, end_time: str):

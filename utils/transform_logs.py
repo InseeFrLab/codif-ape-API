@@ -64,7 +64,7 @@ def save_to_s3(table: pa.Table, bucket: str, path: str):
     pq.write_to_dataset(
         table,
         root_path=f"s3://{bucket}/{path}",
-        partitioning=["date"],
+        partition_cols=["date"],
         basename_template="part-{i}.parquet",
         existing_data_behavior="overwrite_or_ignore",
         filesystem=fs,

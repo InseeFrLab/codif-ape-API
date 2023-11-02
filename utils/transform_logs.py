@@ -2,10 +2,8 @@ import pandas as pd
 from dateutil import parser
 from pandas import json_normalize
 import ast
-from datetime import datetime
 import sys
 import pyarrow as pa
-import pyarrow.dataset as ds
 import pyarrow.parquet as pq
 import s3fs
 import os

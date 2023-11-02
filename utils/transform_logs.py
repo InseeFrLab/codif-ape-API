@@ -4,6 +4,11 @@ from pandas import json_normalize
 import ast
 from datetime import datetime
 import sys
+import pyarrow as pa
+import pyarrow.dataset as ds
+import pyarrow.parquet as pq
+import s3fs
+import os
 
 
 def upload_logs(log_file_path: str, start_time: str, end_time: str):
@@ -49,16 +54,38 @@ def process_logs(logs: pd.DataFrame):
     processed_logs.set_index(filtered_logs.index, inplace=True)
     return processed_logs
 
+def save_to_s3(table: pa.Table, bucket: str, path: str):
+
+    fs = s3fs.S3FileSystem(client_kwargs={'endpoint_url': 'https://'+'minio.lab.sspcloud.fr'},
+                        key =os.getenv("AWS_ACCESS_KEY_ID"), 
+                        secret = os.getenv("AWS_SECRET_ACCESS_KEY"))
+
+    pq.write_to_dataset(table, 
+        root_path=f"s3://{bucket}/{path}",
+        partitioning=['date'],
+        basename_template="part-{i}.parquet",
+        existing_data_behavior='overwrite_or_ignore',
+        filesystem=fs) 
 
 def main(log_file_path: str, start_time: str, end_time: str):
 
+    # Upload log file from API pod and filter by date
     logs = upload_logs(log_file_path, start_time, end_time)
 
+    # Normalize logs into a dataframe
     data_logs = process_logs(logs)
 
+    # Add timestamp to logs 
     df = pd.merge(logs["Timestamp"], data_logs, how='inner', left_index=True, right_index=True).reset_index(drop=True)
 
-    df.to_parquet(f"logs_{datetime.now().strftime('%Y-%m-%d')}.parquet")
+    # Add date column for partitionning
+    df["date"] = df["Timestamp"].dt.strftime('%Y-%m-%d')
+
+    # Translate pd.DataFrame into pa.Table
+    arrow_table = pa.Table.from_pandas(df)
+
+    # Save logs in a partionned parquet file in s3
+    save_to_s3(arrow_table, "projet-ape", "log_files/dashboard_test")
 
 
 if __name__ == "__main__":

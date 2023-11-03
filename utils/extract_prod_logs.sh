@@ -15,4 +15,4 @@ mv -n log_files/raw/*.gz $LOG_FILE_PATH/
 gunzip $LOG_FILE_PATH/*.gz
 
 # Transform and save logs
-python ./src/extract_logs.py $LOG_FILE_PATH
+python utils/extract_prod_logs.py $LOG_FILE_PATH

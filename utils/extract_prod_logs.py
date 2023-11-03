@@ -142,12 +142,13 @@ def main(log_file_path: str):
     logs = (
         logs[
             [
-                "date",
+                "timestamp",
                 "libelleActivite",
                 "liasseType",
                 "natureActivites",
                 "surface",
                 "evenementType",
+                "date",
             ]
         ]
         .rename(

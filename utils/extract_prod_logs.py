@@ -13,9 +13,7 @@ from tqdm import tqdm
 
 # Fonction pour extraire les informations des prédictions
 def extract_predictions(predictions_str):
-    regex_pattern = (
-        r"\[prediction n° (\d+) : code naf proposé = (\w+) ; proba associée = ([\w.]+(?:E-?\d+)?)\]"
-    )
+    regex_pattern = r"\[prediction n° (\d+) : code naf proposé = (\w+) ; proba associée = ([\w.]+(?:E-?\d+)?)\]"
     matches = re.findall(regex_pattern, predictions_str)
     return matches
 

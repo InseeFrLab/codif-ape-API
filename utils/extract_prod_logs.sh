@@ -16,5 +16,24 @@ mv -n log_files/raw/*.gz $LOG_FILE_PATH/
 # Unzip all .gz files
 gunzip $LOG_FILE_PATH/*.gz
 
+# Navigate to the folder
+cd "$LOG_FILE_PATH" || exit
+
+# Loop through each file in the folder
+for file in *.log.*; do
+    if [ -f "$file" ]; then
+        # Extract date from the file name
+        date_part=$(echo "$file" | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}')
+
+        # Construct the new file name
+        new_name="${date_part}.${file}"
+
+        # Rename the file
+        mv "$file" "$new_name"
+
+        echo "Renamed: $file to $new_name"
+    fi
+done
+
 # Transform and save logs
 python utils/extract_prod_logs.py $LOG_FILE_PATH

@@ -35,9 +35,7 @@ def extract_data_by_line(line):
     ]
 
     DATA = {
-        field: re.search(r"{}".format(field + "=([^,]+)"), line).group(1)
-        if field != "fasttextVersion"
-        else re.search(r"{}".format(field + "=([^,]+)"), line).group(1)[:-1]
+        field: re.search(r"{}=([^,\]]*)".format(re.escape(field)), line).group(1)
         for field in FIELDS
     }
 
@@ -71,7 +69,7 @@ def extract_log_info(f):
     Returns:
         _type_: _description_
     """
-    PATTERN = r"fr.insee.sirene4.repertoire.api.codification.rest.CodificationController:\d{3}"
+    PATTERN = r"fr.insee.sirene4.(repertoire|services).api.codification.rest.CodificationController:\d{3}"
 
     results = {
         "timestamp": [],

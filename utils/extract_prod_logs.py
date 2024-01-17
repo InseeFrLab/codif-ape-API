@@ -121,7 +121,7 @@ def save_to_s3(table: pa.Table, bucket: str, path: str):
     pq.write_to_dataset(
         table,
         root_path=f"s3://{bucket}/{path}",
-        partition_cols=["date"],
+        partition_cols=["date", "sourceAppel"],
         basename_template="part-{i}.parquet",
         existing_data_behavior="overwrite_or_ignore",
         filesystem=fs,
@@ -145,6 +145,7 @@ def main(log_file_path: str):
                 "surface",
                 "evenementType",
                 "date",
+                "sourceAppel"
             ]
         ]
         .rename(

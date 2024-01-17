@@ -34,6 +34,7 @@ for file in *.log.*; do
         echo "Renamed: $file to $new_name"
     fi
 done
+cd ../..
 
 # Transform and save logs
 python utils/extract_prod_logs.py $LOG_FILE_PATH

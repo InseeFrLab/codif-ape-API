@@ -45,19 +45,6 @@ def reclassify_surface(d: str):
         return "1"
 
 
-def reclassify_event(d: str):
-    if d == "03":
-        return "03M"
-    elif d == "01":
-        return "01P"
-    elif d == "07":
-        return "07M"
-    elif d == "04":
-        return "04M"
-    else:
-        return d
-
-
 def get_filesystem():
     fs = s3fs.S3FileSystem(
         client_kwargs={"endpoint_url": "https://" + "minio.lab.sspcloud.fr"},
@@ -69,11 +56,9 @@ def get_filesystem():
 
 def format_query(
     df: pd.DataFrame,
-    date_to_log: str,
-):
-    subset = df[df["timestamp"].dt.strftime("%Y-%m-%d") == date_to_log]
+):  
+    subset = df.copy()
     subset["surface"] = subset["surface"].apply(reclassify_surface)
-    subset["event"] = subset["event"].apply(reclassify_event)
     return subset[["text_description", "type_", "nature", "surface", "event"]]
 
 
@@ -85,16 +70,17 @@ def main(log_file_path: str, date_to_log: str):
     data = (
         ds.dataset(
             f"{log_file_path}",
-            partitioning=["date"],
+            partitioning=["date", "sourceAppel"],
             format="parquet",
             filesystem=fs,
         )
         .to_table()
+        .filter((ds.field("sourceAppel") == "sourceAppel=WF") & (ds.field("date") == f"date={date_to_log}"))
         .to_pandas()
     )
 
     # Harmonize dataset for the query
-    data = format_query(data, date_to_log)
+    data = format_query(data)
 
     query_batch_api(
         os.getenv("API_USERNAME"), os.getenv("API_PASSWORD"), data, prob_min=0.0

@@ -90,7 +90,7 @@ def main(log_file_path: str, start_time: str, end_time: str):
     arrow_table = pa.Table.from_pandas(df)
 
     # Save logs in a partionned parquet file in s3
-    save_to_s3(arrow_table, "projet-ape", "log_files/dashboard_test")
+    save_to_s3(arrow_table, "projet-ape", "log_files/dashboard")
 
 
 if __name__ == "__main__":

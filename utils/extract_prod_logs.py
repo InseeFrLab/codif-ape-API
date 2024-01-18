@@ -145,7 +145,7 @@ def main(log_file_path: str):
                 "surface",
                 "evenementType",
                 "date",
-                "sourceAppel"
+                "sourceAppel",
             ]
         ]
         .rename(

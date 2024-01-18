@@ -49,8 +49,7 @@ libs = {}
 libs["lib"] = yaml.safe_load(Path("libs.yaml").read_text())
 
 output_dict = {
-    rank_pred
-    + 1: {
+    rank_pred + 1: {
         "code": res[0][0][rank_pred].replace("__label__", ""),
         "probabilite": res[1][0][rank_pred],
         "libelle": libs["lib"][res[0][0][rank_pred].replace("__label__", "")],

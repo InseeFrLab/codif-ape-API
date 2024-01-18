@@ -9,7 +9,11 @@ import s3fs
 
 
 def query_batch_api(
-    username: str, password: str, data: pd.DataFrame, nb_echos_max: int = 5, prob_min: float = 0.01
+    username: str,
+    password: str,
+    data: pd.DataFrame,
+    nb_echos_max: int = 5,
+    prob_min: float = 0.01,
 ):
     base_url = "https://codification-ape.lab.sspcloud.fr/predict-batch"
     params = {"nb_echos_max": nb_echos_max, "prob_min": prob_min}
@@ -92,7 +96,9 @@ def main(log_file_path: str, date_to_log: str):
     # Harmonize dataset for the query
     data = format_query(data, date_to_log)
 
-    query_batch_api(os.getenv("API_USERNAME"), os.getenv("API_PASSWORD"), data, prob_min=0.0)
+    query_batch_api(
+        os.getenv("API_USERNAME"), os.getenv("API_PASSWORD"), data, prob_min=0.0
+    )
 
 
 if __name__ == "__main__":

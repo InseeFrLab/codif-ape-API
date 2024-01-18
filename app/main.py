@@ -157,7 +157,9 @@ logging.basicConfig(
 
 
 @codification_ape_app.get("/", tags=["Welcome"])
-def show_welcome_page(credentials: Annotated[HTTPBasicCredentials, Depends(optional_security)]):
+def show_welcome_page(
+    credentials: Annotated[HTTPBasicCredentials, Depends(optional_security)],
+):
     """
     Show welcome page with model name and version.
     """
@@ -211,7 +213,9 @@ async def predict(
         dict: Response containing APE codes.
     """
 
-    query = preprocess_query(text_feature, type_liasse, nature, surface, event, nb_echos_max)
+    query = preprocess_query(
+        text_feature, type_liasse, nature, surface, event, nb_echos_max
+    )
 
     predictions = model.predict(query)
 
@@ -291,7 +295,9 @@ async def eval_batch(
         columns=["Probability", "IC", "Prediction"],
     )
 
-    df[["Probability", "IC"]] = df[["Probability", "IC"]].applymap(lambda x: 1 if x > 1 else x)
+    df[["Probability", "IC"]] = df[["Probability", "IC"]].applymap(
+        lambda x: 1 if x > 1 else x
+    )
 
     df["Code"] = liasses.code
     df["Result"] = df["Code"] == df["Prediction"]

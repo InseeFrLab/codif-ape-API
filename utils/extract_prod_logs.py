@@ -33,7 +33,7 @@ def extract_data_by_line(line):
     ]
 
     DATA = {
-        field: re.search(r"{}=([^,\]]*)".format(re.escape(field)), line).group(1)
+        field: re.search(r"{}=([^,\]]*)".format(re.escape(field)), line).group(1).lstrip('"')
         for field in FIELDS
     }
 

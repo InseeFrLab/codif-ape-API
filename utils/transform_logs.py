@@ -96,7 +96,7 @@ def main(log_file_path: str, day_to_retrieve: str, day_shift: str):
 
 if __name__ == "__main__":
     log_file_path = str(sys.argv[1])
-    start_time = str(sys.argv[2])
-    end_time = str(sys.argv[3])
+    day_to_retrieve = str(sys.argv[2])
+    day_shift = str(sys.argv[3])
 
-    main(log_file_path, start_time, end_time)
+    main(log_file_path, day_to_retrieve, day_shift)

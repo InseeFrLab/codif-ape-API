@@ -42,7 +42,7 @@ def reclassify_surface(d: str):
         else:
             return "4"
     except ValueError:
-        return "1"
+        return "null"
 
 
 def get_filesystem():

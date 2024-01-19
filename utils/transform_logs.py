@@ -8,15 +8,16 @@ import pyarrow.parquet as pq
 import s3fs
 from dateutil import parser
 from pandas import json_normalize
+from datetime import datetime, timedelta
 
 
-def upload_logs(log_file_path: str, start_time: str, end_time: str):
+def upload_logs(log_file_path: str, day_to_retrieve: str, day_shift: str):
     # Liste pour stocker les entrées de logs
     log_entries = []
 
     # Convertir les chaînes de temps en objets datetime
-    start_time = parser.parse(start_time)
-    end_time = parser.parse(end_time)
+    start_time = parser.parse(day_to_retrieve) + timedelta(days=int(day_shift))
+    end_time = datetime(start_time.year, start_time.month, start_time.day, 23, 59, 59)
 
     # Lecture du fichier de logs
     with open(log_file_path, "r") as file:
@@ -36,7 +37,7 @@ def upload_logs(log_file_path: str, start_time: str, end_time: str):
 
     for entry in log_entries:
         timestamp_str, log_level, message = entry.split(" - ", 2)
-        timestamp = parser.parse(timestamp_str)
+        timestamp = parser.parse(timestamp_str) - timedelta(days=int(day_shift))
         data.append([timestamp, log_level, message])
 
     log_df = pd.DataFrame(data, columns=columns)
@@ -71,9 +72,9 @@ def save_to_s3(table: pa.Table, bucket: str, path: str):
     )
 
 
-def main(log_file_path: str, start_time: str, end_time: str):
+def main(log_file_path: str, day_to_retrieve: str, day_shift: str):
     # Upload log file from API pod and filter by date
-    logs = upload_logs(log_file_path, start_time, end_time)
+    logs = upload_logs(log_file_path, day_to_retrieve, day_shift)
 
     # Normalize logs into a dataframe
     data_logs = process_logs(logs)

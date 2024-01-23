@@ -159,6 +159,11 @@ def main(log_file_path: str):
         .reset_index(drop=True)
     )
 
+    # Removing observations without text description
+    logs["text_description"] = logs["text_description"].apply(lambda x: x.strip())
+    logs["text_description"] = logs["text_description"].replace([""], np.nan)
+    logs = logs.iloc[logs.index[~logs["text_description"].isna()]]
+
     # Translate pd.DataFrame into pa.Table
     arrow_table = pa.Table.from_pandas(logs)
 

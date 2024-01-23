@@ -136,6 +136,10 @@ def preprocess_query(
         for v in (type_liasse, nature, surface, event)
     )
 
+    if nb_echos_max != 1:
+        k = nb_echos_max
+    else:
+        k = 2
     query = {
         "query": {
             "TEXT_FEATURE": [text_feature],
@@ -144,7 +148,7 @@ def preprocess_query(
             "SURF": [surface],
             "EVT_SICORE": [event],
         },
-        "k": nb_echos_max,
+        "k": k,
     }
     return query
 
@@ -229,9 +233,13 @@ def preprocess_batch(query: dict, nb_echos_max: int) -> dict:
         inplace=True,
     )
 
+    if nb_echos_max != 1:
+        k = nb_echos_max
+    else:
+        k = 2
     query = {
         "query": df.to_dict("list"),
-        "k": nb_echos_max,
+        "k": k,
     }
     return query
 

@@ -1,13 +1,13 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: send-batch-api
+  name: etl-monitoring
 spec:
   project: default
   source:
-    repoURL: https://github.com/ThomasFaria/codif-ape-API.git
+    repoURL: https://github.com/InseeFrLab/codif-ape-API.git
     targetRevision: HEAD
-    path: prod-self
+    path: etl-monitoring
   destination:
     server: https://kubernetes.default.svc
     namespace: projet-ape

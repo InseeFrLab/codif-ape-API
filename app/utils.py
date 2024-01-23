@@ -175,7 +175,7 @@ def preprocess_batch(query: dict, nb_echos_max: int) -> dict:
         raise HTTPException(
             status_code=400,
             detail=(
-                "The text_description is missing for some liasses."
+                "The text_description is missing for some liasses. "
                 f"See line(s): {*matches,}"
             ),
         )

@@ -10,9 +10,7 @@ def get_model():
     model_version: str = os.getenv("MLFLOW_MODEL_VERSION")
 
     try:
-        model = mlflow.pyfunc.load_model(
-            model_uri=f"models:/{model_name}/{model_version}"
-        )
+        model = mlflow.pyfunc.load_model(model_uri=f"models:/{model_name}/{model_version}")
         return model
     except Exception as error:
         raise Exception(

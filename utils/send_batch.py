@@ -56,7 +56,7 @@ def get_filesystem():
 
 def format_query(
     df: pd.DataFrame,
-):  
+):
     subset = df.copy()
     subset["surface"] = subset["surface"].apply(reclassify_surface)
     return subset[["text_description", "type_", "nature", "surface", "event"]]
@@ -75,16 +75,17 @@ def main(log_file_path: str, date_to_log: str):
             filesystem=fs,
         )
         .to_table()
-        .filter((ds.field("sourceAppel") == "sourceAppel=WF") & (ds.field("date") == f"date={date_to_log}"))
+        .filter(
+            (ds.field("sourceAppel") == "sourceAppel=WF")
+            & (ds.field("date") == f"date={date_to_log}")
+        )
         .to_pandas()
     )
 
     # Harmonize dataset for the query
     data = format_query(data)
 
-    query_batch_api(
-        os.getenv("API_USERNAME"), os.getenv("API_PASSWORD"), data, prob_min=0.0
-    )
+    query_batch_api(os.getenv("API_USERNAME"), os.getenv("API_PASSWORD"), data, prob_min=0.0)
 
 
 if __name__ == "__main__":

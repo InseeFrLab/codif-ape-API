@@ -1,7 +1,6 @@
 # Set environment variables
-AWS_ACCESS_KEY_ID=`vault kv get -field=ACCESS_KEY onyxia-kv/projet-ape/s3` && export AWS_ACCESS_KEY_ID
-AWS_SECRET_ACCESS_KEY=`vault kv get -field=SECRET_KEY onyxia-kv/projet-ape/s3` && export AWS_SECRET_ACCESS_KEY
 export MC_HOST_s3=https://$AWS_ACCESS_KEY_ID:$AWS_SECRET_ACCESS_KEY@$AWS_S3_ENDPOINT
+echo $MC_HOST_s3
 NAMESPACE=projet-ape
 
 LOG_FILE_PATH_S3_IN=$NAMESPACE/log_files/raw/

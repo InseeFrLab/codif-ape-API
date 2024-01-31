@@ -7,6 +7,7 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Annotated, List
 
+import mlflow
 import numpy as np
 import pandas as pd
 import yaml
@@ -36,14 +37,16 @@ async def lifespan(app: FastAPI):
     Args:
         app (FastAPI): The FastAPI application.
     """
-    global model, libs
+    global model, libs, training_names
 
     model_name: str = os.getenv("MLFLOW_MODEL_NAME")
     model_version: str = os.getenv("MLFLOW_MODEL_VERSION")
     # Load the ML model
     model = get_model(model_name, model_version)
     libs = yaml.safe_load(Path("app/libs.yaml").read_text())
-
+    text_feature = [mlflow.get_run(model.metadata.run_id).data.params["text_feature"]]
+    features = eval(mlflow.get_run(model.metadata.run_id).data.params["features"])
+    training_names = text_feature + features
     yield
 
 
@@ -213,14 +216,17 @@ async def predict(
         dict: Response containing APE codes.
     """
 
-    query = preprocess_query(text_feature, type_liasse, nature, surface, event, nb_echos_max)
+    query = preprocess_query(training_names, text_feature, type_liasse, nature, surface, event)
 
-    predictions = model.predict(query)
+    if nb_echos_max != 1:
+        predictions = model.predict(query, params={"k": nb_echos_max})
+    else:
+        predictions = model.predict(query, params={"k": 2})
 
     response = process_response(predictions, 0, nb_echos_max, prob_min, libs)
 
     # Logging
-    query_to_log = {key: value[0] for key, value in query["query"].items()}
+    query_to_log = {key: value[0] for key, value in query.items()}
     logging.info(f"{{'Query': {query_to_log}, 'Response': {response}}}")
 
     return response
@@ -243,9 +249,12 @@ async def predict_batch(
         dict: Response containing APE codes.
     """
 
-    query = preprocess_batch(liasses.dict(), nb_echos_max)
+    query = preprocess_batch(training_names, liasses.dict())
 
-    predictions = model.predict(query)
+    if nb_echos_max != 1:
+        predictions = model.predict(query, params={"k": nb_echos_max})
+    else:
+        predictions = model.predict(query, params={"k": 2})
 
     response = [
         process_response(predictions, i, nb_echos_max, prob_min, libs)
@@ -253,9 +262,8 @@ async def predict_batch(
     ]
 
     # Logging
-    print(query["query"]["TEXT_FEATURE"])
-    for line in range(len(query["query"]["TEXT_FEATURE"])):
-        query_line = {key: value[line] for key, value in query["query"].items()}
+    for line in range(len(query[training_names[0]])):
+        query_line = {key: value[line] for key, value in query.items()}
         response_line = response[line]
         logging.info(f"{{'Query': {query_line}, 'Response': {response_line}}}")
 

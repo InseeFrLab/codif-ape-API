@@ -9,13 +9,11 @@ ENV TIMEOUT=300
 WORKDIR /api
 
 # copy the requirements list
-COPY /requirements.txt /code/requirements.txt
-
-COPY /import_corpus.sh /code/import_corpus.sh
+COPY requirements.txt requirements.txt
 
 # install all the requirements and import corpus
-RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt && \
-    /code/import_corpus.sh
+RUN pip install --no-cache-dir --upgrade -r requirements.txt && \
+    python -m nltk.downloader stopwords
 
 # copy the main code of fastapi
 COPY ./app /api/app

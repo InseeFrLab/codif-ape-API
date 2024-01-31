@@ -63,6 +63,7 @@ def get_current_username(
 
 
 def preprocess_query(
+    training_names: list,
     text_feature: str,
     type_liasse: str | None,
     nature: str | None,
@@ -133,24 +134,19 @@ def preprocess_query(
         "NaN" if not isinstance(v, str) else v for v in (type_liasse, nature, surface, event)
     )
 
-    if nb_echos_max != 1:
-        k = nb_echos_max
-    else:
-        k = 2
     query = {
         "query": {
-            "TEXT_FEATURE": [text_feature],
-            "AUTO": [type_liasse],
-            "NAT_SICORE": [nature],
-            "SURF": [surface],
-            "EVT_SICORE": [event],
+            training_names[0]: [text_feature],
+            training_names[1]: [type_liasse],
+            training_names[2]: [nature],
+            training_names[3]: [surface],
+            training_names[4]: [event],
         },
-        "k": k,
     }
     return query
 
 
-def preprocess_batch(query: dict, nb_echos_max: int) -> dict:
+def preprocess_batch(training_names: list, query: dict, nb_echos_max: int) -> dict:
     """
     Preprocesses a batch of data in a dictionary format for prediction.
 
@@ -218,25 +214,16 @@ def preprocess_batch(query: dict, nb_echos_max: int) -> dict:
 
     df = df.replace(np.nan, "NaN")
 
-    df.rename(
+    query = df.rename(
         columns={
-            "text_description": "TEXT_FEATURE",
-            "type_": "AUTO",
-            "nature": "NAT_SICORE",
-            "surface": "SURF",
-            "event": "EVT_SICORE",
-        },
-        inplace=True,
-    )
+            "text_description": training_names[0],
+            "type_": training_names[1],
+            "nature": training_names[2],
+            "surface": training_names[3],
+            "event": training_names[4],
+        }
+    ).to_dict("list")
 
-    if nb_echos_max != 1:
-        k = nb_echos_max
-    else:
-        k = 2
-    query = {
-        "query": df.to_dict("list"),
-        "k": k,
-    }
     return query
 
 

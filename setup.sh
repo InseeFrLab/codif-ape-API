@@ -17,7 +17,4 @@ export API_USERNAME=username
 export API_PASSWORD=password
 export AUTH_API=False
 
-python - <<'END_SCRIPT'
-import nltk
-nltk.download('stopwords')
-END_SCRIPT
+python -m nltk.downloader stopwords

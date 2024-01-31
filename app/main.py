@@ -189,7 +189,7 @@ def show_welcome_page(
 @codification_ape_app.get("/predict", tags=["Predict"])
 async def predict(
     credentials: Annotated[HTTPBasicCredentials, Depends(optional_security)],
-    text_feature: str,
+    text_description: str,
     type_liasse: str | None = None,
     nature: str | None = None,
     surface: str | None = None,
@@ -204,7 +204,7 @@ async def predict(
     ML model to predict the code APE based on the input data.
 
     Args:
-        text_feature (str): The text feature.
+        text_description (str): The text description.
         type_liasse (str, optional): The type of liasse. Defaults to None.
         nature (str, optional): The nature of the liasse. Defaults to None.
         surface (str, optional): The surface of the liasse. Defaults to None.
@@ -216,7 +216,7 @@ async def predict(
         dict: Response containing APE codes.
     """
 
-    query = preprocess_query(training_names, text_feature, type_liasse, nature, surface, event)
+    query = preprocess_query(training_names, text_description, type_liasse, nature, surface, event)
 
     if nb_echos_max != 1:
         predictions = model.predict(query, params={"k": nb_echos_max})

@@ -135,14 +135,12 @@ def preprocess_query(
     )
 
     query = {
-        "query": {
             training_names[0]: [text_feature],
             training_names[1]: [type_liasse],
             training_names[2]: [nature],
             training_names[3]: [surface],
             training_names[4]: [event],
-        },
-    }
+        }
     return query
 
 

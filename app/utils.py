@@ -144,13 +144,12 @@ def preprocess_query(
     return query
 
 
-def preprocess_batch(training_names: list, query: dict, nb_echos_max: int) -> dict:
+def preprocess_batch(training_names: list, query: dict) -> dict:
     """
     Preprocesses a batch of data in a dictionary format for prediction.
 
     Args:
         query (dict): A dictionary containing the batch of data.
-        nb_echos_max (int): The maximum number of echoes allowed.
 
     Returns:
         dict: A dictionary containing the preprocessed data ready for further

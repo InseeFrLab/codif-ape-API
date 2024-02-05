@@ -7,7 +7,7 @@ pydantic==2.6.0
 python_dateutil==2.8.2
 PyYAML==6.0.1
 Requests==2.31.0
-s3fs==2023.12.2
+s3fs==2024.2.0
 tqdm==4.66.1
 ruff==0.1.15
 pre-commit==3.6.0

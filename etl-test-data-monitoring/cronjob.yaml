@@ -1,0 +1,51 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: etl-test-data-monitoring
+spec:
+  schedule: "*/2 * * * *" # "0 3 * * *"
+  # concurrencyPolicy: Forbid # ensure only one pod is running at a time
+  jobTemplate:
+    spec:
+      # backoffLimit: 0  # Number of retries before considering the Job as failed
+      template:
+        spec:
+          containers:
+          - name: etl-test-data-monitoring
+            image: inseefrlab/onyxia-python-datascience:py3.10.9
+            imagePullPolicy: IfNotPresent
+            command:
+              - "/bin/sh"
+              - "-c"
+              - |
+                cd /tmp &&
+                wget https://raw.githubusercontent.com/InseeFrLab/codif-ape-API/main/utils/extract_test_data.py &&
+                wget https://raw.githubusercontent.com/InseeFrLab/codif-ape-API/main/utils/send_batch_test_data.py &&
+                wget https://raw.githubusercontent.com/InseeFrLab/codif-ape-API/main/utils/etl_test_data_monitoring.sh &&
+                chmod +x etl_test_data_monitoring.sh &&
+                export MC_HOST_s3=https://$AWS_ACCESS_KEY_ID:$AWS_SECRET_ACCESS_KEY@$AWS_S3_ENDPOINT &&
+                ./etl_test_data_monitoring.sh 
+                echo "ok" &&
+            volumeMounts:
+            - name: tmp
+              mountPath: "/tmp"
+            envFrom:
+            - configMapRef:
+                    name: configmap-etl-test-data-monitoring
+            env:
+            # from secrets
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: my-s3-creds
+                  key: accessKey
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: my-s3-creds
+                  key: secretKey
+          restartPolicy: Never
+          serviceAccountName: etl-test-data-monitoring
+          volumes:
+          - name: tmp
+            emptyDir: {}

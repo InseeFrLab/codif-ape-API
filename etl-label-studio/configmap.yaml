@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: configmap-label-studio
+  namespace: projet-ape
+data:
+  namespace: projet-ape
+  S3_ENDPOINT: https://minio.lab.sspcloud.fr
+  AWS_S3_ENDPOINT: minio.lab.sspcloud.fr
+  AWS_DEFAULT_REGION: us-east-1
+  S3_BUCKET: projet-ape
+  # S3_BUCKET_PREFIX_TRANSFORM_JSON: "Label_Studio/Annotation_APE_2024/NAF_2008/Batch_data_json/"
+  S3_BUCKET_PREFIX_ANNOTATION_SOURCE: "label-studio/annotation-campaign-2024/NAF2008/data-to-annotate/"
+  S3_BUCKET_PREFIX_DEPOT_MANUEL: "label-studio/annotation-campaign-2024/NAF2008/data-samples/queue/"
+  S3_BUCKET_PREFIX_ARCHIVE_DEPOT_MANUEL: "label-studio/annotation-campaign-2024/NAF2008/data-samples/archive/"
+  S3_BUCKET_PREFIX_ANNOTATION_TARGET: "/label-studio/annotation-campaign-2024/NAF2008/data-annotated"
+  LABEL_STUDIO_SERVICE_ENDPOINT: http://projet-ape-851712.user.lab.sspcloud.fr # replace with your service endpoint
+  ID_S3_TARGET: "1"

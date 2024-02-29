@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: configmap-etl-test-data-monitoring
+  namespace: projet-ape
+data:
+  NAMESPACE: projet-ape
+  AWS_S3_ENDPOINT: minio.lab.sspcloud.fr
+  AWS_DEFAULT_REGION: us-east-1
+  S3_BUCKET: projet-ape
+  # S3_BUCKET_PREFIX_TRANSFORM_JSON: "Label_Studio/Annotation_APE_2024/NAF_2008/Batch_data_json/"
+  PATH_ANNOTATION_RESULTS: "label-studio/annotation-campaign-2024/NAF2008/data-annotated/completed" 
+  PATH_ANNOTATION_PREPROCESSED: "label-studio/annotation-campaign-2024/NAF2008/preprocessed"
+  PATH_ANNOTATION_DASHBOARD: "label-studio/annotation-campaign-2024/NAF2008/dashboard"
+  CURRENT_MODEL_API_PATH: "https://codification-ape-test.lab.sspcloud.fr/predict-batch"
+  NEXT_MODEL_API_PATH: "https://codification-ape-test.lab.sspcloud.fr/predict-batch"

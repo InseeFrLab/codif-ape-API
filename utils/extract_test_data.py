@@ -74,7 +74,7 @@ def transform_json_to_dataframe(json_dir: str):
             'commentary' : commentary,
             'skips' : skips,
         }
-        
+
         # Append in list 
         transformed_data.append(transformed_row)
 
@@ -84,7 +84,7 @@ def transform_json_to_dataframe(json_dir: str):
     # Keep only unskipped and classifiable annotations
     results = results[results['skips'] == 0]
     results = results[results['apet_manual'] != "XXXXX"]
-    print(len(results))
+    print("Number of lines: " + len(results))
 
     return results
 
@@ -104,7 +104,7 @@ def save_to_s3(table: pa.Table, bucket: str, path: str):
         existing_data_behavior="overwrite_or_ignore",
         filesystem=fs,
     )
-    pq.write_table(table,f"s3://{bucket}/{path}/test_data_NAF2008.parquet",filesystem=fs)
+    # pq.write_table(table,f"s3://{bucket}/{path}/test_data_NAF2008.parquet",filesystem=fs)
 
 
 def main(annotation_results_path: str, annotation_preprocessed_path: str):
@@ -127,7 +127,7 @@ def main(annotation_results_path: str, annotation_preprocessed_path: str):
                 "date",
                 "mode_calcul_ape",
                 "apet_manual",
-           
+
             ]
         ]
         .rename(

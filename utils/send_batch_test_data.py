@@ -129,4 +129,4 @@ if __name__ == "__main__":
     dashboard_path = str(sys.argv[2])
     api_path = str(sys.argv[3])
 
-    main(data_file_path, dashboard_path) #, date_to_log)
+    main(data_file_path, dashboard_path, api_path) #, date_to_log)

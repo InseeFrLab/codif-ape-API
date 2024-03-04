@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: etl-data-test-monitoring
+  name: etl-test-data-monitoring
 spec:
   project: default
   source:

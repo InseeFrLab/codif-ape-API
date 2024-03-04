@@ -9,7 +9,7 @@ import pyarrow.parquet as pq
 import requests
 import s3fs
 
-from extract_test_data_monitoring import save_to_s3
+from extract_test_data import save_to_s3
 
 
 def query_batch_api(

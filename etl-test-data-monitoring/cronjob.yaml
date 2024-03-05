@@ -3,7 +3,7 @@ kind: CronJob
 metadata:
   name: etl-test-data-monitoring
 spec:
-  schedule: "*/2 * * * *" # "0 3 * * *"
+  schedule: "0 3 * * *" # "*/2 * * * *" # 
   # concurrencyPolicy: Forbid # ensure only one pod is running at a time
   jobTemplate:
     spec:

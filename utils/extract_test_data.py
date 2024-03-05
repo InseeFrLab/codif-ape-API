@@ -84,7 +84,7 @@ def transform_json_to_dataframe(json_dir: str):
     # Keep only unskipped and classifiable annotations
     results = results[results['skips'] == 0]
     results = results[results['apet_manual'] != "XXXXX"]
-    print("Number of lines: " + len(results))
+    print("Number of lines: " + str(len(results)))
 
     return results
 
@@ -95,16 +95,7 @@ def save_to_s3(table: pa.Table, bucket: str, path: str):
         key=os.getenv("AWS_ACCESS_KEY_ID"),
         secret=os.getenv("AWS_SECRET_ACCESS_KEY"),
     )
-    # To partition data
-    pq.write_to_dataset(
-        table,
-        root_path=f"s3://{bucket}/{path}/",
-        partition_cols=["date"],
-        basename_template="part-{i}.parquet",
-        existing_data_behavior="overwrite_or_ignore",
-        filesystem=fs,
-    )
-    # pq.write_table(table,f"s3://{bucket}/{path}/test_data_NAF2008.parquet",filesystem=fs)
+    pq.write_table(table, f"s3://{bucket}/{path}/test_data_NAF2008.parquet", filesystem=fs)
 
 
 def main(annotation_results_path: str, annotation_preprocessed_path: str):

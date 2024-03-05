@@ -9,8 +9,6 @@ import pyarrow.parquet as pq
 import requests
 import s3fs
 
-from extract_test_data import save_to_s3
-
 
 def query_batch_api(
     data: pd.DataFrame,
@@ -95,6 +93,19 @@ def add_prediction_columns(df, results):
     return df
 
 
+def save_to_s3(table: pa.Table, bucket: str, path: str):
+    fs = get_filesystem()
+    # To partition data
+    pq.write_to_dataset(
+        table,
+        root_path=f"s3://{bucket}/{path}/",
+        partition_cols=["date"],
+        basename_template="part-{i}.parquet",
+        existing_data_behavior="overwrite_or_ignore",
+        filesystem=fs,
+    )
+
+
 def main(data_file_path: str, dashboard_path:str, api_path:str) : #, date_to_log: str):
     # Define file system
     fs = get_filesystem()
@@ -102,8 +113,8 @@ def main(data_file_path: str, dashboard_path:str, api_path:str) : #, date_to_log
     # Open Dataset
     data = (
         ds.dataset(
-            f"{data_file_path}",
-            partitioning=["date"],
+            f"{data_file_path}/test_data_NAF2008.parquet",
+            # partitioning=["date"],
             format="parquet",
             filesystem=fs,
         )
@@ -121,7 +132,7 @@ def main(data_file_path: str, dashboard_path:str, api_path:str) : #, date_to_log
     # Remove 'date=' prefix from the 'date' column to partition again
     table['date'] = table['date'].str.replace('date=', '')
     arrow_table = pa.Table.from_pandas(table)
-    save_to_s3(arrow_table, "projet-ape", f"/{dashboard_path}/")
+    save_to_s3(arrow_table, "projet-ape", f"{dashboard_path}")
 
 
 if __name__ == "__main__":
@@ -129,4 +140,4 @@ if __name__ == "__main__":
     dashboard_path = str(sys.argv[2])
     api_path = str(sys.argv[3])
 
-    main(data_file_path, dashboard_path, api_path) #, date_to_log)
+    main(data_file_path, dashboard_path, api_path)

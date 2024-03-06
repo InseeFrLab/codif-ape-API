@@ -19,9 +19,9 @@ spec:
               - "-c"
               - |
                 cd /tmp &&
-                wget https://raw.githubusercontent.com/InseeFrLab/codif-ape-API/label-studio/utils/extract_test_data.py &&
-                wget https://raw.githubusercontent.com/InseeFrLab/codif-ape-API/label-studio/utils/send_batch_test_data.py &&
-                wget https://raw.githubusercontent.com/InseeFrLab/codif-ape-API/label-studio/utils/etl_test_data_monitoring.sh &&
+                wget https://raw.githubusercontent.com/InseeFrLab/codif-ape-API/main/utils/extract_test_data.py &&
+                wget https://raw.githubusercontent.com/InseeFrLab/codif-ape-API/main/utils/send_batch_test_data.py &&
+                wget https://raw.githubusercontent.com/InseeFrLab/codif-ape-API/main/utils/etl_test_data_monitoring.sh &&
                 chmod +x etl_test_data_monitoring.sh &&
                 export MC_HOST_s3=https://$AWS_ACCESS_KEY_ID:$AWS_SECRET_ACCESS_KEY@$AWS_S3_ENDPOINT &&
                 ./etl_test_data_monitoring.sh 

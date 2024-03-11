@@ -13,23 +13,26 @@ spec:
             image: inseefrlab/onyxia-python-datascience:py3.10.9
             imagePullPolicy: IfNotPresent
             command:
-            - /bin/sh
-            - -c
-            - | 
-              cd /tmp &&
-              wget https://raw.githubusercontent.com/InseeFrLab/codif-ape-API/main/utils/extract_prod_logs.py &&
-              wget https://raw.githubusercontent.com/InseeFrLab/codif-ape-API/main/utils/send_batch.py &&
-              wget https://raw.githubusercontent.com/InseeFrLab/codif-ape-API/main/utils/transform_logs.py &&
-              wget https://raw.githubusercontent.com/InseeFrLab/codif-ape-API/main/utils/etl_monitoring.sh &&
-              chmod +x etl_monitoring.sh &&
-              ./etl_monitoring.sh
+              - /bin/sh
+              - -c
+              - | 
+                cd /tmp &&
+                wget https://raw.githubusercontent.com/InseeFrLab/codif-ape-API/main/utils/extract_prod_logs.py &&
+                wget https://raw.githubusercontent.com/InseeFrLab/codif-ape-API/main/utils/send_batch.py &&
+                wget https://raw.githubusercontent.com/InseeFrLab/codif-ape-API/main/utils/transform_logs.py &&
+                wget https://raw.githubusercontent.com/InseeFrLab/codif-ape-API/main/utils/etl_monitoring.sh &&
+                wget https://raw.githubusercontent.com/InseeFrLab/codif-ape-API/main/utils/extract_test_data.py &&
+                wget https://raw.githubusercontent.com/InseeFrLab/codif-ape-API/main/utils/send_batch_test_data.py &&
+                wget https://raw.githubusercontent.com/InseeFrLab/codif-ape-API/main/utils/etl_test_data_monitoring.sh &&
+                chmod +x etl_monitoring.sh &&
+                ./etl_monitoring.sh
             volumeMounts:
               - name: tmp
                 mountPath: "/tmp"
+            envFrom:
+              - configMapRef:
+                  name: configmap-etl-monitoring
             env:
-            # env var for s3 connexion
-            - name: AWS_S3_ENDPOINT
-              value: minio.lab.sspcloud.fr
             - name: AWS_ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef:
@@ -40,8 +43,6 @@ spec:
                 secretKeyRef:
                   name: my-s3-creds
                   key: secretKey
-            - name: AWS_DEFAULT_REGION
-              value: us-east-1
             - name: API_USERNAME
               valueFrom:
                 secretKeyRef:

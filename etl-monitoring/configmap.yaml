@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: configmap-etl-monitoring
+  namespace: projet-ape
+data:
+  NAMESPACE: projet-ape
+  AWS_S3_ENDPOINT: minio.lab.sspcloud.fr
+  AWS_DEFAULT_REGION: us-east-1
+  PATH_ANNOTATION_RESULTS: label-studio/annotation-campaign-2024/NAF2008/data-annotated/completed"
+  PATH_ANNOTATION_PREPROCESSED: label-studio/annotation-campaign-2024/NAF2008/preprocessed
+  PATH_ANNOTATION_DASHBOARD: label-studio/annotation-campaign-2024/NAF2008/dashboard
+  CURRENT_MODEL_API_PATH: https://codification-ape-test.lab.sspcloud.fr/predict-batch
+  NEXT_MODEL_API_PATH: https://codification-ape-test.lab.sspcloud.fr/predict-batch
+  LOG_FILE_PATH_LOCAL: log_files/log_zip
+  DAY_SHIFT: "21"
+  PATH_TO_LOGS: /api
+  API_PATH_LOGS: codification_ape_log_file.log
+  DATA_FILE_PATH_LOCAL: data

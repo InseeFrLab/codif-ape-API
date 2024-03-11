@@ -1,17 +1,12 @@
 # Set environment variables
 export MC_HOST_s3=https://$AWS_ACCESS_KEY_ID:$AWS_SECRET_ACCESS_KEY@$AWS_S3_ENDPOINT
-NAMESPACE=projet-ape
 
 LOG_FILE_PATH_S3_IN=$NAMESPACE/log_files/raw/
 LOG_FILE_PATH_S3_OUT=$NAMESPACE/log_files/preprocessed/
-LOG_FILE_PATH_LOCAL=log_files/log_zip
 
-DAY_SHIFT=21
 DATE_TO_LOG=$(date --date="-$DAY_SHIFT days" +%Y-%m-%d)
 
 POD_NAME=$(kubectl get pods -l app=codification-ape-model-deployment --no-headers -o custom-columns=":metadata.name")
-PATH_TO_LOGS=/api
-API_PATH_LOGS=codification_ape_log_file.log
 
 # Retrieves raw logs files from s3
 mc cp -r s3/$LOG_FILE_PATH_S3_IN log_files/raw
@@ -57,3 +52,17 @@ kubectl cp $NAMESPACE/$POD_NAME:$PATH_TO_LOGS/$API_PATH_LOGS $API_PATH_LOGS
 # Transform logs in an explicit format for a given ans store parquet in s3
 python transform_logs.py $API_PATH_LOGS $DATE_TO_LOG $DAY_SHIFT
 
+
+##### EVALUATION ON TEST SET
+
+# Retrieve recursively all annotation data and copy locally
+mc ls s3/$NAMESPACE/$PATH_ANNOTATION_RESULTS | awk '{print "s3/'$NAMESPACE'/'$PATH_ANNOTATION_RESULTS'/" $5}' | xargs -I {} mc cp --recursive {} ./$DATA_FILE_PATH_LOCAL
+
+# Transform and save annotation data
+python extract_test_data.py $DATA_FILE_PATH_LOCAL $PATH_ANNOTATION_PREPROCESSED
+
+# Predict with current model to send data to dashboard
+python send_batch_test_data.py $NAMESPACE/$PATH_ANNOTATION_PREPROCESSED $PATH_ANNOTATION_DASHBOARD/current-model $CURRENT_MODEL_API_PATH
+
+# Predict with next/retrained model to send data to dashboard
+python send_batch_test_data.py $NAMESPACE/$PATH_ANNOTATION_PREPROCESSED $PATH_ANNOTATION_DASHBOARD/next-model $NEXT_MODEL_API_PATH

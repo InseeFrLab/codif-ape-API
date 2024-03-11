@@ -1,0 +1,70 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: send-batch-label-studio
+spec:
+  schedule: "*/2 * * * *" # toutes les 2 minutes, si on veut faire toutes les minutes : "* * * * *"
+  concurrencyPolicy: Forbid # ensure only one pod is running at a time
+  jobTemplate:
+    spec:
+      backoffLimit: 0  # Number of retries before considering the Job as failed
+      template:
+        spec:
+          containers:
+          - name: send-batch-label-studio
+            image: inseefrlab/onyxia-python-datascience:py3.10.9
+            imagePullPolicy: IfNotPresent
+            command:
+              - "/bin/sh"
+              - "-c"
+              - |
+                cd /tmp &&
+                wget https://raw.githubusercontent.com/InseeFrLab/codif-ape-annotation/main/instructions.txt &&
+                wget https://raw.githubusercontent.com/InseeFrLab/codif-ape-annotation/main/taxonomy.xml &&
+                wget https://raw.githubusercontent.com/InseeFrLab/codif-ape-annotation/main/var_index_mapping/correspondance_intitule_nature_activite.json &&
+                wget https://raw.githubusercontent.com/InseeFrLab/codif-ape-annotation/main/var_index_mapping/correspondance_intitule_cj.json &&
+                wget https://raw.githubusercontent.com/InseeFrLab/codif-ape-annotation/main/utils/validate_xml.py &&
+                wget https://raw.githubusercontent.com/InseeFrLab/codif-ape-annotation/main/utils/display_last_pk.py &&
+                wget https://raw.githubusercontent.com/InseeFrLab/codif-ape-annotation/main/utils/display_current_target_folder_id.py &&
+                wget https://raw.githubusercontent.com/InseeFrLab/codif-ape-annotation/main/utils/display_last_target_folder_id.py &&
+                wget https://raw.githubusercontent.com/InseeFrLab/codif-ape-annotation/main/utils/get_last_target_folder_id.py &&
+                wget https://raw.githubusercontent.com/InseeFrLab/codif-ape-annotation/main/utils/count_project_id.py &&
+                wget https://raw.githubusercontent.com/InseeFrLab/codif-ape-annotation/main/utils/update_create_project.py &&
+                wget https://raw.githubusercontent.com/InseeFrLab/codif-ape-annotation/main/utils/s3_sync_source.py &&
+                wget https://raw.githubusercontent.com/InseeFrLab/codif-ape-annotation/main/utils/s3_create_target.py &&
+                wget https://raw.githubusercontent.com/InseeFrLab/codif-ape-annotation/main/utils/s3_sync_target.py &&
+                wget https://raw.githubusercontent.com/InseeFrLab/codif-ape-annotation/main/utils/transform_to_json.py &&
+                wget https://raw.githubusercontent.com/InseeFrLab/codif-ape-annotation/main/utils/labeling_pipeline_s3.sh &&
+                chmod +x labeling_pipeline_s3.sh &&
+                export MC_HOST_s3=https://$AWS_ACCESS_KEY_ID:$AWS_SECRET_ACCESS_KEY@$AWS_S3_ENDPOINT &&
+                ./labeling_pipeline_s3.sh 
+                echo "ok" &&
+            volumeMounts:
+            - name: tmp
+              mountPath: "/tmp"
+            envFrom:
+            # from configmap
+            - configMapRef:
+                    name: configmap-label-studio
+            env:
+            # from secrets
+            - name: LABEL_STUDIO_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: secret-label-studio-token
+                  key: token
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: my-s3-creds
+                  key: accessKey
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: my-s3-creds
+                  key: secretKey
+          restartPolicy: Never
+          serviceAccountName: send-batch-label-studio
+          volumes:
+          - name: tmp
+            emptyDir: {}

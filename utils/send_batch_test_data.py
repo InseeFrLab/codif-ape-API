@@ -106,7 +106,7 @@ def save_to_s3(table: pa.Table, bucket: str, path: str):
     )
 
 
-def main(data_file_path: str, dashboard_path:str, api_path:str) : #, date_to_log: str):
+def main(data_file_path: str, dashboard_path: str, api_path: str):  # , date_to_log: str):
     # Define file system
     fs = get_filesystem()
 
@@ -130,7 +130,7 @@ def main(data_file_path: str, dashboard_path:str, api_path:str) : #, date_to_log
     results = query_batch_api(table, api_path, prob_min=0.0)
     table = add_prediction_columns(data, results)
     # Remove 'date=' prefix from the 'date' column to partition again
-    table['date'] = table['date'].str.replace('date=', '')
+    table["date"] = table["date"].str.replace("date=", "")
     arrow_table = pa.Table.from_pandas(table)
     save_to_s3(arrow_table, "projet-ape", f"{dashboard_path}")
 

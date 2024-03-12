@@ -23,7 +23,6 @@ spec:
                 wget https://raw.githubusercontent.com/InseeFrLab/codif-ape-API/main/utils/etl_monitoring.sh &&
                 wget https://raw.githubusercontent.com/InseeFrLab/codif-ape-API/main/utils/extract_test_data.py &&
                 wget https://raw.githubusercontent.com/InseeFrLab/codif-ape-API/main/utils/send_batch_test_data.py &&
-                wget https://raw.githubusercontent.com/InseeFrLab/codif-ape-API/main/utils/etl_test_data_monitoring.sh &&
                 chmod +x etl_monitoring.sh &&
                 ./etl_monitoring.sh
             volumeMounts:

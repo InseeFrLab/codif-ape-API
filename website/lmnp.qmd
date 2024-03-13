@@ -123,7 +123,7 @@ import os
 ```{python}
 
 def query_batch_api(username: str, password: str, data: pd.DataFrame, nb_echos_max:int = 5, prob_min: float = 0.01):
-    base_url = "https://codification-ape.lab.sspcloud.fr/predict-batch"
+    base_url = "https://codification-ape-test.lab.sspcloud.fr/predict-batch"
     params = {
         "nb_echos_max": nb_echos_max,
         "prob_min": prob_min

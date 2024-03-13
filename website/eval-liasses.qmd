@@ -360,7 +360,7 @@ count_errors = valueCounts(
 
 ```{ojs}
 async function queryBatchApi(username, password, data) {
-  const url = "https://codification-ape.lab.sspcloud.fr/evaluation";
+  const url = "https://codification-ape-test.lab.sspcloud.fr/evaluation";
 
   // Create the request body
   const request_body = data.reduce((acc, obj) => {

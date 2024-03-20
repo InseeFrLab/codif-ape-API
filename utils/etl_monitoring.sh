@@ -13,6 +13,7 @@ mc cp -r s3/$LOG_FILE_PATH_S3_IN log_files/raw
 
 # Create an empty directory
 mkdir -p $LOG_FILE_PATH_LOCAL
+mkdir -p $DATA_FILE_PATH_LOCAL
 
 # Move only .gz files to this new directory
 mv -n log_files/raw/*.gz $LOG_FILE_PATH_LOCAL/

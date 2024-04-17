@@ -42,7 +42,7 @@ spec:
             - name: MLFLOW_MODEL_VERSION
               value: "15"
             - name: AUTH_API
-              value: "True"
+              value: "False"
           resources:
             limits:
               memory: "20Gi"

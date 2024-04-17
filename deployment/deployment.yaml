@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: codif-ape-app-dev
-          image: thomasfaria/codification-ape-api:main
+          image: thomasfaria/codification-ape-api:latest
           imagePullPolicy: Always
           env:
             # env var for s3 connexion

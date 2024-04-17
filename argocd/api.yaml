@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: API-Production
+  name: api-production
 spec:
   project: default
   source:

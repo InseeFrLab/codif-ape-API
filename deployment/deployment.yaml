@@ -2,20 +2,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: codification-ape-model-deployment
+  name: codification-ape-model-deployment-dev
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: codification-ape-model-deployment
+      app: codification-ape-model-deployment-dev
   template:
     metadata:
       labels:
-        app: codification-ape-model-deployment
+        app: codification-ape-model-deployment-dev
     spec:
       containers:
-        - name: codif-ape-app
-          image: thomasfaria/codification-ape-api:v0.1.2
+        - name: codif-ape-app-dev
+          image: thomasfaria/codification-ape-api:main
           imagePullPolicy: Always
           env:
             # env var for s3 connexion
@@ -38,9 +38,9 @@ spec:
               value: https://projet-ape-mlflow.user.lab.sspcloud.fr
             # env var for setting models uri which will be deployed
             - name: MLFLOW_MODEL_NAME
-              value: FastText-APE
+              value: test
             - name: MLFLOW_MODEL_VERSION
-              value: Production
+              value: "15"
             - name: AUTH_API
               value: "True"
           resources:

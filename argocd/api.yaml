@@ -1,12 +1,12 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: api
+  name: API-Dev
 spec:
   project: default
   source:
     repoURL: https://github.com/ThomasFaria/codif-ape-API.git
-    targetRevision: HEAD
+    targetRevision: main
     path: deployment
   destination:
     server: https://kubernetes.default.svc

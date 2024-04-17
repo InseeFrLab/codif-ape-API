@@ -8,9 +8,9 @@ metadata:
 spec:
   tls:
     - hosts:
-        - codification-ape.lab-dev.sspcloud.fr
+        - codification-ape-dev.lab.sspcloud.fr
   rules:
-    - host: codification-ape.lab-dev.sspcloud.fr
+    - host: codification-ape-dev.lab.sspcloud.fr
       http:
         paths:
           - path: /

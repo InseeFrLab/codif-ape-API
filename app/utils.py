@@ -128,7 +128,7 @@ def preprocess_query(
         list_ok=list_ok,
     )
 
-    check_format_features([event], "event", r"^\d{2}[PMF]$")
+    check_format_features([event], "event", r"^\d{2}[APMF]$")
 
     type_liasse, nature, surface, event = (
         "NaN" if not isinstance(v, str) else v for v in (type_liasse, nature, surface, event)
@@ -340,7 +340,7 @@ def check_format_features(values: list, feature: str, regex: str, list_ok: list 
         ),
         "event": (
             f"The format of event is incorrect. The event value is an "
-            "integer between 00 and 99 plus the letter P, M or F. Example: "
+            "integer between 00 and 99 plus the letter A, P, M or F. Example: "
             f"'01P'. See line(s): {*matches,}"
         ),
     }

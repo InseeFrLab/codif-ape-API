@@ -216,7 +216,7 @@ def preprocess_batch(query: dict, nb_echos_max: int) -> dict:
         list_ok=list_ok,
     )
 
-    check_format_features(df["event"].to_list(), "event", r"^\d{2}[PMF]$")
+    check_format_features(df["event"].to_list(), "event", r"^\d{2}[APMF]$")
 
     df = df.replace(np.nan, "NaN")
 
@@ -320,6 +320,10 @@ def check_format_features(values: list, feature: str, regex: str, list_ok: list 
 
     matches = []
 
+    # check_format_features(df["event"].to_list(), "event", r"^\d{2}[APMF]$")
+    # values = data.iloc[[158262, 158263, 158264, 163138, 163139]]["event"].to_list()
+    # values = values + ["01P"]
+    # regex = r"^\d{2}[APMF]$"
     for i, value in enumerate(values):
         if isinstance(value, str):
             if not re.match(regex, value):

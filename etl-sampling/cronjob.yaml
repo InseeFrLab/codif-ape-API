@@ -5,6 +5,7 @@ metadata:
 spec:
   timeZone: "Europe/Paris"
   schedule: "50 21 * * 4"
+  concurrencyPolicy: Forbid
   jobTemplate:
     spec:
       template:

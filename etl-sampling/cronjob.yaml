@@ -3,7 +3,8 @@ kind: CronJob
 metadata:
   name: etl-sampling
 spec:
-  schedule: "10 21 * * 4"
+  timeZone: "Europe/Paris"
+  schedule: "20 21 * * 4"
   jobTemplate:
     spec:
       template:

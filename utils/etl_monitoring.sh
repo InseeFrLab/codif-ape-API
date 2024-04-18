@@ -1,5 +1,5 @@
 # Set environment variables
-export MC_HOST_s3=https://$AWS_ACCESS_KEY_ID:$AWS_SECRET_ACCESS_KEY@$AWS_S3_ENDPOINT
+
 
 LOG_FILE_PATH_S3_IN=$NAMESPACE/log_files/raw/
 LOG_FILE_PATH_S3_OUT=$NAMESPACE/log_files/preprocessed/

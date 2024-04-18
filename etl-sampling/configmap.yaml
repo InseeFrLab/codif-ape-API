@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: configmap-etl-sampling
+  namespace: projet-ape
+data:
+  NAMESPACE: projet-ape
+  NUMBER_TO_ANNOTATE: "1701"
+  MONTH_INTERVAL: "1"
+  DATA_SAMPLED_QUEUE_PATH: "s3/projet-ape/label-studio/annotation-campaign-2024/NAF2008/data-samples/queue/"
+  DATA_SAMPLED_ARCHIVE_PATH: "s3/projet-ape/label-studio/annotation-campaign-2024/NAF2008/data-samples/archive/"

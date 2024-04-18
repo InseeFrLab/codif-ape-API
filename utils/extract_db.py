@@ -53,7 +53,7 @@ def sample_data(df_path: str, n_lines: str, time_window_month: str):
     # Sauvegarder le résultat dans un nouveau fichier Parquet
     output_file = f"extrait_random_sirene_last_date_{last_date}.parquet"
     pq.write_table(pa.Table.from_pandas(random_rows), output_file)
-    
+ 
     print(output_file)
 
 

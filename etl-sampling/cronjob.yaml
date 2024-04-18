@@ -3,7 +3,7 @@ kind: CronJob
 metadata:
   name: etl-sampling
 spec:
-  schedule: "50 19 * * 4"
+  schedule: "57 19 * * 4"
   jobTemplate:
     spec:
       template:

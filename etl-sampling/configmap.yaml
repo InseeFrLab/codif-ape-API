@@ -5,6 +5,7 @@ metadata:
   namespace: projet-ape
 data:
   NAMESPACE: projet-ape
+  AWS_S3_ENDPOINT: minio.lab.sspcloud.fr
   NUMBER_TO_ANNOTATE: "1701"
   MONTH_INTERVAL: "1"
   DATA_SAMPLED_QUEUE_PATH: s3/projet-ape/label-studio/annotation-campaign-2024/NAF2008/data-samples/queue/

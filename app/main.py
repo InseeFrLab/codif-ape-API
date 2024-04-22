@@ -241,15 +241,17 @@ async def predict_batch(
     prob_min: float = 0.01,
 ):
     """
-
+    Endpoint for predicting batches of data.
 
     Args:
-
+        credentials (HTTPBasicCredentials): The credentials for authentication.
+        liasses (Liasses): The input data in the form of Liasses object.
+        nb_echos_max (int, optional): The maximum number of predictions to return. Defaults to 5.
+        prob_min (float, optional): The minimum probability threshold for predictions. Defaults to 0.01.
 
     Returns:
-        dict: Response containing APE codes.
+        list: The list of predicted responses.
     """
-
     query = preprocess_batch(training_names, liasses.dict())
 
     if nb_echos_max != 1:
@@ -277,13 +279,14 @@ async def eval_batch(
     liasses: LiassesEvaluation,
 ):
     """
-
+    Evaluate a batch of liasses.
 
     Args:
-
+        credentials (HTTPBasicCredentials): The credentials for authentication.
+        liasses (LiassesEvaluation): The liasses to be evaluated.
 
     Returns:
-        dict: Response containing APE codes.
+        dict: A dictionary containing the evaluation results.
     """
 
     query = preprocess_batch(liasses.dict(), nb_echos_max=2)

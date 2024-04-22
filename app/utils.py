@@ -8,8 +8,6 @@ import pandas as pd
 from fastapi import Depends, HTTPException, Request, status
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 
-security = HTTPBasic()
-
 
 def get_model(model_name: str, model_version: str) -> object:
     """
@@ -41,8 +39,17 @@ def get_model(model_name: str, model_version: str) -> object:
 
 
 async def optional_security(request: Request):
+    """
+    Determines whether to apply optional security measures based on the value of the AUTH_API environment variable.
+
+    Args:
+        request (Request): The incoming request object.
+
+    Returns:
+        Union[HTTPBasic, None]: An instance of the HTTPBasic class if AUTH_API is set to "True", otherwise None.
+    """
     if os.getenv("AUTH_API") == "True":
-        return await security(request)
+        return await HTTPBasic(request)
     else:
         return None
 
@@ -50,13 +57,26 @@ async def optional_security(request: Request):
 def get_current_username(
     credentials: Optional[HTTPBasicCredentials] = Depends(optional_security),
 ):
+    """
+    Retrieves the current username based on the provided credentials.
+
+    Args:
+        credentials (Optional[HTTPBasicCredentials]): The credentials used for authentication.
+
+    Returns:
+        str: The username extracted from the credentials.
+
+    Raises:
+        HTTPException: If authentication fails.
+
+    """
     if os.getenv("AUTH_API") == "True":
         if not (credentials.username == os.getenv("API_USERNAME")) or not (
             credentials.password == os.getenv("API_PASSWORD")
         ):
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Authentification failed",
+                detail="Authentication failed",
                 headers={"WWW-Authenticate": "Basic"},
             )
     return credentials.username

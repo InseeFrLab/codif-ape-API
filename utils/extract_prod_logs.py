@@ -90,7 +90,8 @@ def extract_log_info(f):
         "fasttextVersion": [],
     }
 
-    for line in f:
+    lines = f.readlines()
+    for line in lines:
         idx = line.find("CodificationBilan")
         is_empty = bool(re.match(r"^\s*$", line))
         is_valid_line = bool(re.search(PATTERN, line))
@@ -98,7 +99,14 @@ def extract_log_info(f):
         if (is_empty or not is_valid_line) and idx == -1:
             continue
 
-        data = extract_data_by_line(line)
+        if line == lines[-1]:
+            # Some logs are corrupted so we have to deal with that
+            try:
+                data = extract_data_by_line(line)
+            except AttributeError:
+                print(f"ERROR for {line}")
+        else:
+            data = extract_data_by_line(line)
 
         for key in results.keys():
             results[key].append(data[key])

@@ -1,6 +1,4 @@
 # Set environment variables
-
-
 LOG_FILE_PATH_S3_IN=$NAMESPACE/log_files/raw/
 LOG_FILE_PATH_S3_OUT=$NAMESPACE/log_files/preprocessed/
 
@@ -36,7 +34,6 @@ for file in *.log.*; do
         # Rename the file
         mv "$file" "$new_name"
 
-        echo "Renamed: $file to $new_name"
     fi
 done
 cd ../..

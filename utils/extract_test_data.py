@@ -11,8 +11,8 @@ from tqdm import tqdm
 
 def transform_json_to_dataframe(json_dir: str):
     transformed_data = []
-
-    for filename in tqdm(os.listdir(json_dir)):
+    files_only = [item for item in os.listdir(json_dir) if os.path.isfile(os.path.join(json_dir, item))]
+    for filename in tqdm(files_only):
         with open(os.path.join(json_dir, filename), "r") as file:
             data = json.load(file)
 

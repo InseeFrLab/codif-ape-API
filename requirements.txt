@@ -6,7 +6,7 @@ pyarrow==14.0.2
 pydantic==2.7.2
 python_dateutil==2.9.0.post0
 PyYAML==6.0.1
-Requests==2.32.2
+Requests==2.32.3
 s3fs==2024.5.0
 tqdm==4.66.4
 ruff==0.4.6

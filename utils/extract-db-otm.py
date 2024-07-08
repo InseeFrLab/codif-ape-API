@@ -36,7 +36,14 @@ def sample_data(df_path: str, n_lines: str):
     n = int(n_lines)
 
     # Sélectionner les lignes où categorie_demande est "CG" pour la stratification
-    df_stratify_cg = df[df['categorie_demande'] == 'CG']
+    # Exclure celles dont `apet_finale` commence par `01`, `02`, ou `03`
+    df_stratify_cg = df[(df['categorie_demande'] == 'CG') & (~df['apet_finale'].str.match(r'^(01|02|03)'))]
+    
+    # Récupérer les lignes où categorie_demande est "CG" et apet_finale commence par `01`, `02`, ou `03`
+    df_cg_apet_010203 = df[(df['categorie_demande'] == 'CG') & (df['apet_finale'].str.match(r'^(01|02|03)'))]
+
+    # Ajouter ces lignes à la partie AGRI
+    df.loc[df_cg_apet_010203.index, 'categorie_demande'] = 'AGRI'
 
     # Calculer la taille de chaque strate pour les lignes CG
     total_size_cg = len(df_stratify_cg)

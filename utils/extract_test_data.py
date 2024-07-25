@@ -25,7 +25,9 @@ def transform_json_to_dataframe(json_dir: str):
         liasse_type = data["task"]["data"]["liasse_type"]
         activ_surf_et = str(data["task"]["data"]["activ_surf_et"])
         activ_nat_et = data["task"]["data"]["activ_nat_et"]
+        activ_nat_lib_et = data["task"]["data"]["activ_nat_lib_et"]
         cj = data["task"]["data"]["cj"]
+        activ_perm_et = data["task"]["data"]["activ_perm_et"]
 
         # Extract text description amongst three columns according to the order of preference.
         activ_pr_lib_et = data["task"]["data"].get("activ_pr_lib_et")
@@ -65,7 +67,9 @@ def transform_json_to_dataframe(json_dir: str):
             "liasse_type": liasse_type,
             "activ_surf_et": activ_surf_et,
             "activ_nat_et": activ_nat_et,
+            "activ_nat_lib_et": activ_nat_lib_et,
             "cj": cj,
+            "activ_perm_et": activ_perm_et,
             "date_modification": date_modification,
             "annotation_date": annotation_date,
             "mode_calcul_ape": mode_calcul_ape,
@@ -119,7 +123,9 @@ def main(annotation_results_path: str, annotation_preprocessed_path: str):
                 "liasse_type",
                 "activ_surf_et",
                 "activ_nat_et",
+                "activ_nat_lib_et",
                 "cj",
+                "activ_perm_et",
                 "date",
                 "mode_calcul_ape",
                 "apet_manual",
@@ -130,8 +136,10 @@ def main(annotation_results_path: str, annotation_preprocessed_path: str):
                 "libelle": "text_description",
                 "liasse_type": "type_",
                 "activ_nat_et": "nature",
+                "activ_nat_lib_et": "other_nature_text",
                 "activ_surf_et": "surface",
                 "evenement_type": "event",
+                "activ_perm_et": "permanence",
             }
         )
         .reset_index(drop=True)

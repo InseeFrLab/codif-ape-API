@@ -1,5 +1,6 @@
 import os
 import sys
+import subprocess
 
 import json
 import pandas as pd
@@ -33,6 +34,14 @@ def transform_json_to_dataframe(json_dir: str):
         activ_nat_lib_et = data["task"]["data"]["activ_nat_lib_et"]
         activ_sec_agri_et = data["task"]["data"]["activ_sec_agri_et"]
         cj = data["task"]["data"]["cj"]
+
+        try:
+            # Attempt to access the "choices" key
+            choices = data["result"][0]["value"]["choices"]
+        except KeyError:
+            # Print the directory when KeyError occurs
+            print(f"KeyError occurred. Directory: {json_dir}")
+            subprocess.run(["echo", json_dir])
 
         # Number of skips
         skips = int(data["was_cancelled"])

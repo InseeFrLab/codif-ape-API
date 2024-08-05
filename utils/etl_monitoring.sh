@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Set environment variables
 NAMESPACE='projet-ape'
 LOG_FILE_PATH_S3_IN=$NAMESPACE/log_files/raw/
@@ -62,7 +64,7 @@ python extract_test_data.py $DATA_FILE_PATH_LOCAL $PATH_ANNOTATION_PREPROCESSED
 
 # Transform and save labeled training data in NACE rev 2.1
 # List of CATEGORY values
-categories=("AGRI" "CG" "PSA" "SOCET")
+categories="AGRI CG PSA SOCET"
 # Loop through each CATEGORY value
 for CATEGORY in "${categories[@]}"; do
     echo "Processing for CATEGORY: $CATEGORY"

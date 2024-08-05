@@ -45,10 +45,6 @@ def transform_json_to_dataframe(json_dir: str):
                 # Retrieve comment
                 if "text" in result["value"]:
                     commentary = result["value"]["text"][0]
-                # Check if apet is in comment and fill empty apet (due to LS bug)
-                if is_naf_code(commentary):
-                    print("Potential LS bug --> NAF code in comment: " + commentary)
-                    apet_manual = commentary
                 # Retrieve choice result
                 if "choices" in result["value"]:
                     choices = result["value"]["choices"]
@@ -63,6 +59,10 @@ def transform_json_to_dataframe(json_dir: str):
                 # Retrieve rating result
                 if "rating" in result["value"]:
                     rating = result["value"]["rating"]
+                # Check if apet is in comment and fill empty apet (due to LS bug)
+                if apet_manual == "" and is_naf_code(commentary):
+                    print("Potential LS bug --> NAF code in comment: " + commentary)
+                    apet_manual = commentary
 
         # Créer un dictionnaire pour les données transformées
         transformed_row = {
@@ -117,7 +117,9 @@ def save_to_s3(table: list[pa.Table], bucket: str, path: str, category: str):
         key=os.getenv("AWS_ACCESS_KEY_ID"),
         secret=os.getenv("AWS_SECRET_ACCESS_KEY"),
     )
-    pq.write_table(table, f"s3://{bucket}/{path}/training_data_{category}_NAF2025.parquet/", filesystem=fs)
+    pq.write_table(table[0], f"s3://{bucket}/{path}/training_data_{category}_NAF2025.parquet/", filesystem=fs)
+    pq.write_table(table[1], f"s3://{bucket}/{path}/skipped_data_{category}_NAF2025.parquet/", filesystem=fs)
+    pq.write_table(table[2], f"s3://{bucket}/{path}/unclassifiable_data_{category}_NAF2025.parquet/", filesystem=fs)
 
 
 def main(annotation_results_path: str, annotation_preprocessed_path: str, category: str):

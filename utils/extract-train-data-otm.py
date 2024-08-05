@@ -40,8 +40,8 @@ def transform_json_to_dataframe(json_dir: str):
             choices = data["result"][0]["value"]["choices"]
         except KeyError:
             # Print the directory when KeyError occurs
-            print(f"KeyError occurred. Directory: {json_dir}")
-            subprocess.run(["echo", json_dir])
+            print(f"KeyError occurred. File: {filename}")
+            subprocess.run(["echo", filename])
 
         # Number of skips
         skips = int(data["was_cancelled"])

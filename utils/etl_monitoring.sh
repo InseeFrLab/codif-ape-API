@@ -1,4 +1,5 @@
 # Set environment variables
+NAMESPACE='projet-ape'
 LOG_FILE_PATH_S3_IN=$NAMESPACE/log_files/raw/
 LOG_FILE_PATH_S3_OUT=$NAMESPACE/log_files/preprocessed/
 
@@ -58,14 +59,18 @@ mc ls s3/$NAMESPACE/$PATH_ANNOTATION_RESULTS | awk '{print "s3/'$NAMESPACE'/'$PA
 
 # Transform and save labeled test data in NACE rev 2
 python extract_test_data.py $DATA_FILE_PATH_LOCAL $PATH_ANNOTATION_PREPROCESSED
+
 # Transform and save labeled training data in NACE rev 2.1
 # List of CATEGORY values
 categories=("AGRI" "CG" "PSA" "SOCET")
-
 # Loop through each CATEGORY value
 for CATEGORY in "${categories[@]}"; do
     echo "Processing for CATEGORY: $CATEGORY"
+    PATH_ANNOTATION_RESULTS='label-studio/annotation-campaign-2024/rev-NAF2025/'$CATEGORY'/data-annotated/completed'
     PATH_ANNOTATION_PREPROCESSED='label-studio/annotation-campaign-2024/rev-NAF2025/'$CATEGORY'/preprocessed'
+    # Retrieve recursively all annotation data and copy locally
+    mc ls s3/$NAMESPACE/$PATH_ANNOTATION_RESULTS | awk '{print "s3/'$NAMESPACE'/'$PATH_ANNOTATION_RESULTS'/" $5}' | xargs -I {} mc cp --recursive {} ./$DATA_FILE_PATH_LOCAL
+    # Transform and save annotation data
     python extract-train-data-otm.py "$DATA_FILE_PATH_LOCAL" "$PATH_ANNOTATION_PREPROCESSED" $CATEGORY
 done
 

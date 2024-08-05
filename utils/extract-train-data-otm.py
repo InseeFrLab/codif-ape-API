@@ -162,4 +162,4 @@ if __name__ == "__main__":
     annotation_preprocessed_path = str(sys.argv[2])
     category = str(sys.argv[3])
 
-    main(annotation_results_path, annotation_preprocessed_path)
+    main(annotation_results_path, annotation_preprocessed_path, category)

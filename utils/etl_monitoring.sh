@@ -66,14 +66,16 @@ python extract_test_data.py $DATA_FILE_PATH_LOCAL $PATH_ANNOTATION_PREPROCESSED
 # List of CATEGORY values
 categories="AGRI CG PSA SOCET"
 # Loop through each CATEGORY value
-for CATEGORY in "${categories[@]}"; do
+for CATEGORY in $categories; do
     echo "Processing for CATEGORY: $CATEGORY"
-    PATH_ANNOTATION_RESULTS='label-studio/annotation-campaign-2024/rev-NAF2025/'$CATEGORY'/data-annotated/completed'
-    PATH_ANNOTATION_PREPROCESSED='label-studio/annotation-campaign-2024/rev-NAF2025/'$CATEGORY'/preprocessed'
+    PATH_ANNOTATION_RESULTS_NAF2025='label-studio/annotation-campaign-2024/rev-NAF2025/'$CATEGORY'/data-annotated/completed'
+    PATH_ANNOTATION_PREPROCESSED_NAF2025='label-studio/annotation-campaign-2024/rev-NAF2025/'$CATEGORY'/preprocessed'
+    # Create an empty directory
+    mkdir -p $DATA_FILE_PATH_LOCAL_$CATEGORY
     # Retrieve recursively all annotation data and copy locally
-    mc ls s3/$NAMESPACE/$PATH_ANNOTATION_RESULTS | awk '{print "s3/'$NAMESPACE'/'$PATH_ANNOTATION_RESULTS'/" $5}' | xargs -I {} mc cp --recursive {} ./$DATA_FILE_PATH_LOCAL
+    mc ls s3/$NAMESPACE/$PATH_ANNOTATION_RESULTS_NAF2025 | awk '{print "s3/'$NAMESPACE'/'$PATH_ANNOTATION_RESULTS_NAF2025'/" $5}' | xargs -I {} mc cp --recursive {} ./$DATA_FILE_PATH_LOCAL_$CATEGORY
     # Transform and save annotation data
-    python extract-train-data-otm.py "$DATA_FILE_PATH_LOCAL" "$PATH_ANNOTATION_PREPROCESSED" $CATEGORY
+    python extract-train-data-otm.py "$DATA_FILE_PATH_LOCAL_$CATEGORY" "$PATH_ANNOTATION_PREPROCESSED_NAF2025" $CATEGORY
 done
 
 # Predict with current model to send data to dashboard

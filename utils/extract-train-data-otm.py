@@ -1,6 +1,5 @@
 import os
 import sys
-import subprocess
 
 import json
 import pandas as pd
@@ -35,14 +34,6 @@ def transform_json_to_dataframe(json_dir: str):
         activ_sec_agri_et = data["task"]["data"]["activ_sec_agri_et"]
         cj = data["task"]["data"]["cj"]
 
-        try:
-            # Attempt to access the "choices" key
-            choices = data["result"][0]["value"]["choices"]
-        except KeyError:
-            # Print the directory when KeyError occurs
-            print(f"KeyError occurred. File: {filename}")
-            subprocess.run(["echo", filename])
-
         # Number of skips
         skips = int(data["was_cancelled"])
         # Get annotated data without skips and adjust from UI's bugs
@@ -50,28 +41,29 @@ def transform_json_to_dataframe(json_dir: str):
             apet_manual = ""
             commentary = ""
             rating = 0
-            # Retrieve comment
-            if "text" in data["result"][0]["value"]:
-                commentary = data["result"][0]["value"]["text"][0]
-            # Retrieve choice result
-            if len(data["result"]) > 1:
-                if "choices" in data["result"][1]["value"]:
-                    if "Oui" in data["result"][0]["value"]["choices"]:
-                        if is_naf_code(data["result"][1]["value"]["choices"][0]):
-                            apet_manual = data["result"][1]["value"]["choices"][0]
+            for result in data["result"]:
+                # Retrieve comment
+                if "text" in result["value"]:
+                    commentary = result["value"]["text"][0]
+                # Check if apet is in comment and fill empty apet (due to LS bug)
+                if is_naf_code(commentary):
+                    print("Potential LS bug --> NAF code in comment: " + commentary)
+                    apet_manual = commentary
+                # Retrieve choice result
+                if "choices" in result["value"]:
+                    choices = result["value"]["choices"]
+                    if "Oui" in choices:
+                        if is_naf_code(choices[0]):
+                            apet_manual = choices[0]
                 # Retrieve taxonomy result
-                else:
-                    if "taxonomy" in data["result"][1]["value"]:
-                        taxonomy_values = data["result"][1]["value"]["taxonomy"][0][-1]
-                        apet_manual = taxonomy_values.replace(".", "")  # delete . in apet_manual
-                    # Check if apet is in comment and fill empty apet (due to LS bug)
-                    if is_naf_code(commentary):
-                        print("Potential LS bug --> NAF code in comment: " + commentary)
-                        apet_manual = commentary
+                if "taxonomy" in result["value"]:
+                    taxonomy_values = result["value"]["taxonomy"][0][-1]
+                    apet_manual = taxonomy_values.replace(".", "")  # delete . in apet_manual
+                    apet_manual = apet_manual[:4]
                 # Retrieve rating result
-                if len(data["result"]) > 2:
-                    if "rating" in data["result"][2]["value"]:
-                        rating = data["result"][2]["value"]["rating"]
+                if "rating" in result["value"]:
+                    rating = result["value"]["rating"]
+
         # Créer un dictionnaire pour les données transformées
         transformed_row = {
             "liasse_numero": liasse_numero,
@@ -98,21 +90,28 @@ def transform_json_to_dataframe(json_dir: str):
     # Convert to Dataframe
     results = pd.DataFrame(transformed_data)
 
+    # Filter skipped results
+    skipped_results = results[results["skips"] != 0]
+    # Filter unclassifiable results
+    unclassifiable_results = results[results["apet_manual"] == "Inclassable"]
+
     # Count skipped and unclassifiable
-    print("Number of skips: " + str(len(results[results["skips"] != 0])))
-    print("Rate of skips: " + str(len(results[results["skips"] != 0])/len(results)))
-    print("Number of unclassifiable: " + str(len(results[results["apet_manual"] == "XXXXX"])))
-    print("Rate of unclassifiable: " + str(len(results[results["apet_manual"] == "XXXXX"])/len(results)))
+    print("Number of skips: " + str(len(skipped_results)))
+    print("Rate of skips: " + str(len(skipped_results)/len(results)))
+    print("Number of unclassifiable: " + str(len(unclassifiable_results)))
+    print("Rate of unclassifiable: " + str(len(unclassifiable_results)/len(results)))
 
     # Keep only unskipped and classifiable annotations
     results = results[results["skips"] == 0]
     results = results[results["apet_manual"] != "XXXXX"]
+    results = results[results["apet_manual"] != ""]
+    results = results[results["apet_manual"] != "Inclassable"]
     print("Number of lines: " + str(len(results)))
 
-    return results
+    return results, skipped_results, unclassifiable_results
 
 
-def save_to_s3(table: pa.Table, bucket: str, path: str, category: str):
+def save_to_s3(table: list[pa.Table], bucket: str, path: str, category: str):
     fs = s3fs.S3FileSystem(
         client_kwargs={"endpoint_url": "https://" + "minio.lab.sspcloud.fr"},
         key=os.getenv("AWS_ACCESS_KEY_ID"),
@@ -123,10 +122,12 @@ def save_to_s3(table: pa.Table, bucket: str, path: str, category: str):
 
 def main(annotation_results_path: str, annotation_preprocessed_path: str, category: str):
     # Upload log file from API pod and filter by date
-    data = transform_json_to_dataframe(annotation_results_path)
+    data, skipped_data, unclassifiable_data = transform_json_to_dataframe(annotation_results_path)
 
     # Add date column for partitionning
     data["date"] = pd.to_datetime(data["date_modification"]).dt.strftime("%Y-%m-%d")
+    skipped_data["date"] = pd.to_datetime(skipped_data["date_modification"]).dt.strftime("%Y-%m-%d")
+    unclassifiable_data["date"] = pd.to_datetime(unclassifiable_data["date_modification"]).dt.strftime("%Y-%m-%d")
 
     data = (
         data[
@@ -146,24 +147,27 @@ def main(annotation_results_path: str, annotation_preprocessed_path: str, catego
                 "rating"
             ]
         ]
-        .rename(
-            columns={
-                "libelle": "text_description",
-                "liasse_type": "type_",
-                "activ_nat_et": "nature",
-                "activ_surf_et": "surface",
-                "evenement_type": "event",
-            }
-        )
         .reset_index(drop=True)
+        #.rename(
+        #    columns={
+        #        "libelle": "text_description",
+        #        "liasse_type": "type_",
+        #        "activ_nat_et": "nature",
+        #        "activ_surf_et": "surface",
+        #        "evenement_type": "event",
+        #    }
+        #)
+        #.reset_index(drop=True)
     )
 
     # data['surface'] = data['surface'].astype(bytes)
     # Translate pd.DataFrame into pa.Table
     arrow_table = pa.Table.from_pandas(data)
+    arrow_skipped_table = pa.Table.from_pandas(skipped_data)
+    arrow_unclassifiable_table = pa.Table.from_pandas(unclassifiable_data)
 
     # Save logs in a partionned parquet file in s3
-    save_to_s3(arrow_table, "projet-ape", f"/{annotation_preprocessed_path}/", category)
+    save_to_s3([arrow_table, arrow_skipped_table, arrow_unclassifiable_table], "projet-ape", f"/{annotation_preprocessed_path}/", category)
 
 
 if __name__ == "__main__":

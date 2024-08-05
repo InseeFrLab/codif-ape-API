@@ -93,7 +93,7 @@ def transform_json_to_dataframe(json_dir: str):
     # Filter skipped results
     skipped_results = results[results["skips"] != 0]
     # Filter unclassifiable results
-    unclassifiable_results = results[results["apet_manual"] == "Inclassable"]
+    unclassifiable_results = results[(results["apet_manual"] == "Inclassable") | (results["apet_manual"] == "XXXXX")]
 
     # Count skipped and unclassifiable
     print("Number of skips: " + str(len(skipped_results)))

@@ -80,7 +80,7 @@ for CATEGORY in $categories; do
     python extract-train-data-otm.py "$DATA_FILE_PATH_LOCAL_$CATEGORY" "$PATH_ANNOTATION_PREPROCESSED_NAF2025" $CATEGORY
 done
 # Collect final labeled training set gathered from each category
-python collect-train-data-otm.py 'label-studio/annotation-campaign-2024/rev-NAF2025/'
+python collect-train-data-otm.py 'label-studio/annotation-campaign-2024/rev-NAF2025'
 
 # Predict with current model to send data to dashboard
 python send_batch_test_data.py $NAMESPACE/$PATH_ANNOTATION_PREPROCESSED $PATH_ANNOTATION_DASHBOARD/current-model $CURRENT_MODEL_API_PATH

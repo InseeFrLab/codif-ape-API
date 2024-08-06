@@ -44,10 +44,10 @@ def gather_data_from_categories(bucket: str, prefix: str):
     # Save all the collected training set back to S3
     combined_training_df.to_parquet(f"s3://{bucket}/{prefix}/preprocessed/training_data_NAF2025.parquet", filesystem=fs)
     combined_skipped_df.to_parquet(f"s3://{bucket}/{prefix}/preprocessed/skipped_data_NAF2025.parquet", filesystem=fs)
-    combined_unclassifiable_df.to_parquet(f"s3://{bucket}/preprocessed/{prefix}/unclassifiable_data_NAF2025.parquet", filesystem=fs)
+    combined_unclassifiable_df.to_parquet(f"s3://{bucket}/{prefix}/preprocessed/unclassifiable_data_NAF2025.parquet", filesystem=fs)
 
 
 if __name__ == "__main__":
     annotation_extraction_prefix = str(sys.argv[1])
-    
+   
     gather_data_from_categories("projet-ape", annotation_extraction_prefix)

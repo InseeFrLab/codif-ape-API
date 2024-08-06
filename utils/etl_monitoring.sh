@@ -70,7 +70,7 @@ categories="AGRI CG PSA SOCET"
 # Loop through each CATEGORY value
 for CATEGORY in $categories; do
     echo "Processing for CATEGORY: $CATEGORY"
-    PATH_ANNOTATION_RESULTS_NAF2025='label-studio/annotation-campaign-2024/rev-NAF2025/'$CATEGORY'/data-annotated/completed'
+    PATH_ANNOTATION_RESULTS_NAF2025='label-studio/annotation-campaign-2024/rev-NAF2025/'$CATEGORY'/data-annotated/in-progress'
     PATH_ANNOTATION_PREPROCESSED_NAF2025='label-studio/annotation-campaign-2024/rev-NAF2025/'$CATEGORY'/preprocessed'
     # Create an empty directory
     mkdir -p $DATA_FILE_PATH_LOCAL_$CATEGORY

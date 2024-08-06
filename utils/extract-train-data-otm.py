@@ -89,7 +89,7 @@ def transform_json_to_dataframe(json_dir: str):
 
     # Convert to Dataframe
     results = pd.DataFrame(transformed_data)
-
+    print("Number of lines: " + str(len(results)))
     # Filter skipped results
     skipped_results = results[results["skips"] != 0]
     # Filter unclassifiable results
@@ -103,9 +103,7 @@ def transform_json_to_dataframe(json_dir: str):
 
     # Keep only unskipped and classifiable annotations
     results = results[results["skips"] == 0]
-    results = results[results["apet_manual"] != "XXXXX"]
-    results = results[results["apet_manual"] != ""]
-    results = results[results["apet_manual"] != "Inclassable"]
+    results = results[~(results["apet_manual"].str.match(r'^(I|X)'))]
     print("Number of lines: " + str(len(results)))
 
     return results, skipped_results, unclassifiable_results

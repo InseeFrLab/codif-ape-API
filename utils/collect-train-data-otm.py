@@ -2,6 +2,7 @@ import os
 import sys
 
 import pandas as pd
+import pyarrow.parquet as pq
 import s3fs
 
 
@@ -21,20 +22,21 @@ def gather_data_from_categories(bucket: str, prefix: str):
 
     # Iterate over the prefixes and load Parquet files
     for speciality in specialities:
-        training_file_path = f"s3://{bucket}/{prefix}/{speciality}/preprocessed/training_data_{speciality}_NAF2025.parquet/"
+        training_file_path = f's3://{bucket}/{prefix}/{speciality}/preprocessed/training_data_{speciality}_NAF2025.parquet'
         print(f"Loading {training_file_path}")
-        skipped_file_path = f"s3://{bucket}/{prefix}/{speciality}/preprocessed/skipped_data_{speciality}_NAF2025.parquet/"
+        skipped_file_path = f's3://{bucket}/{prefix}/{speciality}/preprocessed/skipped_data_{speciality}_NAF2025.parquet'
         print(f"Loading {skipped_file_path}")
-        unclassifiable_file_path = f"s3://{bucket}/{prefix}/{speciality}/preprocessed/unclassifiable_data_{speciality}_NAF2025.parquet/"
+        unclassifiable_file_path = f's3://{bucket}/{prefix}/{speciality}/preprocessed/unclassifiable_data_{speciality}_NAF2025.parquet'
         print(f"Loading {unclassifiable_file_path}")
 
         training_df = pd.read_parquet(training_file_path, filesystem=fs)
+        print(training_df)
         skipped_df = pd.read_parquet(skipped_file_path, filesystem=fs)
         unclassifiable_df = pd.read_parquet(unclassifiable_file_path, filesystem=fs)
 
-        training_dataframes = training_dataframes.append(training_df)
-        skipped_dataframes = skipped_dataframes.append(skipped_df)
-        unclassifiable_dataframes = unclassifiable_dataframes.append(unclassifiable_df)
+        training_dataframes = training_dataframes.append(training_df) if training_df is not None else training_dataframes
+        skipped_dataframes = skipped_dataframes.append(skipped_df) if skipped_df is not None else skipped_dataframes
+        unclassifiable_dataframes = unclassifiable_dataframes.append(unclassifiable_df) if unclassifiable_df is not None else unclassifiable_dataframes
 
     # Concatenate all DataFrames
     combined_training_df = pd.concat(training_dataframes, ignore_index=True)
@@ -48,6 +50,7 @@ def gather_data_from_categories(bucket: str, prefix: str):
 
 
 if __name__ == "__main__":
-    annotation_extraction_prefix = str(sys.argv[1])
-   
+    annotation_extraction_prefix = 'label-studio/annotation-campaign-2024/rev-NAF2025' # str(sys.argv[1])
+
+
     gather_data_from_categories("projet-ape", annotation_extraction_prefix)

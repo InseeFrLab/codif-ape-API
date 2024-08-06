@@ -55,7 +55,7 @@ def transform_json_to_dataframe(json_dir: str):
                 if "taxonomy" in result["value"]:
                     taxonomy_values = result["value"]["taxonomy"][0][-1]
                     apet_manual = taxonomy_values.replace(".", "")  # delete . in apet_manual
-                    apet_manual = apet_manual[:4]
+                    apet_manual = apet_manual[:5]
                 # Retrieve rating result
                 if "rating" in result["value"]:
                     rating = result["value"]["rating"]
@@ -93,7 +93,7 @@ def transform_json_to_dataframe(json_dir: str):
     # Filter skipped results
     skipped_results = results[results["skips"] != 0]
     # Filter unclassifiable results
-    unclassifiable_results = results[(results["apet_manual"] == "Inclassable") | (results["apet_manual"] == "XXXXX")]
+    unclassifiable_results = results[(results["apet_manual"].str.match(r'^(I|X)'))]
 
     # Count skipped and unclassifiable
     print("Number of skips: " + str(len(skipped_results)))

@@ -48,7 +48,7 @@ def transform_json_to_dataframe(json_dir: str):
                 # Retrieve choice result
                 if "choices" in result["value"]:
                     choices = result["value"]["choices"]
-                    if "Oui" in choices: #order
+                    if "Oui" in choices: # order
                         NAF2025_OK = 1
             # Then map dict data
             for result in data["result"]:
@@ -113,6 +113,7 @@ def transform_json_to_dataframe(json_dir: str):
     # Keep only unskipped and classifiable annotations
     results = results[results["skips"] == 0]
     results = results[~(results["apet_manual"].str.match(r'^(I|X)'))]
+    results = results[results["apet_manual"] != ""]
     print("Number of lines: " + str(len(results)))
 
     return results, skipped_results, unclassifiable_results

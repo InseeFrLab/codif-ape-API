@@ -89,7 +89,7 @@ def transform_json_to_dataframe(json_dir: str):
     print("Rate of skips: " + str(len(results[results["skips"] != 0])/len(results)))
     print("Number of unclassifiable: " + str(len(results[results["apet_manual"] == "XXXXX"])))
     print("Rate of unclassifiable: " + str(len(results[results["apet_manual"] == "XXXXX"])/len(results)))
-    
+
     # Keep only unskipped and classifiable annotations
     results = results[results["skips"] == 0]
     results = results[results["apet_manual"] != "XXXXX"]

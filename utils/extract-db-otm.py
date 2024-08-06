@@ -40,11 +40,11 @@ def sample_data(df_path: str, n_lines: str):
     df['libelle_normalized'] = df['libelle'].str.lower()
     df_s3['libelle_normalized'] = df_s3['libelle'].str.lower()
 
-    print("Number of lines before selection" + str(len(df)))
+    print("Number of lines before selection (full dataset): " + str(len(df)))
     # Economie de labellisation: ne pas reprendre les libellés déjà annotés sur les cas non agricoles
-    df = df[(~df['libelle_normalized'].apply(lambda x: df_s3['libelle_normalized'].str.contains(x).any())) & (~df['apet_finale'].str.match(r'^(01|02|03)'))]
+    df = df[(~df['libelle_normalized'].apply(lambda x: df_s3['libelle_normalized'].str.contains(x, regex=False).any())) & (~df['apet_finale'].str.match(r'^(01|02|03)'))]
     df = df.drop(columns=['libelle_normalized'])
-    print("Number of lines after selection" + str(len(df)))
+    print("Number of lines after selection (remove already done): " + str(len(df)))
 
     # Convertir la colonne de dates en format datetime si ce n'est pas déjà fait
     df["date_modification_dt"] = pd.to_datetime(df["date_modification"])
@@ -53,11 +53,10 @@ def sample_data(df_path: str, n_lines: str):
 
     # Sélectionner les lignes où categorie_demande est "CG" pour la stratification
     # Exclure celles dont `apet_finale` commence par `01`, `02`, ou `03`
-    df_stratify_cg = df[(df['categorie_demande'] == 'CG') & (~df['apet_finale'].str.match(r'^(01|02|03)'))]
+    df_stratify_cg = df[(df['categorie_demande'] == 'CG') & (~df['apet_finale'].str.match(r'^(1|2|3)'))]
 
     # Récupérer les lignes où categorie_demande n'est pas "AGRI" et apet_finale commence par `01`, `02`, ou `03`
-    df_cg_apet_010203 = df[(df['categorie_demande'] != 'AGRI') & (df['apet_finale'].str.match(r'^(01|02|03)'))]
-
+    df_cg_apet_010203 = df[(df['categorie_demande'] != 'AGRI') & (df['apet_finale'].str.match(r'^(1|2|3)'))]
     # Ajouter ces lignes à la partie AGRI
     df.loc[df_cg_apet_010203.index, 'categorie_demande'] = 'AGRI'
 
@@ -76,7 +75,7 @@ def sample_data(df_path: str, n_lines: str):
 
     # Ajuster l'échantillon pour qu'il soit exactement de taille n
     if len(stratified_sample_df_cg) > n:
-        stratified_sample_df = stratified_sample_df_cg .sample(n, random_state=42)
+        stratified_sample_df = stratified_sample_df_cg.sample(n, random_state=42)
     elif len(stratified_sample_df_cg) < n:
         additional_sample = df.drop(stratified_sample_df_cg.index).sample(n - len(stratified_sample_df_cg), random_state=42)
         stratified_sample_df_cg  = pd.concat([stratified_sample_df_cg , additional_sample])
@@ -86,8 +85,7 @@ def sample_data(df_path: str, n_lines: str):
 
     # Concaténer les lignes avec l'échantillon stratifié pour les lignes CG
     stratified_sample_df = pd.concat([stratified_sample_df_cg, df_concatenate])
-
-    print(len(stratified_sample_df))
+    print(len(stratified_sample_df_cg))
 
     # Récupérer la dernière date disponible dans la table
     last_date = df['date_modification_dt'].max().strftime("%Y%m%d")

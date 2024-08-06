@@ -3,7 +3,9 @@ import sys
 
 import pandas as pd
 import pyarrow.parquet as pq
+from tqdm import tqdm
 import s3fs
+
 
 
 def gather_data_from_categories(bucket: str, prefix: str):
@@ -12,7 +14,7 @@ def gather_data_from_categories(bucket: str, prefix: str):
 
     # Initialize an empty list to hold DataFrames
     training_dataframes, skipped_dataframes, unclassifiable_dataframes = [], [], []
-
+    print(training_dataframes)
     # Create an S3 filesystem object
     fs = s3fs.S3FileSystem(
         client_kwargs={"endpoint_url": "https://" + "minio.lab.sspcloud.fr"},
@@ -21,7 +23,7 @@ def gather_data_from_categories(bucket: str, prefix: str):
     )
 
     # Iterate over the prefixes and load Parquet files
-    for speciality in specialities:
+    for speciality in tqdm(specialities):
         training_file_path = f's3://{bucket}/{prefix}/{speciality}/preprocessed/training_data_{speciality}_NAF2025.parquet'
         print(f"Loading {training_file_path}")
         skipped_file_path = f's3://{bucket}/{prefix}/{speciality}/preprocessed/skipped_data_{speciality}_NAF2025.parquet'
@@ -29,14 +31,17 @@ def gather_data_from_categories(bucket: str, prefix: str):
         unclassifiable_file_path = f's3://{bucket}/{prefix}/{speciality}/preprocessed/unclassifiable_data_{speciality}_NAF2025.parquet'
         print(f"Loading {unclassifiable_file_path}")
 
-        training_df = pd.read_parquet(training_file_path, filesystem=fs)
-        print(training_df)
-        skipped_df = pd.read_parquet(skipped_file_path, filesystem=fs)
-        unclassifiable_df = pd.read_parquet(unclassifiable_file_path, filesystem=fs)
+        try:
+            training_df = pd.read_parquet(training_file_path, filesystem=fs)
+            skipped_df = pd.read_parquet(skipped_file_path, filesystem=fs)
+            unclassifiable_df = pd.read_parquet(unclassifiable_file_path, filesystem=fs)
+        except FileNotFoundError as e:
+            # Handle the case where the file does not exist for now
+            print(f"{e}: The file does not exist yet.")
 
-        training_dataframes = training_dataframes.append(training_df) if training_df is not None else training_dataframes
-        skipped_dataframes = skipped_dataframes.append(skipped_df) if skipped_df is not None else skipped_dataframes
-        unclassifiable_dataframes = unclassifiable_dataframes.append(unclassifiable_df) if unclassifiable_df is not None else unclassifiable_dataframes
+        training_dataframes.append(training_df)
+        skipped_dataframes.append(skipped_df)
+        unclassifiable_dataframes.append(unclassifiable_df)
 
     # Concatenate all DataFrames
     combined_training_df = pd.concat(training_dataframes, ignore_index=True)

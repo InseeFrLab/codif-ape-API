@@ -20,7 +20,12 @@ def get_filesystem():
 
 def sample_data(df_path: str, n_lines: str):
     fs = get_filesystem()
-    # Charger le DataFrame depuis le fichier Parquet
+
+    # Importer l'échantillon d'entraînement annoté
+
+    df_s3 = pd.read_parquet("s3://projet-ape/label-studio/annotation-campaign-2024/rev-NAF2025/preprocessed/training_data_NAF2025.parquet/", filesystem=fs)
+
+    # Charger le DataFrame de la base depuis le fichier Parquet
     df = (
         ds.dataset(
             f"{df_path}",
@@ -30,6 +35,17 @@ def sample_data(df_path: str, n_lines: str):
         .to_table()
         .to_pandas()
     )
+
+    # Normaliser les colonnes 'libelle' des deux DataFrames (par exemple, en minuscules)
+    df['libelle_normalized'] = df['libelle'].str.lower()
+    df_s3['libelle_normalized'] = df_s3['libelle'].str.lower()
+
+    print("Number of lines before selection" + str(len(df)))
+    # Economie de labellisation: ne pas reprendre les libellés déjà annotés sur les cas non agricoles
+    df = df[(~df['libelle_normalized'].apply(lambda x: df_s3['libelle_normalized'].str.contains(x).any())) & (~df['apet_finale'].str.match(r'^(01|02|03)'))]
+    df = df.drop(columns=['libelle_normalized'])
+    print("Number of lines after selection" + str(len(df)))
+
     # Convertir la colonne de dates en format datetime si ce n'est pas déjà fait
     df["date_modification_dt"] = pd.to_datetime(df["date_modification"])
     # Calculer la taille de l'échantillon pour chaque strate
@@ -38,7 +54,7 @@ def sample_data(df_path: str, n_lines: str):
     # Sélectionner les lignes où categorie_demande est "CG" pour la stratification
     # Exclure celles dont `apet_finale` commence par `01`, `02`, ou `03`
     df_stratify_cg = df[(df['categorie_demande'] == 'CG') & (~df['apet_finale'].str.match(r'^(01|02|03)'))]
-    
+
     # Récupérer les lignes où categorie_demande n'est pas "AGRI" et apet_finale commence par `01`, `02`, ou `03`
     df_cg_apet_010203 = df[(df['categorie_demande'] != 'AGRI') & (df['apet_finale'].str.match(r'^(01|02|03)'))]
 

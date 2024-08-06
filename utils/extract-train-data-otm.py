@@ -41,6 +41,16 @@ def transform_json_to_dataframe(json_dir: str):
             apet_manual = ""
             commentary = ""
             rating = 0
+            # indicator to check if NAF 2025 is selected as choice
+            NAF2025_OK = 0
+            # Check first if NAF2025 is ok in whole dict
+            for result in data["result"]:
+                # Retrieve choice result
+                if "choices" in result["value"]:
+                    choices = result["value"]["choices"]
+                    if "Oui" in choices: #order
+                        NAF2025_OK = 1
+            # Then map dict data
             for result in data["result"]:
                 # Retrieve comment
                 if "text" in result["value"]:
@@ -48,11 +58,10 @@ def transform_json_to_dataframe(json_dir: str):
                 # Retrieve choice result
                 if "choices" in result["value"]:
                     choices = result["value"]["choices"]
-                    if "Oui" in choices:
-                        if is_naf_code(choices[0]):
-                            apet_manual = choices[0]
+                    if (NAF2025_OK == 1) and is_naf_code(choices[0]):
+                        apet_manual = choices[0]
                 # Retrieve taxonomy result
-                if "taxonomy" in result["value"]:
+                if "taxonomy" in result["value"] and (NAF2025_OK == 0):
                     taxonomy_values = result["value"]["taxonomy"][0][-1]
                     apet_manual = taxonomy_values.replace(".", "")  # delete . in apet_manual
                     apet_manual = apet_manual[:5]

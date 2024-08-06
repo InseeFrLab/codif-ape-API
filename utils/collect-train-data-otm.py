@@ -37,7 +37,7 @@ def gather_data_from_categories(bucket: str, prefix: str):
             unclassifiable_df = pd.read_parquet(unclassifiable_file_path, filesystem=fs)
         except FileNotFoundError as e:
             # Handle the case where the file does not exist for now
-            print(f"{e}: The file does not exist yet.")
+            print(f"The file {e} does not exist yet.")
 
         training_dataframes.append(training_df)
         skipped_dataframes.append(skipped_df)
@@ -47,6 +47,7 @@ def gather_data_from_categories(bucket: str, prefix: str):
     combined_training_df = pd.concat(training_dataframes, ignore_index=True)
     combined_skipped_df = pd.concat(skipped_dataframes, ignore_index=True)
     combined_unclassifiable_df = pd.concat(unclassifiable_dataframes, ignore_index=True)
+    print(len(combined_training_df))
 
     # Save all the collected training set back to S3
     combined_training_df.to_parquet(f"s3://{bucket}/{prefix}/preprocessed/training_data_NAF2025.parquet", filesystem=fs)

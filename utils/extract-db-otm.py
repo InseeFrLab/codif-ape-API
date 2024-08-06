@@ -41,8 +41,8 @@ def sample_data(df_path: str, n_lines: str):
     df_s3['libelle_normalized'] = df_s3['libelle'].str.lower()
 
     print("Number of lines before selection (full dataset): " + str(len(df)))
-    # Economie de labellisation: ne pas reprendre les libellés déjà annotés sur les cas non agricoles
-    df = df[(~df['libelle_normalized'].apply(lambda x: df_s3['libelle_normalized'].str.contains(x, regex=False).any())) & (~df['apet_finale'].str.match(r'^(01|02|03)'))]
+    # Economie de labellisation: ne pas reprendre les libellés déjà annotés
+    df = df[(~df['libelle_normalized'].apply(lambda x: df_s3['libelle_normalized'].str.contains(x, regex=False).any()))]
     df = df.drop(columns=['libelle_normalized'])
     print("Number of lines after selection (remove already done): " + str(len(df)))
 
@@ -97,7 +97,7 @@ def sample_data(df_path: str, n_lines: str):
     # Partitionner par 'emetteur' et sauvegarder chaque partition dans un fichier Parquet
     for categorie, partition_df in stratified_sample.groupby('categorie_demande'):
         partition_file = os.path.join(f's3://projet-ape/label-studio/annotation-campaign-2024/rev-NAF2025/{categorie}/data-samples/queue/extrait_{categorie}_sirene_last_date_{last_date}.parquet')
-        pq.write_table(pa.Table.from_pandas(partition_df), partition_file, filesystem=fs)
+        pq.write_table(pa.Table.from_pandas(partition_df), partition_file)#, filesystem=fs)
         print(f'Saved {partition_file}')
 
 

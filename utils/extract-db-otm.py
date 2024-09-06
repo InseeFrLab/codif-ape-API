@@ -94,9 +94,10 @@ def sample_data(df_path: str, n_lines: str):
 
     # Partitionner par 'emetteur' et sauvegarder chaque partition dans un fichier Parquet
     for categorie, partition_df in stratified_sample.groupby('categorie_demande'):
-        partition_file = os.path.join(f's3://projet-ape/label-studio/annotation-campaign-2024/rev-NAF2025/{categorie}/data-samples/queue/extrait_{categorie}_sirene_last_date_{last_date}.parquet')
-        pq.write_table(pa.Table.from_pandas(partition_df), partition_file, filesystem=fs)
-        print(f'Saved {partition_file}')
+        if categorie in ["CG","SOCET"]:
+            partition_file = os.path.join(f's3://projet-ape/label-studio/annotation-campaign-2024/rev-NAF2025/{categorie}/data-samples/queue/extrait_{categorie}_sirene_last_date_{last_date}.parquet')
+            pq.write_table(pa.Table.from_pandas(partition_df), partition_file, filesystem=fs)
+            print(f'Saved {partition_file}')
 
 
 def main(df_path: str, number_of_lines: str):  # , date_to_log: str):

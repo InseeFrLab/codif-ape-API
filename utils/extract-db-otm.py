@@ -36,6 +36,9 @@ def sample_data(df_path: str, n_lines: str):
         .to_pandas()
     )
 
+     # Convertir la colonne de dates en format datetime si ce n'est pas déjà fait
+    df["date_modification_dt"] = pd.to_datetime(df["date_modification"], unit='ms', origin='unix')
+
     # Normaliser les colonnes 'libelle' des deux DataFrames (par exemple, en minuscules)
     df['libelle_normalized'] = df['libelle'].str.lower()
     df_s3['libelle_normalized'] = df_s3['libelle'].str.lower()
@@ -46,8 +49,6 @@ def sample_data(df_path: str, n_lines: str):
     df = df.drop(columns=['libelle_normalized'])
     print("Number of lines after selection (remove already done): " + str(len(df)))
 
-    # Convertir la colonne de dates en format datetime si ce n'est pas déjà fait
-    df["date_modification_dt"] = pd.to_datetime(df["date_modification"], unit='ms', origin='unix')
     # Calculer la taille de l'échantillon pour chaque strate
     n = int(n_lines)
 

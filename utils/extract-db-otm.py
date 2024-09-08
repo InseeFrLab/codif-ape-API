@@ -87,7 +87,7 @@ def sample_data(df_path: str, n_lines: str):
     print(len(stratified_sample_df_cg))
 
     # Récupérer la dernière date disponible dans la table
-    last_date = df['date_modification_dt'].max().strftime("%Y%m%d")
+    #last_date = df['date_modification_dt'].max().strftime("%Y%m%d")
 
     # Supprimer la colonne datetime si elle existe, après traitement (pour traitement ultérieur JSON)
     if 'date_modification_dt' in stratified_sample_df.columns:
@@ -96,7 +96,7 @@ def sample_data(df_path: str, n_lines: str):
     # Partitionner par 'emetteur' et sauvegarder chaque partition dans un fichier Parquet
     for categorie, partition_df in stratified_sample.groupby('categorie_demande'):
         if categorie in ["CG","SOCET"]:
-            partition_file = os.path.join(f's3://projet-ape/label-studio/annotation-campaign-2024/rev-NAF2025/{categorie}/data-samples/queue/extrait_{categorie}_sirene_last_date_{last_date}.parquet')
+            partition_file = os.path.join(f's3://projet-ape/label-studio/annotation-campaign-2024/rev-NAF2025/{categorie}/data-samples/queue/extrait_{categorie}_sirene_last_date_{"unavaible_for_now"}.parquet')
             pq.write_table(pa.Table.from_pandas(partition_df), partition_file, filesystem=fs)
             print(f'Saved {partition_file}')
 

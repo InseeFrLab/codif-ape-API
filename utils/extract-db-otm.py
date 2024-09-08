@@ -47,7 +47,7 @@ def sample_data(df_path: str, n_lines: str):
     print("Number of lines after selection (remove already done): " + str(len(df)))
 
     # Convertir la colonne de dates en format datetime si ce n'est pas déjà fait
-    df["date_modification_dt"] = pd.to_datetime(df["date_modification"])
+    df["date_modification_dt"] = pd.to_datetime(df["date_modification"], unit='ms', origin='unix')
     # Calculer la taille de l'échantillon pour chaque strate
     n = int(n_lines)
 

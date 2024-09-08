@@ -109,6 +109,7 @@ def main(df_path: str, number_of_lines: str):  # , date_to_log: str):
     files_sorted = sorted(files, key=lambda x: fs.info(x)['LastModified'], reverse=True)
     # Get the last file in the sorted list
     last_file = files_sorted[0]
+    print(last_file)
     # Sample data to annotate
     sample_data(last_file, number_of_lines)
 

@@ -68,10 +68,11 @@ class Liasses(BaseModel):
     """
 
     text_description: List[str]
-    type_: List[str]
-    nature: List[str]
-    surface: List[str]
-    event: List[str]
+    additional_var: dict[str, any]
+    # type_: List[str]
+    # nature: List[str]
+    # surface: List[str]
+    # event: List[str]
 
     class Config:
         schema_extra = {
@@ -82,10 +83,11 @@ class Liasses(BaseModel):
                         "SERVICES (CODE APE 6820A Location de logements)"
                     )
                 ],
-                "type_": ["I"],
-                "nature": [""],
-                "surface": [""],
-                "event": ["01P"],
+                "additional_var": {"noise": 1},
+                # "type_": ["I"],
+                # "nature": [""],
+                # "surface": [""],
+                # "event": ["01P"],
             }
         }
 
@@ -108,11 +110,12 @@ class LiassesEvaluation(BaseModel):
     """
 
     text_description: List[str]
-    type_: List[str]
-    nature: List[str]
-    surface: List[str]
-    event: List[str]
-    code: List[str]
+    additional_var: dict[str, any]
+    # type_: List[str]
+    # nature: List[str]
+    # surface: List[str]
+    # event: List[str]
+    # code: List[str]
 
     class Config:
         schema_extra = {
@@ -123,18 +126,18 @@ class LiassesEvaluation(BaseModel):
                         "SERVICES (CODE APE 6820A Location de logements)"
                     )
                 ],
-                "type_": ["I"],
-                "nature": [""],
-                "surface": [""],
-                "event": ["01P"],
-                "code": ["6820A"],
+                "additional_var": {"noise": 1},
+                # "type_": ["I"],
+                # "nature": [""],
+                # "surface": [""],
+                # "event": ["01P"],
             }
         }
 
 
 codification_ape_app = FastAPI(
     lifespan=lifespan,
-    title="Prédiction code APE",
+    title="Prédiction code APE avec fastText Pytorch",
     description="Application de prédiction pour \
                                             l'activité principale \
                                             de l'entreprise (APE)",

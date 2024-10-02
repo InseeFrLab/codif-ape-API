@@ -8,21 +8,15 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Annotated, List
 
-import mlflow
-import numpy as np
-import pandas as pd
 import yaml
 from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPBasicCredentials
-from mlflow import MlflowClient
 from pydantic import BaseModel
 
 from app.utils import (
     get_model,
     optional_security,
-    preprocess_batch,
-    preprocess_query,
     process_response,
 )
 
@@ -38,16 +32,16 @@ async def lifespan(app: FastAPI):
     Args:
         app (FastAPI): The FastAPI application.
     """
-    global model, libs, training_names
+    # global model, libs, training_names
+    global model, libs
 
     model_name: str = os.getenv("MLFLOW_MODEL_NAME")
     model_version: str = os.getenv("MLFLOW_MODEL_VERSION")
     # Load the ML model
-    model = get_model(model_name, model_version)
+
+    module = get_model(model_name, model_version)
+    model = module.model
     libs = yaml.safe_load(Path("app/libs.yaml").read_text())
-    text_feature = [mlflow.get_run(model.metadata.run_id).data.params["text_feature"]]
-    features = eval(mlflow.get_run(model.metadata.run_id).data.params["features"])
-    training_names = text_feature + features
     yield
 
 
@@ -68,14 +62,14 @@ class Liasses(BaseModel):
     """
 
     text_description: List[str]
-    additional_var: dict[str, any]
-    # type_: List[str]
-    # nature: List[str]
-    # surface: List[str]
-    # event: List[str]
+    type_: List[str]
+    nature: List[str]
+    surface: List[str]
+    event: List[str]
 
     class Config:
-        schema_extra = {
+        arbitrary_types_allowed = True
+        json_schema_extra = {
             "example": {
                 "text_description": [
                     (
@@ -83,11 +77,10 @@ class Liasses(BaseModel):
                         "SERVICES (CODE APE 6820A Location de logements)"
                     )
                 ],
-                "additional_var": {"noise": 1},
-                # "type_": ["I"],
-                # "nature": [""],
-                # "surface": [""],
-                # "event": ["01P"],
+                "type_": ["I"],
+                "nature": [""],
+                "surface": [""],
+                "event": ["01P"],
             }
         }
 
@@ -110,12 +103,11 @@ class LiassesEvaluation(BaseModel):
     """
 
     text_description: List[str]
-    additional_var: dict[str, any]
-    # type_: List[str]
-    # nature: List[str]
-    # surface: List[str]
-    # event: List[str]
-    # code: List[str]
+    type_: List[str]
+    nature: List[str]
+    surface: List[str]
+    event: List[str]
+    code: List[str]
 
     class Config:
         schema_extra = {
@@ -126,11 +118,10 @@ class LiassesEvaluation(BaseModel):
                         "SERVICES (CODE APE 6820A Location de logements)"
                     )
                 ],
-                "additional_var": {"noise": 1},
-                # "type_": ["I"],
-                # "nature": [""],
-                # "surface": [""],
-                # "event": ["01P"],
+                "type_": ["I"],
+                "nature": [""],
+                "surface": [""],
+                "event": ["01P"],
             }
         }
 
@@ -170,24 +161,14 @@ def show_welcome_page(
     """
     Show welcome page with model name and version.
     """
-    client = MlflowClient()
-    run = client.get_run(model.metadata.run_id)
     model_name: str = os.getenv("MLFLOW_MODEL_NAME")
     model_version: str = os.getenv("MLFLOW_MODEL_VERSION")
-    metrics = {
-        key: "Passed"
-        if "Result" in key and value == 1
-        else "Failed"
-        if "Result" in key and value == 0
-        else value
-        for key, value in run.data.metrics.items()
-    }
 
     return {
         "Message": "Codification de l'APE",
         "Model_name": f"{model_name}",
         "Model_version": f"{model_version}",
-    } | {"Metrics": metrics}
+    }
 
 
 @codification_ape_app.get("/predict", tags=["Predict"])
@@ -198,7 +179,7 @@ async def predict(
     nature: str | None = None,
     surface: str | None = None,
     event: str | None = None,
-    nb_echos_max: int = 5,
+    top_k: int = 5,
     prob_min: float = 0.01,
 ):
     """
@@ -220,18 +201,40 @@ async def predict(
         dict: Response containing APE codes.
     """
 
-    query = preprocess_query(training_names, text_description, type_liasse, nature, surface, event)
+    # query = preprocess_query(training_names, text_description, type_liasse, nature, surface, event)
 
-    if nb_echos_max != 1:
-        predictions = model.predict(query, params={"k": nb_echos_max})
-    else:
-        predictions = model.predict(query, params={"k": 2})
+    # if nb_echos_max != 1:
+    #     predictions = model.predict(query, params={"k": nb_echos_max})
+    # else:
+    #     predictions = model.predict(query, params={"k": 2})
 
-    response = process_response(predictions, 0, nb_echos_max, prob_min, libs)
+    # # Logging
+    # query_to_log = {key: value[0] for key, value in query.items()}
+    # logging.info(f"{{'Query': {query_to_log}, 'Response': {response}}}")
 
-    # Logging
-    query_to_log = {key: value[0] for key, value in query.items()}
-    logging.info(f"{{'Query': {query_to_log}, 'Response': {response}}}")
+    # return response
+
+    text = [text_description]  # model needs a list of strings
+    params = {"additional_var": [1] * len(text)}  # TBR
+
+    (
+        preds,
+        confidence,
+        attr,
+        tokenized_text,
+        id_to_token_dicts,
+        token_to_id_dicts,
+        processed_text,
+    ) = model.predict(text=text, params=params, top_k=top_k, explain=False)
+
+    response = process_response(
+        predictions=preds,
+        liasse_nb=0,
+        confidence=confidence,
+        top_k=top_k,
+        prob_min=prob_min,
+        libs=libs,
+    )
 
     return response
 
@@ -240,7 +243,7 @@ async def predict(
 async def predict_batch(
     credentials: Annotated[HTTPBasicCredentials, Depends(optional_security)],
     liasses: Liasses,
-    nb_echos_max: int = 5,
+    top_k: int = 5,
     prob_min: float = 0.01,
 ):
     """
@@ -255,63 +258,37 @@ async def predict_batch(
     Returns:
         list: The list of predicted responses.
     """
-    query = preprocess_batch(training_names, liasses.dict())
+    # query = preprocess_batch(training_names, liasses.dict())
+    query = liasses.dict()
+    text = query["text_description"]
+    params = {"additional_var": [1] * len(text)}
 
-    if nb_echos_max != 1:
-        predictions = model.predict(query, params={"k": nb_echos_max})
-    else:
-        predictions = model.predict(query, params={"k": 2})
+    (
+        preds,
+        confidence,
+        attr,
+        tokenized_text,
+        id_to_token_dicts,
+        token_to_id_dicts,
+        processed_text,
+    ) = model.predict(text=text, params=params, top_k=top_k, explain=False)
 
     response = [
-        process_response(predictions, i, nb_echos_max, prob_min, libs)
-        for i in range(len(predictions[0]))
+        process_response(
+            predictions=preds,
+            liasse_nb=i,
+            confidence=confidence,
+            top_k=top_k,
+            prob_min=prob_min,
+            libs=libs,
+        )
+        for i in range(len(preds))
     ]
 
     # Logging
-    for line in range(len(query[training_names[0]])):
-        query_line = {key: value[line] for key, value in query.items()}
-        response_line = response[line]
-        logging.info(f"{{'Query': {query_line}, 'Response': {response_line}}}")
+    # for line in range(len(query[training_names[0]])):
+    #     query_line = {key: value[line] for key, value in query.items()}
+    #     response_line = response[line]
+    #     logging.info(f"{{'Query': {query_line}, 'Response': {response_line}}}")
 
     return response
-
-
-@codification_ape_app.post("/evaluation", tags=["Evaluate"])
-async def eval_batch(
-    credentials: Annotated[HTTPBasicCredentials, Depends(optional_security)],
-    liasses: LiassesEvaluation,
-):
-    """
-    Evaluate a batch of liasses.
-
-    Args:
-        credentials (HTTPBasicCredentials): The credentials for authentication.
-        liasses (LiassesEvaluation): The liasses to be evaluated.
-
-    Returns:
-        dict: A dictionary containing the evaluation results.
-    """
-
-    query = preprocess_batch(liasses.dict(), nb_echos_max=2)
-
-    predictions = model.predict(query)
-
-    df = pd.DataFrame(
-        [
-            [
-                predictions[1][i][0],
-                np.diff(predictions[1][i])[0] * -1,
-                predictions[0][i][0].replace("__label__", ""),
-            ]
-            for i in range(len(predictions[0]))
-        ],
-        columns=["Probability", "IC", "Prediction"],
-    )
-
-    df[["Probability", "IC"]] = df[["Probability", "IC"]].applymap(lambda x: 1 if x > 1 else x)
-
-    df["Code"] = liasses.code
-    df["Result"] = df["Code"] == df["Prediction"]
-    df["Lib"] = liasses.text_description
-
-    return df.to_dict()

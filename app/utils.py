@@ -291,9 +291,61 @@ def process_response(
     }
 
     try:
-        response = output_dict | {
-            "IC": output_dict["1"]["probabilite"] - float(confidence[liasse_nb][1])
+        response = output_dict
+        return response
+    except KeyError:
+        raise HTTPException(
+            status_code=400,
+            detail=(
+                "The minimal probability requested is "
+                "higher than the highest prediction "
+                "probability of the model."
+            ),
+        )
+
+
+def process_response_explain(
+    predictions: list[list[str]],
+    liasse_nb: int,
+    confidence: list[list[float]],
+    all_scores: list[dict[str, float]],
+    prob_min: float,
+    libs: dict,
+):
+    """
+    Processes model predictions and generates response.
+
+    Args:
+
+
+    Returns:
+        response (dict): The processed response as a dictionary containing
+        the predicted results.
+
+    Raises:
+        HTTPException: If the minimal probability requested is higher than
+        the highest prediction probability of the model, a HTTPException
+        is raised with a 400 status code and a detailed error message.
+    """
+
+    if confidence[0][0] < prob_min:
+        raise HTTPException(
+            status_code=400,
+            detail="The model is not confident enough to make a prediction (and explain it).",
+        )
+
+    output_dict = {
+        str(1): {
+            "code": predictions[liasse_nb][-1].replace("__label__", ""),
+            "probabilite": float(confidence[liasse_nb][-1]),
+            "libelle": libs[predictions[liasse_nb][-1].replace("__label__", "")],
         }
+    }
+    for word in list(all_scores[liasse_nb].keys()):
+        output_dict[word] = all_scores[liasse_nb][word]
+
+    try:
+        response = output_dict
         return response
     except KeyError:
         raise HTTPException(

@@ -14,11 +14,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPBasicCredentials
 from pydantic import BaseModel
 
-from app.utils import (
-    get_model,
-    optional_security,
-    process_response,
-)
+from app.utils import get_model, optional_security, process_response, process_response_explain
 
 
 @asynccontextmanager
@@ -201,37 +197,62 @@ async def predict(
         dict: Response containing APE codes.
     """
 
-    # query = preprocess_query(training_names, text_description, type_liasse, nature, surface, event)
-
-    # if nb_echos_max != 1:
-    #     predictions = model.predict(query, params={"k": nb_echos_max})
-    # else:
-    #     predictions = model.predict(query, params={"k": 2})
-
-    # # Logging
-    # query_to_log = {key: value[0] for key, value in query.items()}
-    # logging.info(f"{{'Query': {query_to_log}, 'Response': {response}}}")
-
-    # return response
-
     text = [text_description]  # model needs a list of strings
     params = {"additional_var": [1] * len(text)}  # TBR
 
-    (
-        preds,
-        confidence,
-        attr,
-        tokenized_text,
-        id_to_token_dicts,
-        token_to_id_dicts,
-        processed_text,
-    ) = model.predict(text=text, params=params, top_k=top_k, explain=False)
+    preds, confidence = model.predict(text=text, params=params, top_k=top_k)
 
     response = process_response(
         predictions=preds,
         liasse_nb=0,
         confidence=confidence,
         top_k=top_k,
+        prob_min=prob_min,
+        libs=libs,
+    )
+
+    return response
+
+
+@codification_ape_app.get("/predict-and-explain", tags=["Explain"])
+async def predict_and_explain(
+    credentials: Annotated[HTTPBasicCredentials, Depends(optional_security)],
+    text_description: str,
+    type_liasse: str | None = None,
+    nature: str | None = None,
+    surface: str | None = None,
+    event: str | None = None,
+    prob_min: float = 0.01,
+):
+    """
+    Predict code APE.
+
+    This endpoint accepts input data as query parameters and uses the loaded
+    ML model to predict the code APE based on the input data.
+
+    Args:
+        text_description (str): The text description.
+        type_liasse (str, optional): The type of liasse. Defaults to None.
+        nature (str, optional): The nature of the liasse. Defaults to None.
+        surface (str, optional): The surface of the liasse. Defaults to None.
+        event: (str, optional): Event of the liasse. Optional.
+        nb_echos_max (int): Maximum number of echoes to consider. Default is 5.
+        prob_min (float): Minimum probability threshold. Default is 0.01.
+
+    Returns:
+        dict: Response containing APE codes.
+    """
+
+    text = [text_description]  # model needs a list of strings
+    params = {"additional_var": [1] * len(text)}  # TBR
+
+    pred, confidence, all_scores = model.predict_and_explain(text, params)
+
+    response = process_response_explain(
+        predictions=pred,
+        liasse_nb=0,
+        confidence=confidence,
+        all_scores=all_scores,
         prob_min=prob_min,
         libs=libs,
     )
@@ -263,15 +284,7 @@ async def predict_batch(
     text = query["text_description"]
     params = {"additional_var": [1] * len(text)}
 
-    (
-        preds,
-        confidence,
-        attr,
-        tokenized_text,
-        id_to_token_dicts,
-        token_to_id_dicts,
-        processed_text,
-    ) = model.predict(text=text, params=params, top_k=top_k, explain=False)
+    preds, confidence = model.predict(text=text, params=params, top_k=top_k)
 
     response = [
         process_response(

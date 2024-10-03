@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - fasttext-pytorch
     tags:
       - "*"
   # Allows you to run this workflow manually from the Actions tab

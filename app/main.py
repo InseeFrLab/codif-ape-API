@@ -129,6 +129,7 @@ codification_ape_app = FastAPI(
                                             l'activité principale \
                                             de l'entreprise (APE)",
     version="0.0.1",
+    # root_path="/app",
 )
 
 
@@ -249,6 +250,7 @@ async def predict_and_explain(
     pred, confidence, all_scores = model.predict_and_explain(text, params)
 
     response = process_response_explain(
+        text=text,
         predictions=pred,
         liasse_nb=0,
         confidence=confidence,

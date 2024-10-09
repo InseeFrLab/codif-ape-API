@@ -305,6 +305,7 @@ def process_response(
 
 
 def process_response_explain(
+    text: list[str],
     predictions: list[list[str]],
     liasse_nb: int,
     confidence: list[list[float]],
@@ -341,8 +342,8 @@ def process_response_explain(
             "libelle": libs[predictions[liasse_nb][-1].replace("__label__", "")],
         }
     }
-    for word in list(all_scores[liasse_nb].keys()):
-        output_dict[word] = all_scores[liasse_nb][word]
+
+    output_dict[text[liasse_nb]] = all_scores[liasse_nb]
 
     try:
         response = output_dict

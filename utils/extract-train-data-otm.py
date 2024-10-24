@@ -26,7 +26,7 @@ def transform_json_to_dataframe(json_dir: str):
         liasse_numero = data["task"]["data"]["liasse_numero"]
         date_modification = data["task"]["data"]["date_modification"]
         apet_finale = data["task"]["data"]["apet_finale"]
-        mode_calcul_ape = data["task"]["data"]["mode_calcul_ape"]
+        mode_calcul_ape = [v for k, v in data["task"]["data"].items() if k.startswith("mode_calcul_ape") and v != ""][0] # un des jsons contient mode_calcul_apen/apet (l'un ou l'autre)
         evenement_type = data["task"]["data"]["evenement_type"]
         liasse_type = data["task"]["data"]["liasse_type"]
         activ_surf_et = str(data["task"]["data"]["activ_surf_et"])

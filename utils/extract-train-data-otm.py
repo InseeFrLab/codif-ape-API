@@ -87,7 +87,7 @@ def transform_json_to_dataframe(json_dir: str):
             "cj": cj,
             "date_modification": date_modification,
             "annotation_date": annotation_date,
-            "NAF2008_code": apet_finale,
+            "NAF2008_code": NAF2008_code,
             "mode_calcul_ape": mode_calcul_ape,
             "apet_manual": apet_manual,
             "commentary": commentary,

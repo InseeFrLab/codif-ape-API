@@ -25,7 +25,7 @@ def transform_json_to_dataframe(json_dir: str):
         libelle = data["task"]["data"]["libelle"]
         liasse_numero = data["task"]["data"]["liasse_numero"]
         date_modification = data["task"]["data"]["date_modification"]
-        NAF2008_code_intitule = data["task"]["data"]["NAF2008_code_intitule"]
+        NAF2008_code = data["task"]["data"]["apet_finale"]
         mode_calcul_ape = data["task"]["data"]["mode_calcul_ape"]
         evenement_type = data["task"]["data"]["evenement_type"]
         liasse_type = data["task"]["data"]["liasse_type"]
@@ -87,7 +87,7 @@ def transform_json_to_dataframe(json_dir: str):
             "cj": cj,
             "date_modification": date_modification,
             "annotation_date": annotation_date,
-            "NAF2008_code_intitule": NAF2008_code_intitule,
+            "NAF2008_code": apet_finale,
             "mode_calcul_ape": mode_calcul_ape,
             "apet_manual": apet_manual,
             "commentary": commentary,
@@ -154,7 +154,7 @@ def main(annotation_results_path: str, annotation_preprocessed_path: str, catego
                 "activ_sec_agri_et",
                 "cj",
                 "date",
-                "NAF2008_code_intitule",
+                "NAF2008_code",
                 "mode_calcul_ape",
                 "apet_manual",
                 "rating"

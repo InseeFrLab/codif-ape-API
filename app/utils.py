@@ -312,6 +312,7 @@ def process_response_explain(
     all_scores: list[dict[str, float]],
     prob_min: float,
     libs: dict,
+    all_scores_letters,
 ):
     """
     Processes model predictions and generates response.
@@ -335,15 +336,19 @@ def process_response_explain(
             detail="The model is not confident enough to make a prediction (and explain it).",
         )
 
+    k = int(all_scores_letters.shape[0])  # top_k
     output_dict = {
-        str(1): {
-            "code": predictions[liasse_nb][-1].replace("__label__", ""),
-            "probabilite": float(confidence[liasse_nb][-1]),
-            "libelle": libs[predictions[liasse_nb][-1].replace("__label__", "")],
+        str(rank_pred + 1): {
+            "code": predictions[liasse_nb][-rank_pred - 1].replace("__label__", ""),
+            "probabilite": float(confidence[liasse_nb][-rank_pred - 1]),
+            "libelle": libs[predictions[liasse_nb][-rank_pred - 1].replace("__label__", "")],
+            "letter_attr": np.array(all_scores_letters).tolist()[
+                -rank_pred - 1
+            ],  # Converts numpy arrays to lists
+            "word_attr": np.array(all_scores[liasse_nb]).tolist()[-rank_pred - 1],
         }
+        for rank_pred in range(k)
     }
-
-    output_dict[text[liasse_nb]] = all_scores[liasse_nb]
 
     try:
         response = output_dict

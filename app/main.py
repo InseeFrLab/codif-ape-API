@@ -224,6 +224,7 @@ async def predict_and_explain(
     surface: str | None = None,
     event: str | None = None,
     prob_min: float = 0.01,
+    top_k: int = 3,
 ):
     """
     Predict code APE.
@@ -247,7 +248,9 @@ async def predict_and_explain(
     text = [text_description]  # model needs a list of strings
     params = {"additional_var": [1] * len(text)}  # TBR
 
-    pred, confidence, all_scores = model.predict_and_explain(text, params)
+    pred, confidence, all_scores, all_scores_letters = model.predict_and_explain(
+        text, params, top_k=top_k
+    )
 
     response = process_response_explain(
         text=text,
@@ -257,6 +260,7 @@ async def predict_and_explain(
         all_scores=all_scores,
         prob_min=prob_min,
         libs=libs,
+        all_scores_letters=all_scores_letters,
     )
 
     return response

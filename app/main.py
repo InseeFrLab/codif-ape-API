@@ -88,7 +88,7 @@ class Forms(BaseModel):
     activity_permanence_status: List[str]
 
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "description_activity": [
                     (

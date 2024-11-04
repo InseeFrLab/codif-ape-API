@@ -249,8 +249,30 @@ def preprocess_batch(training_names: list, query: dict) -> dict:
     check_format_features(df["event"].to_list(), "event", r"^\d{2}[PMF]$")
 
     # TODO: Add check for cj and activity_permanence_status*
-
-    df = df.replace(np.nan, "NaN")
+    # TODO: make it cleaner
+    df.loc[:, ["other_nature_activity", "precision_act_sec_agricole"]] = df[
+        ["other_nature_activity", "precision_act_sec_agricole"]
+    ].replace(np.nan, "")
+    df.loc[
+        :,
+        [
+            "type_form",
+            "nature",
+            "surface",
+            "event",
+            "cj",
+            "activity_permanence_status",
+        ],
+    ] = df[
+        [
+            "type_form",
+            "nature",
+            "surface",
+            "event",
+            "cj",
+            "activity_permanence_status",
+        ]
+    ].replace(np.nan, "NaN")
 
     query = df.rename(
         columns={

@@ -84,11 +84,15 @@ def get_current_username(
 
 def preprocess_query(
     training_names: list,
-    text_feature: str,
-    type_liasse: str | None,
+    description_activity: str,
+    other_nature_activity: str | None,
+    precision_act_sec_agricole: str | None,
+    type_form: str | None,
     nature: str | None,
     surface: str | None,
     event: str | None,
+    cj: str | None,
+    activity_permanence_status: str | None,
     nb_echos_max: int = 5,
 ) -> dict:
     """
@@ -96,12 +100,16 @@ def preprocess_query(
     predictions using the fetched machine learning model.
 
     Args:
-        text_feature (str): The text feature to be used for prediction.
-        type_liasse (str | None): The type of liasse for the query.
-        Can be None.
-        nature (str | None): The nature of the liasse. Can be None.
-        surface (str | None): The surface of the liasse. Can be None.
-        event (str | None): The event of the liasse. Can be None.
+        training_names (list): A list of feature names used for training.
+        description_activity (str): The text description.
+        other_nature_activity (str, optional): Other nature of the activity. Defaults to None.
+        precision_act_sec_agricole (str, optional): Precision of the activity in the agricultural sector. Defaults to None.
+        type_form (str, optional): The type of the form CERFA. Defaults to None.
+        nature (str, optional): The nature of the activity. Defaults to None.
+        surface (str, optional): The surface of activity. Defaults to None.
+        event (str, optional): The event of the form. Defaults to None.
+        cj (str, optional): The legal category code. Defaults to None.
+        activity_permanence_status (str, optional): The activity permanence status (permanent or seasonal). Defaults to None.
         nb_echos_max (int, optional): The maximum number of echo predictions.
         Default is 5.
 
@@ -110,8 +118,9 @@ def preprocess_query(
         making predictions.
 
     """
-    type_liasse, nature, surface, event = (
-        np.nan if v is None else v for v in (type_liasse, nature, surface, event)
+    type_form, nature, surface, event, cj, activity_permanence_status = (
+        np.nan if v is None else v
+        for v in (type_form, nature, surface, event, cj, activity_permanence_status)
     )
 
     list_ok = [
@@ -133,8 +142,8 @@ def preprocess_query(
         "Z",
     ]
     check_format_features(
-        [type_liasse],
-        "type_",
+        [type_form],
+        "type_form",
         r"^(" + "|".join(list_ok) + r")$",
         list_ok=list_ok,
     )
@@ -151,16 +160,23 @@ def preprocess_query(
 
     check_format_features([event], "event", r"^\d{2}[APMF]$")
 
-    type_liasse, nature, surface, event = (
-        "NaN" if not isinstance(v, str) else v for v in (type_liasse, nature, surface, event)
+    # TODO : Add check for cj and activity_permanence_status
+
+    type_form, nature, surface, event, cj, activity_permanence_status = (
+        "NaN" if not isinstance(v, str) else v
+        for v in (type_form, nature, surface, event, cj, activity_permanence_status)
     )
 
     query = {
-        training_names[0]: [text_feature],
-        training_names[1]: [type_liasse],
-        training_names[2]: [nature],
-        training_names[3]: [surface],
-        training_names[4]: [event],
+        training_names[0]: [description_activity],
+        training_names[1]: [other_nature_activity],
+        training_names[2]: [precision_act_sec_agricole],
+        training_names[3]: [type_form],
+        training_names[4]: [nature],
+        training_names[5]: [surface],
+        training_names[6]: [event],
+        training_names[7]: [cj],
+        training_names[8]: [activity_permanence_status],
     }
     return query
 
@@ -176,7 +192,7 @@ def preprocess_batch(training_names: list, query: dict) -> dict:
         dict: A dictionary containing the preprocessed data ready for further
         processing.
     Raises:
-        HTTPException: If the 'text_description' field is missing for any
+        HTTPException: If the 'description_activity' field is missing for any
             liasses in the batch, a HTTPException is raised with a 400
             status code and a detailed error message.
     """
@@ -185,12 +201,13 @@ def preprocess_batch(training_names: list, query: dict) -> dict:
     df = df.apply(lambda x: x.str.strip())
     df = df.replace(["null", "", "NA", "NAN", "nan", "None"], np.nan)
 
-    if df["text_description"].isna().any():
-        matches = df.index[df["text_description"].isna()].to_list()
+    if df["description_activity"].isna().any():
+        matches = df.index[df["description_activity"].isna()].to_list()
         raise HTTPException(
             status_code=400,
             detail=(
-                "The text_description is missing for some liasses. " f"See line(s): {*matches,}"
+                "The description of the activity is missing for some forms. "
+                f"See line(s): {*matches,}"
             ),
         )
 
@@ -213,8 +230,8 @@ def preprocess_batch(training_names: list, query: dict) -> dict:
         "Z",
     ]
     check_format_features(
-        df["type_"].to_list(),
-        "type_",
+        df["type_form"].to_list(),
+        "type_form",
         r"^(" + "|".join(list_ok) + r")$",
         list_ok=list_ok,
     )
@@ -231,15 +248,21 @@ def preprocess_batch(training_names: list, query: dict) -> dict:
 
     check_format_features(df["event"].to_list(), "event", r"^\d{2}[PMF]$")
 
+    # TODO: Add check for cj and activity_permanence_status*
+
     df = df.replace(np.nan, "NaN")
 
     query = df.rename(
         columns={
-            "text_description": training_names[0],
-            "type_": training_names[1],
-            "nature": training_names[2],
-            "surface": training_names[3],
-            "event": training_names[4],
+            "description_activity": training_names[0],
+            "other_nature_activity": training_names[1],
+            "precision_act_sec_agricole": training_names[2],
+            "type_form": training_names[3],
+            "nature": training_names[4],
+            "surface": training_names[5],
+            "event": training_names[6],
+            "cj": training_names[7],
+            "activity_permanence_status": training_names[8],
         }
     ).to_dict("list")
 
@@ -330,7 +353,7 @@ def check_format_features(values: list, feature: str, regex: str, list_ok: list 
                 matches.append(i)
 
     errors = {
-        "type_": (
+        "type_form": (
             "The format of type_liasse is incorrect. Accepted values are"
             f": {list_ok}. See line(s) : {*matches,}"
         ),

@@ -7,6 +7,7 @@ import os
 from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Annotated, List
+import time
 
 import yaml
 from fastapi import Depends, FastAPI
@@ -245,13 +246,23 @@ async def predict_and_explain(
         dict: Response containing APE codes.
     """
 
+    start = time.time()
+
+    logging.info(f"Number of CPUs: {os.cpu_count()}")
+    logging.info(f"Request received at {start}")
+
     text = [text_description]  # model needs a list of strings
     params = {"additional_var": [1] * len(text)}  # TBR
 
+    start = time.time()
+    logging.info(f"Starting model pred at {start}")
     pred, confidence, all_scores, all_scores_letters = model.predict_and_explain(
         text, params, top_k=top_k
     )
-
+    end = time.time()
+    logging.info(f"Model pred done at {end}. Took {end - start} seconds")
+    start = time.time()
+    logging.info(f"Starting process_response_explain at {start}")
     response = process_response_explain(
         text=text,
         predictions=pred,
@@ -262,6 +273,8 @@ async def predict_and_explain(
         libs=libs,
         all_scores_letters=all_scores_letters,
     )
+    end = time.time()
+    logging.info(f"process_response_explain done at {end}. Took {end - start} seconds")
 
     return response
 

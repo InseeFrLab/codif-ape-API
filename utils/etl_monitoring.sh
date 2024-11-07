@@ -10,7 +10,7 @@ DATE_TO_LOG=$(date --date="-$DAY_SHIFT days" +%Y-%m-%d)
 POD_NAME=$(kubectl get pods -l app=codification-ape-model-deployment --no-headers -o custom-columns=":metadata.name")
 
 # Retrieves raw logs files from s3
-mc cp -r s3/$LOG_FILE_PATH_S3_IN log_files/raw
+mc cp -r s3/$LOG_FILE_PATH_S3_IN log_files/raw > /dev/null
 
 # Create an empty directory
 mkdir -p $LOG_FILE_PATH_LOCAL
@@ -57,7 +57,7 @@ python transform_logs.py $API_PATH_LOGS $DATE_TO_LOG $DAY_SHIFT
 ##### EVALUATION ON TEST SET
 
 # Retrieve recursively all annotation data and copy locally
-mc ls s3/$NAMESPACE/$PATH_ANNOTATION_RESULTS | awk '{print "s3/'$NAMESPACE'/'$PATH_ANNOTATION_RESULTS'/" $5}' | xargs -I {} mc cp --recursive {} ./$DATA_FILE_PATH_LOCAL
+mc ls s3/$NAMESPACE/$PATH_ANNOTATION_RESULTS | awk '{print "s3/'$NAMESPACE'/'$PATH_ANNOTATION_RESULTS'/" $5}' | xargs -I {} mc cp --recursive {} ./$DATA_FILE_PATH_LOCAL  > /dev/null
 
 # Transform and save labeled test data in NACE rev 2
 python extract_test_data.py $DATA_FILE_PATH_LOCAL $PATH_ANNOTATION_PREPROCESSED
@@ -75,7 +75,7 @@ for CATEGORY in $categories; do
     # Create an empty directory
     mkdir -p $DATA_FILE_PATH_LOCAL_$CATEGORY
     # Retrieve recursively all annotation data and copy locally
-    mc ls s3/$NAMESPACE/$PATH_ANNOTATION_RESULTS_NAF2025 | awk '{print "s3/'$NAMESPACE'/'$PATH_ANNOTATION_RESULTS_NAF2025'/" $5}' | xargs -I {} mc cp --recursive {} ./$DATA_FILE_PATH_LOCAL_$CATEGORY
+    mc ls s3/$NAMESPACE/$PATH_ANNOTATION_RESULTS_NAF2025 | awk '{print "s3/'$NAMESPACE'/'$PATH_ANNOTATION_RESULTS_NAF2025'/" $5}' | xargs -I {} mc cp --recursive {} ./$DATA_FILE_PATH_LOCAL_$CATEGORY  > /dev/null
     # Transform and save annotation data for each category
     python extract-train-data-otm.py "$DATA_FILE_PATH_LOCAL_$CATEGORY" "$PATH_ANNOTATION_PREPROCESSED_NAF2025" $CATEGORY
 done

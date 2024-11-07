@@ -92,6 +92,7 @@ def extract_log_info(f):
 
     lines = f.readlines()
     for line in lines:
+        line = remove_before_last_double_null(line)
         idx = line.find("CodificationBilan")
         is_empty = bool(re.match(r"^\s*$", line))
         is_valid_line = bool(re.search(PATTERN, line))
@@ -121,6 +122,18 @@ def extract_all_logs(log_path: str):
             logs_by_file.append(extract_log_info(f))
 
     return pd.concat(logs_by_file)
+
+
+def remove_before_last_double_null(string):
+    # Find the last occurrence of two consecutive '\x00'
+    last_double_null = string.rfind("\x00\x00")
+
+    # If found, return the substring after it
+    if last_double_null != -1:
+        return string[last_double_null + 2 :]
+    else:
+        # If not found, return the original string
+        return string
 
 
 def save_to_s3(table: pa.Table, bucket: str, path: str):

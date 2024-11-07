@@ -59,6 +59,7 @@ def format_query(
 ):
     subset = df.copy()
     subset["surface"] = subset["surface"].apply(reclassify_surface)
+    subset = subset[subset["text_description"] != "NA"]
     return subset[["text_description", "type_", "nature", "surface", "event"]]
 
 

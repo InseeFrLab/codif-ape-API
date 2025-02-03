@@ -3,7 +3,7 @@ name: Image Build
 on:
   push:
     branches:
-      - main
+      - deploy-dev-api-rev2
     tags:
       - "*"
   # Allows you to run this workflow manually from the Actions tab

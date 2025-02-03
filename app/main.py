@@ -71,7 +71,6 @@ class Forms(BaseModel):
         type_form (List[str]): The type of the form CERFA.
         nature (List[str]): The nature of the activity.
         surface (List[str]): The surface of activity.
-        event (List[str]): The event of the form.
         cj (List[str]): The legal category code.
         activity_permanence_status (List[str]): The activity permanence status (permanent or seasonal).
 
@@ -83,7 +82,6 @@ class Forms(BaseModel):
     type_form: List[str]
     nature: List[str]
     surface: List[str]
-    event: List[str]
     cj: List[str]
     activity_permanence_status: List[str]
 
@@ -101,7 +99,6 @@ class Forms(BaseModel):
                 "type_form": ["I"],
                 "nature": [""],
                 "surface": [""],
-                "event": ["01P"],
                 "cj": [""],
                 "activity_permanence_status": [""],
             }
@@ -162,7 +159,6 @@ async def predict(
     type_form: str | None = None,
     nature: str | None = None,
     surface: str | None = None,
-    event: str | None = None,
     cj: str | None = None,
     activity_permanence_status: str | None = None,
     nb_echos_max: int = 5,
@@ -181,7 +177,6 @@ async def predict(
         type_form (str, optional): The type of the form CERFA. Defaults to None.
         nature (str, optional): The nature of the activity. Defaults to None.
         surface (str, optional): The surface of activity. Defaults to None.
-        event (str, optional): The event of the form. Defaults to None.
         cj (str, optional): The legal category code. Defaults to None.
         activity_permanence_status (str, optional): The activity permanence status (permanent or seasonal). Defaults to None.
         nb_echos_max (int): Maximum number of echoes to consider. Default is 5.
@@ -199,7 +194,6 @@ async def predict(
         type_form,
         nature,
         surface,
-        event,
         cj,
         activity_permanence_status,
     )

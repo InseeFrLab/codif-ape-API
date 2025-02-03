@@ -90,7 +90,6 @@ def preprocess_query(
     type_form: str | None,
     nature: str | None,
     surface: str | None,
-    event: str | None,
     cj: str | None,
     activity_permanence_status: str | None,
     nb_echos_max: int = 5,
@@ -107,7 +106,6 @@ def preprocess_query(
         type_form (str, optional): The type of the form CERFA. Defaults to None.
         nature (str, optional): The nature of the activity. Defaults to None.
         surface (str, optional): The surface of activity. Defaults to None.
-        event (str, optional): The event of the form. Defaults to None.
         cj (str, optional): The legal category code. Defaults to None.
         activity_permanence_status (str, optional): The activity permanence status (permanent or seasonal). Defaults to None.
         nb_echos_max (int, optional): The maximum number of echo predictions.
@@ -118,9 +116,9 @@ def preprocess_query(
         making predictions.
 
     """
-    type_form, nature, surface, event, cj, activity_permanence_status = (
+    type_form, nature, surface, cj, activity_permanence_status = (
         np.nan if v is None else v
-        for v in (type_form, nature, surface, event, cj, activity_permanence_status)
+        for v in (type_form, nature, surface, cj, activity_permanence_status)
     )
 
     list_ok = [
@@ -158,13 +156,11 @@ def preprocess_query(
         list_ok=list_ok,
     )
 
-    check_format_features([event], "event", r"^\d{2}[APMF]$")
-
     # TODO : Add check for cj and activity_permanence_status
 
-    type_form, nature, surface, event, cj, activity_permanence_status = (
+    type_form, nature, surface, cj, activity_permanence_status = (
         "NaN" if not isinstance(v, str) else v
-        for v in (type_form, nature, surface, event, cj, activity_permanence_status)
+        for v in (type_form, nature, surface, cj, activity_permanence_status)
     )
 
     query = {
@@ -174,9 +170,8 @@ def preprocess_query(
         training_names[3]: [type_form],
         training_names[4]: [nature],
         training_names[5]: [surface],
-        training_names[6]: [event],
-        training_names[7]: [cj],
-        training_names[8]: [activity_permanence_status],
+        training_names[6]: [cj],
+        training_names[7]: [activity_permanence_status],
     }
     return query
 
@@ -246,7 +241,7 @@ def preprocess_batch(training_names: list, query: dict) -> dict:
         list_ok=list_ok,
     )
 
-    check_format_features(df["event"].to_list(), "event", r"^\d{2}[PMF]$")
+
 
     # TODO: Add check for cj and activity_permanence_status*
     # TODO: make it cleaner
@@ -259,7 +254,6 @@ def preprocess_batch(training_names: list, query: dict) -> dict:
             "type_form",
             "nature",
             "surface",
-            "event",
             "cj",
             "activity_permanence_status",
         ],
@@ -268,7 +262,6 @@ def preprocess_batch(training_names: list, query: dict) -> dict:
             "type_form",
             "nature",
             "surface",
-            "event",
             "cj",
             "activity_permanence_status",
         ]
@@ -282,9 +275,8 @@ def preprocess_batch(training_names: list, query: dict) -> dict:
             "type_form": training_names[3],
             "nature": training_names[4],
             "surface": training_names[5],
-            "event": training_names[6],
-            "cj": training_names[7],
-            "activity_permanence_status": training_names[8],
+            "cj": training_names[6],
+            "activity_permanence_status": training_names[7],
         }
     ).to_dict("list")
 
@@ -386,11 +378,6 @@ def check_format_features(values: list, feature: str, regex: str, list_ok: list 
         "surface": (
             "The format of surface is incorrect. Accepted values are: "
             f"{list_ok}. See line(s): {*matches,}"
-        ),
-        "event": (
-            f"The format of event is incorrect. The event value is an "
-            "integer between 00 and 99 plus the letter A, P, M or F. Example: "
-            f"'01P'. See line(s): {*matches,}"
         ),
     }
 

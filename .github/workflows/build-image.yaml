@@ -25,7 +25,7 @@ jobs:
           images: thomasfaria/codification-ape-api
           tags: |
             # set latest tag for main branch
-            type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'deploy-dev-api-rev2') }}
+            type=raw,value=deploy-dev-api-rev2,enable=${{ github.ref == format('refs/heads/{0}', 'deploy-dev-api-rev2') }}
             # propagate valid semver tags
             type=semver,pattern={{raw}}
 

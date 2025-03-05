@@ -42,16 +42,16 @@ done
 cd ../..
 
 # Transform and save logs
-python extract_prod_logs.py $LOG_FILE_PATH_LOCAL
+#python extract_prod_logs.py $LOG_FILE_PATH_LOCAL
 
 # Send a batch query from a daily log
-python send_batch.py $LOG_FILE_PATH_S3_OUT $DATE_TO_LOG
+#python send_batch.py $LOG_FILE_PATH_S3_OUT $DATE_TO_LOG
 
 # Copy locally log file from API pod
-kubectl cp $NAMESPACE/$POD_NAME:$PATH_TO_LOGS/$API_PATH_LOGS $API_PATH_LOGS
+#kubectl cp $NAMESPACE/$POD_NAME:$PATH_TO_LOGS/$API_PATH_LOGS $API_PATH_LOGS
 
 # Transform logs in an explicit format for a given ans store parquet in s3
-python transform_logs.py $API_PATH_LOGS $DATE_TO_LOG $DAY_SHIFT
+#python transform_logs.py $API_PATH_LOGS $DATE_TO_LOG $DAY_SHIFT
 
 
 ##### EVALUATION ON TEST SET

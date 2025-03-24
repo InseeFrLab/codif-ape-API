@@ -1,4 +1,4 @@
-fastapi==0.115.11
+fastapi==0.115.12
 mlflow==2.21.0
 numpy==1.26.4
 pandas==2.2.3

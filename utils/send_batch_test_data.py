@@ -3,8 +3,8 @@ import sys
 from urllib.parse import urlencode
 
 import pandas as pd
-import pyarrow.dataset as ds
 import pyarrow as pa
+import pyarrow.dataset as ds
 import pyarrow.parquet as pq
 import requests
 import s3fs

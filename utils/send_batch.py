@@ -76,10 +76,7 @@ def main(log_file_path: str, date_to_log: str):
             filesystem=fs,
         )
         .to_table()
-        .filter(
-            (ds.field("sourceAppel") == "sourceAppel=WF")
-            & (ds.field("date") == f"date={date_to_log}")
-        )
+        .filter((ds.field("sourceAppel") == "sourceAppel=WF") & (ds.field("date") == f"date={date_to_log}"))
         .to_pandas()
     )
 

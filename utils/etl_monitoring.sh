@@ -7,6 +7,7 @@ LOG_FILE_PATH_S3_OUT=$NAMESPACE/log_files/preprocessed/
 
 DATE_TO_LOG=$(date --date="-$DAY_SHIFT days" +%Y-%m-%d)
 
+
 POD_NAME=$(kubectl get pods -l app=codification-ape-model-deployment --no-headers -o custom-columns=":metadata.name")
 
 # Retrieves raw logs files from s3

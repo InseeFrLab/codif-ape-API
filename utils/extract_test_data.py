@@ -1,7 +1,7 @@
+import json
 import os
 import sys
 
-import json
 import pandas as pd
 import pyarrow as pa
 import pyarrow.parquet as pq
@@ -86,9 +86,9 @@ def transform_json_to_dataframe(json_dir: str):
 
     # Count skipped and unclassifiable
     print("Number of skips: " + str(len(results[results["skips"] != 0])))
-    print("Rate of skips: " + str(len(results[results["skips"] != 0])/len(results)))
+    print("Rate of skips: " + str(len(results[results["skips"] != 0]) / len(results)))
     print("Number of unclassifiable: " + str(len(results[results["apet_manual"] == "XXXXX"])))
-    print("Rate of unclassifiable: " + str(len(results[results["apet_manual"] == "XXXXX"])/len(results)))
+    print("Rate of unclassifiable: " + str(len(results[results["apet_manual"] == "XXXXX"]) / len(results)))
 
     # Keep only unskipped and classifiable annotations
     results = results[results["skips"] == 0]

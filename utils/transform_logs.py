@@ -1,6 +1,7 @@
 import ast
 import os
 import sys
+from datetime import datetime, timedelta
 
 import pandas as pd
 import pyarrow as pa
@@ -8,7 +9,6 @@ import pyarrow.parquet as pq
 import s3fs
 from dateutil import parser
 from pandas import json_normalize
-from datetime import datetime, timedelta
 
 
 def upload_logs(log_file_path: str, day_to_retrieve: str, day_shift: str):
@@ -46,9 +46,7 @@ def upload_logs(log_file_path: str, day_to_retrieve: str, day_shift: str):
 
 
 def process_logs(logs: pd.DataFrame):
-    filtered_logs = logs[
-        (logs["LogLevel"] == "INFO") & (logs["Message"].str.startswith("{'Query'"))
-    ]
+    filtered_logs = logs[(logs["LogLevel"] == "INFO") & (logs["Message"].str.startswith("{'Query'"))]
     extracted_data = [ast.literal_eval(message) for message in filtered_logs["Message"]]
     processed_logs = json_normalize(extracted_data)
     processed_logs.set_index(filtered_logs.index, inplace=True)
@@ -80,9 +78,7 @@ def main(log_file_path: str, day_to_retrieve: str, day_shift: str):
     data_logs = process_logs(logs)
 
     # Add timestamp to logs
-    df = pd.merge(
-        logs["Timestamp"], data_logs, how="inner", left_index=True, right_index=True
-    ).reset_index(drop=True)
+    df = pd.merge(logs["Timestamp"], data_logs, how="inner", left_index=True, right_index=True).reset_index(drop=True)
 
     # Add date column for partitionning
     df["date"] = df["Timestamp"].dt.strftime("%Y-%m-%d")

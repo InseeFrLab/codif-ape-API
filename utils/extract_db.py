@@ -1,12 +1,12 @@
-import sys
 import os
-import s3fs
+import sys
 
 import pandas as pd
-import pyarrow.dataset as ds
-import pyarrow as pa
-import pyarrow.parquet as pq
 import pendulum
+import pyarrow as pa
+import pyarrow.dataset as ds
+import pyarrow.parquet as pq
+import s3fs
 
 
 def get_filesystem():
@@ -35,7 +35,7 @@ def sample_data(df_path: str, n_lines: str, time_window_month: str):
     # Filtrer les lignes pour avoir 1 mois glissant
     # Get today's date (better to instantiate)
     # Set the local timezone explicitly
-    local_tz = pendulum.timezone('Europe/Paris')
+    local_tz = pendulum.timezone("Europe/Paris")
     # Get today's date in the local timezone
     today = pendulum.now(local_tz)
     # Calculate the last month's date with the same day
@@ -53,7 +53,7 @@ def sample_data(df_path: str, n_lines: str, time_window_month: str):
     # Sauvegarder le résultat dans un nouveau fichier Parquet
     output_file = f"extrait_random_sirene_last_date_{last_date}.parquet"
     pq.write_table(pa.Table.from_pandas(random_rows), output_file)
- 
+
     print(output_file)
 
 
@@ -63,7 +63,7 @@ def main(df_path: str, number_of_lines: str, time_window_month: str):  # , date_
     # List all the files in the prefix folder
     files = fs.ls(df_path)
     # Sort the files based on their modification time (last modified first)
-    files_sorted = sorted(files, key=lambda x: fs.info(x)['LastModified'], reverse=True)
+    files_sorted = sorted(files, key=lambda x: fs.info(x)["LastModified"], reverse=True)
     # Get the last file in the sorted list
     last_file = files_sorted[0]
     # Sample data to annotate

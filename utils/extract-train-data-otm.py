@@ -1,7 +1,7 @@
+import json
 import os
 import sys
 
-import json
 import pandas as pd
 import pyarrow as pa
 import pyarrow.parquet as pq
@@ -26,7 +26,9 @@ def transform_json_to_dataframe(json_dir: str):
         liasse_numero = data["task"]["data"]["liasse_numero"]
         date_modification = data["task"]["data"]["date_modification"]
         apet_finale = data["task"]["data"]["apet_finale"]
-        mode_calcul_ape = [v for k, v in data["task"]["data"].items() if k.startswith("mode_calcul_ape") and v != ""][0] # un des jsons contient mode_calcul_apen/apet (l'un ou l'autre)
+        mode_calcul_ape = [v for k, v in data["task"]["data"].items() if k.startswith("mode_calcul_ape") and v != ""][
+            0
+        ]  # un des jsons contient mode_calcul_apen/apet (l'un ou l'autre)
         evenement_type = data["task"]["data"]["evenement_type"]
         liasse_type = data["task"]["data"]["liasse_type"]
         activ_surf_et = str(data["task"]["data"]["activ_surf_et"])
@@ -49,7 +51,7 @@ def transform_json_to_dataframe(json_dir: str):
                 # Retrieve choice result
                 if "choices" in result["value"]:
                     choices = result["value"]["choices"]
-                    if "Oui" in choices: # order
+                    if "Oui" in choices:  # order
                         NAF2025_OK = 1
             # Then map dict data
             for result in data["result"]:
@@ -104,17 +106,17 @@ def transform_json_to_dataframe(json_dir: str):
     # Filter skipped results
     skipped_results = results[results["skips"] != 0]
     # Filter unclassifiable results
-    unclassifiable_results = results[(results["apet_manual"].str.match(r'^(I|X)'))]
+    unclassifiable_results = results[(results["apet_manual"].str.match(r"^(I|X)"))]
 
     # Count skipped and unclassifiable
     print("Number of skips: " + str(len(skipped_results)))
-    print("Rate of skips: " + str(len(skipped_results)/len(results)))
+    print("Rate of skips: " + str(len(skipped_results) / len(results)))
     print("Number of unclassifiable: " + str(len(unclassifiable_results)))
-    print("Rate of unclassifiable: " + str(len(unclassifiable_results)/len(results)))
+    print("Rate of unclassifiable: " + str(len(unclassifiable_results) / len(results)))
 
     # Keep only unskipped and classifiable annotations
     results = results[results["skips"] == 0]
-    results = results[~(results["apet_manual"].str.match(r'^(I|X)'))]
+    results = results[~(results["apet_manual"].str.match(r"^(I|X)"))]
     results = results[results["apet_manual"] != ""]
     print("Number of lines: " + str(len(results)))
 
@@ -157,11 +159,10 @@ def main(annotation_results_path: str, annotation_preprocessed_path: str, catego
                 "NAF2008_code",
                 "mode_calcul_ape",
                 "apet_manual",
-                "rating"
+                "rating",
             ]
-        ]
-        .reset_index(drop=True)
-        #.rename(
+        ].reset_index(drop=True)
+        # .rename(
         #    columns={
         #        "libelle": "text_description",
         #        "liasse_type": "type_",
@@ -169,8 +170,8 @@ def main(annotation_results_path: str, annotation_preprocessed_path: str, catego
         #        "activ_surf_et": "surface",
         #        "evenement_type": "event",
         #    }
-        #)
-        #.reset_index(drop=True)
+        # )
+        # .reset_index(drop=True)
     )
 
     # data['surface'] = data['surface'].astype(bytes)
@@ -180,7 +181,12 @@ def main(annotation_results_path: str, annotation_preprocessed_path: str, catego
     arrow_unclassifiable_table = pa.Table.from_pandas(unclassifiable_data)
 
     # Save logs in a partionned parquet file in s3
-    save_to_s3([arrow_table, arrow_skipped_table, arrow_unclassifiable_table], "projet-ape", f"/{annotation_preprocessed_path}/", category)
+    save_to_s3(
+        [arrow_table, arrow_skipped_table, arrow_unclassifiable_table],
+        "projet-ape",
+        f"/{annotation_preprocessed_path}/",
+        category,
+    )
 
 
 if __name__ == "__main__":

@@ -1,11 +1,8 @@
 import os
-import sys
 
 import pandas as pd
-import pyarrow.parquet as pq
-from tqdm import tqdm
 import s3fs
-
+from tqdm import tqdm
 
 
 def gather_data_from_categories(bucket: str, prefix: str):
@@ -24,11 +21,13 @@ def gather_data_from_categories(bucket: str, prefix: str):
 
     # Iterate over the prefixes and load Parquet files
     for speciality in tqdm(specialities):
-        training_file_path = f's3://{bucket}/{prefix}/{speciality}/preprocessed/training_data_{speciality}_NAF2025.parquet'
+        training_file_path = f"s3://{bucket}/{prefix}/{speciality}/preprocessed/training_data_{speciality}_NAF2025.parquet"
         print(f"Loading {training_file_path}")
-        skipped_file_path = f's3://{bucket}/{prefix}/{speciality}/preprocessed/skipped_data_{speciality}_NAF2025.parquet'
+        skipped_file_path = f"s3://{bucket}/{prefix}/{speciality}/preprocessed/skipped_data_{speciality}_NAF2025.parquet"
         print(f"Loading {skipped_file_path}")
-        unclassifiable_file_path = f's3://{bucket}/{prefix}/{speciality}/preprocessed/unclassifiable_data_{speciality}_NAF2025.parquet'
+        unclassifiable_file_path = (
+            f"s3://{bucket}/{prefix}/{speciality}/preprocessed/unclassifiable_data_{speciality}_NAF2025.parquet"
+        )
         print(f"Loading {unclassifiable_file_path}")
 
         try:
@@ -52,11 +51,12 @@ def gather_data_from_categories(bucket: str, prefix: str):
     # Save all the collected training set back to S3
     combined_training_df.to_parquet(f"s3://{bucket}/{prefix}/preprocessed/training_data_NAF2025.parquet", filesystem=fs)
     combined_skipped_df.to_parquet(f"s3://{bucket}/{prefix}/preprocessed/skipped_data_NAF2025.parquet", filesystem=fs)
-    combined_unclassifiable_df.to_parquet(f"s3://{bucket}/{prefix}/preprocessed/unclassifiable_data_NAF2025.parquet", filesystem=fs)
+    combined_unclassifiable_df.to_parquet(
+        f"s3://{bucket}/{prefix}/preprocessed/unclassifiable_data_NAF2025.parquet", filesystem=fs
+    )
 
 
 if __name__ == "__main__":
-    annotation_extraction_prefix = 'label-studio/annotation-campaign-2024/rev-NAF2025' # str(sys.argv[1])
-
+    annotation_extraction_prefix = "label-studio/annotation-campaign-2024/rev-NAF2025"  # str(sys.argv[1])
 
     gather_data_from_categories("projet-ape", annotation_extraction_prefix)

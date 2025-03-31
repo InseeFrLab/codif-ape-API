@@ -13,9 +13,7 @@ from tqdm import tqdm
 
 # Fonction pour extraire les informations des prédictions
 def extract_predictions(predictions_str):
-    regex_pattern = (
-        r"\[prediction n° (\d+) : code naf proposé = (\w+) ; proba associée = ([\w.]+(?:E-?\d+)?)\]"
-    )
+    regex_pattern = r"\[prediction n° (\d+) : code naf proposé = (\w+) ; proba associée = ([\w.]+(?:E-?\d+)?)\]"
     matches = re.findall(regex_pattern, predictions_str)
     return matches
 
@@ -34,10 +32,7 @@ def extract_data_by_line(line):
         "fasttextVersion",
     ]
 
-    DATA = {
-        field: re.search(r"{}=([^,\]]*)".format(re.escape(field)), line).group(1).lstrip('"')
-        for field in FIELDS
-    }
+    DATA = {field: re.search(r"{}=([^,\]]*)".format(re.escape(field)), line).group(1).lstrip('"') for field in FIELDS}
 
     DATA["timestamp"] = datetime.strptime(
         re.search(r"^(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d+)", line).group(1),
@@ -69,9 +64,7 @@ def extract_log_info(f):
     Returns:
         _type_: _description_
     """
-    PATTERN = (
-        r"fr.insee.sirene4.(repertoire|services).api.codification.rest.CodificationController:\d{3}"
-    )
+    PATTERN = r"fr.insee.sirene4.(repertoire|services).api.codification.rest.CodificationController:\d{3}"
 
     results = {
         "timestamp": [],

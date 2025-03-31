@@ -37,7 +37,7 @@ async def predict(
 
     query = preprocess_inputs(request.app.state.training_names, [form])
 
-    predictions = request.app.state.model.predict(query, params={"k": nb_echos_max})
+    predictions = request.app.state.model.predict(query, params={"k": max(2, nb_echos_max)})
 
     response = process_response(predictions, 0, nb_echos_max, prob_min, request.app.state.libs)
 

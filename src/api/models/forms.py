@@ -2,7 +2,7 @@ from typing import Optional
 
 from pydantic import BaseModel, model_validator, validator
 
-from api.constants.models import VALID_SURFACE, VALID_TYPE_FORM
+from api.constants.models import VALID_ACTIV_PERM, VALID_SURFACE, VALID_TYPE_FORM
 
 
 class SingleForm(BaseModel):
@@ -31,6 +31,18 @@ class SingleForm(BaseModel):
     def validate_surface(cls, v):
         if (v is not None) and (v not in VALID_SURFACE):
             raise ValueError(f"Invalid surface '{v}', must be one of {VALID_SURFACE}")
+        return v
+
+    @validator("cj")
+    def validate_cj(cls, v):
+        if (v is not None) and (not v.isdigit() or len(v) != 2):
+            raise ValueError("cj must be a 4-digit number (e.g., '5499')")
+        return v
+
+    @validator("activity_permanence_status")
+    def validate_activity_permanence_status(cls, v):
+        if (v is not None) and (v not in VALID_ACTIV_PERM):
+            raise ValueError(f"Invalid surface '{v}', must be one of {VALID_ACTIV_PERM}")
         return v
 
 

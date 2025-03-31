@@ -18,13 +18,14 @@ def process_response(
     pred_labels = labels[liasse_nb]
     pred_probs = probs[liasse_nb]
 
-    valid_indices = [i for i, p in enumerate(pred_probs) if p >= prob_min]
-    k = min(nb_echos_max, len(valid_indices)) if valid_indices else 0
+    valid_predictions = [
+        (label.replace("__label__", ""), prob) for label, prob in zip(pred_labels, pred_probs) if prob >= prob_min
+    ][:nb_echos_max]
 
-    if k == 0:
+    if not valid_predictions:
         raise HTTPException(
             status_code=400,
-            detail="No prediction exceeds the given minimum probability threshold.",
+            detail="No prediction exceeds the minimum probability threshold.",
         )
 
     response_data = {
@@ -33,11 +34,10 @@ def process_response(
             probabilite=float(prob),
             libelle=libs[label],
         )
-        for i in range(k)
-        for label, prob in [(pred_labels[i].replace("__label__", ""), pred_probs[i])]
+        for i, (label, prob) in enumerate(valid_predictions)
     }
 
-    ic = response_data["1"].probabilite - float(pred_probs[1]) if k > 1 else 0.0
+    ic = response_data["1"].probabilite - float(pred_probs[1])
     response_data["IC"] = ic
 
-    return PredictionResponse(__root__=response_data)
+    return PredictionResponse(response_data)

@@ -21,30 +21,22 @@ from utils.security import get_credentials
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """
-    Asynchronous context manager for managing the lifespan of the API.
-
-    This context manager is used to load the ML model and other resources
-    when the API starts and clean them up when the API stops.
-
-    Args:
-        app (FastAPI): The FastAPI application.
-    """
     configure_logging()
     logger = logging.getLogger(__name__)
     logger.info("🚀 Starting API lifespan")
 
-    app.state.model = mlflow.pyfunc.load_model(
-        model_uri=f"models:/{os.environ['MLFLOW_MODEL_NAME']}/{os.environ['MLFLOW_MODEL_VERSION']}"
-    )
-    run_data = mlflow.get_run(app.state.model.metadata.run_id).data.params
+    model_uri = f"models:/{os.environ['MLFLOW_MODEL_NAME']}/{os.environ['MLFLOW_MODEL_VERSION']}"
+    app.state.model = mlflow.pyfunc.load_model(model_uri)
+    run_params = mlflow.get_run(app.state.model.metadata.run_id).data.params
+
     app.state.training_names = [
-        run_data["text_feature"],
-        *(v for k, v in run_data.items() if k.startswith("textual_features")),
-        *(v for k, v in run_data.items() if k.startswith("categorical_features")),
+        run_params["text_feature"],
+        *(v for k, v in run_params.items() if k.startswith("textual_features")),
+        *(v for k, v in run_params.items() if k.startswith("categorical_features")),
     ]
 
-    app.state.libs = yaml.safe_load(Path("api/data/libs.yaml").read_text())
+    libs_path = Path("api/data/libs.yaml")
+    app.state.libs = yaml.safe_load(libs_path.read_text())
 
     yield
     logger.info("🛑 Shutting down API lifespan")
@@ -60,7 +52,6 @@ app = FastAPI(
 app.include_router(predict_single.router)
 app.include_router(predict_batch.router)
 
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -71,7 +62,7 @@ app.add_middleware(
 
 
 @app.get("/", tags=["Welcome"])
-def show_welcome_page(
+def root(
     credentials: Annotated[HTTPBasicCredentials, Depends(get_credentials)],
 ):
     """

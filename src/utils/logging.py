@@ -16,5 +16,4 @@ def configure_logging():
 
 def log_prediction(query: dict, response: PredictionResponse, index: int = 0):
     query_line = {key: value[index] for key, value in query.items()}
-    logging.info(f"{{'Query': {query_line}, 'Response': {response}}}")
-    # TODO : response.model_dump() ?
+    logging.info(f"{{'Query': {query_line}, 'Response': {response.model_dump()}}}")

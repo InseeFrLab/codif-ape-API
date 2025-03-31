@@ -8,14 +8,6 @@ def preprocess_inputs(training_names: list, inputs: list[SingleForm]) -> dict:
     Preprocess both single and batch inputs using shared logic.
     """
     df = pd.DataFrame([form.model_dump() for form in inputs])
-
-    for feature in training_names[:2]:  # textual features
-        df[feature] = df[feature].fillna(value="")
-    for feature in training_names[2:]:  # categorical features
-        df[feature] = df[feature].fillna(value="NaN")
-
-    df = df.astype(str)
-
     mapping = {
         "description_activity": training_names[0],
         "other_nature_activity": training_names[1],
@@ -28,4 +20,10 @@ def preprocess_inputs(training_names: list, inputs: list[SingleForm]) -> dict:
     }
 
     df.rename(columns=mapping, inplace=True)
-    return df.to_dict(orient="list")
+
+    for feature in training_names[:3]:  # textual features
+        df[feature] = df[feature].fillna(value="")
+    for feature in training_names[3:]:  # categorical features
+        df[feature] = df[feature].fillna(value="NaN")
+
+    return df.astype(str).to_dict(orient="list")

@@ -1,7 +1,7 @@
 [project]
 name = "codif-ape-API"
 version = "0.1.0"
-description = "Code for the deployment of the classification model for the APE nomenclature"
+description = "API for deployment of the classification model for APE nomenclature"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [

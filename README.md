@@ -4,8 +4,23 @@ This project provides all the code necessary to deploy the APE classification mo
 
 ## Prerequisites
 
-- Python 3.10
-- Python libraries: see `requirements.txt`
+- Python 3.12
+- Python libraries: see `pyproject.toml`
+
+## Setup
+
+```bash
+export MLFLOW_S3_ENDPOINT_URL="https://$AWS_S3_ENDPOINT"
+export MLFLOW_TRACKING_URI=***
+export MLFLOW_MODEL_NAME=***
+export MLFLOW_MODEL_VERSION=***
+
+uv sync
+uv run pre-commit install
+uv run -m nltk.downloader stopwords
+cd src
+uv run uvicorn api.main:app --reload --host 0.0.0.0 --port 5000
+```
 
 ## License
 

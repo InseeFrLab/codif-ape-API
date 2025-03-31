@@ -46,7 +46,8 @@
 0710Y: Extraction de minerais de fer
 0721Y: Extraction de minerais d’uranium et de thorium
 0729Y: Extraction d’autres minerais de métaux non ferreux
-0811Y: Extraction de pierres ornementales, de calcaire industriel, de gypse, d’ardoise
+0811Y:
+  Extraction de pierres ornementales, de calcaire industriel, de gypse, d’ardoise
   et d’autres pierres
 0812Y: Exploitation de gravières et sablières, extraction d’argiles et de kaolin
 0891Y: Extraction de minéraux chimiques et d’engrais minéraux
@@ -55,7 +56,8 @@
 0899Y: Autres activités extractives n.c.a.
 0910Y: Activités de soutien à l’extraction d’hydrocarbures
 0990Y: Activités de soutien aux autres industries extractives
-1011Y: Transformation et conservation de la viande, à l’exception de la viande de
+1011Y:
+  Transformation et conservation de la viande, à l’exception de la viande de
   volaille
 1012Y: Transformation et conservation de la viande de volaille
 1013G: Préparation industrielle de produits à base de viande
@@ -75,7 +77,8 @@
 1061H: Autres activités du travail des grains
 1062Y: Fabrication de produits amylacés
 1071G: Fabrication industrielle de pain et de pâtisserie fraîche
-1071H: Fabrication de pain et d'autres produits de boulangerie-pâtisserie associée
+1071H:
+  Fabrication de pain et d'autres produits de boulangerie-pâtisserie associée
   à leur vente au détail
 1071J: Fabrication de pâtisserie fraîche associée à sa vente au détail
 1072Y: Fabrication de biscuits, biscottes et pâtisseries de conservation
@@ -116,7 +119,8 @@
 1424Y: Fabrication de vêtements en cuir et en fourrure
 1429Y: Fabrication d’autres articles d’habillement et accessoires n.c.a.
 1511Y: Tannage, apprêt et teinture des cuirs et des fourrures
-1512Y: Fabrication de bagages, de maroquinerie, sellerie et bourrellerie, en toutes
+1512Y:
+  Fabrication de bagages, de maroquinerie, sellerie et bourrellerie, en toutes
   matières
 1520Y: Fabrication de chaussures
 1611Y: Sciage et rabotage du bois
@@ -159,7 +163,8 @@
 2060Y: Fabrication de fibres artificielles ou synthétiques
 2110Y: Fabrication de produits pharmaceutiques de base
 2120Y: Fabrication de préparations pharmaceutiques
-2211Y: Fabrication et rechapage de pneus en caoutchouc et fabrication de chambres
+2211Y:
+  Fabrication et rechapage de pneus en caoutchouc et fabrication de chambres
   à air
 2212Y: Fabrication d’autres articles en caoutchouc
 2221Y: Fabrication de plaques, feuilles, tubes et profilés en matières plastiques
@@ -193,7 +198,8 @@
 2391Y: Fabrication de produits abrasifs
 2399Y: Fabrication d’autres produits minéraux non métalliques n.c.a.
 2410Y: Sidérurgie
-2420Y: Fabrication de tubes, tuyaux, profilés creux et accessoires correspondants
+2420Y:
+  Fabrication de tubes, tuyaux, profilés creux et accessoires correspondants
   en acier
 2431Y: Étirage à froid de barres
 2432Y: Laminage à froid de feuillards
@@ -233,9 +239,11 @@
 2640Y: Fabrication de produits électroniques grand public
 2651Y: Fabrication d’instruments et d’appareils de mesure, d’essai et de navigation
 2652Y: Horlogerie
-2660Y: Fabrication d’équipements d’irradiation médicale, d’équipements électromédicaux
+2660Y:
+  Fabrication d’équipements d’irradiation médicale, d’équipements électromédicaux
   et électrothérapeutiques
-2670Y: Fabrication de matériels optique et photographique et de supports magnétiques
+2670Y:
+  Fabrication de matériels optique et photographique et de supports magnétiques
   et optiques
 2711Y: Fabrication de moteurs, génératrices et transformateurs électriques
 2712Y: Fabrication de matériel de distribution et de commande électrique
@@ -247,7 +255,8 @@
 2751Y: Fabrication d’appareils électroménagers
 2752Y: Fabrication d’appareils ménagers non électriques
 2790Y: Fabrication d’autres matériels électriques
-2811Y: Fabrication de moteurs et turbines, à l’exception des moteurs d’avions et de
+2811Y:
+  Fabrication de moteurs et turbines, à l’exception des moteurs d’avions et de
   véhicules
 2812Y: Fabrication d’équipements de transmission de puissance hydrauliques et pneumatiques
 2813G: Fabrication d'autres pompes
@@ -256,7 +265,8 @@
 2815Y: Fabrication de roulements et de transmissions mécaniques
 2821Y: Fabrication de fours et brûleurs et d’équipements fixes de chauffage domestique
 2822Y: Fabrication de matériel de levage et de manutention
-2823Y: Fabrication de machines et d’équipements de bureau (à l’exception des ordinateurs
+2823Y:
+  Fabrication de machines et d’équipements de bureau (à l’exception des ordinateurs
   et équipements périphériques)
 2824Y: Fabrication d’outillage portatif à moteur incorporé
 2825Y: Fabrication d’équipements aérauliques et frigorifiques industriels
@@ -273,7 +283,8 @@
 2897Y: Fabrication de machines de fabrication additive
 2899Y: Fabrication d’autres machines d’usage spécifique n.c.a.
 2910Y: Construction de véhicules automobiles
-2920Y: Fabrication de carrosseries de véhicules automobiles ; fabrication de remorques
+2920Y:
+  Fabrication de carrosseries de véhicules automobiles ; fabrication de remorques
   et de semi-remorques
 2931Y: Fabrication d’équipements électriques et électroniques automobiles
 2932Y: Fabrication d’autres équipements automobiles
@@ -364,43 +375,55 @@
 4341G: Travaux de charpente
 4341H: Travaux de couverture par éléments
 4341J: Travaux d'étanchéification pour la toiture
-4342G: Travaux de montage d’éléments de construction préfabriqués pour bâtiments,
+4342G:
+  Travaux de montage d’éléments de construction préfabriqués pour bâtiments,
   en acier
-4342H: Travaux de montage d’éléments de construction préfabriqués pour bâtiments,
+4342H:
+  Travaux de montage d’éléments de construction préfabriqués pour bâtiments,
   en bois
-4342J: Autres travaux de construction spécialisés dans la construction de bâtiments
+4342J:
+  Autres travaux de construction spécialisés dans la construction de bâtiments
   n.c.a.
 4350Y: Travaux de construction spécialisés en génie civil
 4360Y: Activités de service d’intermédiation pour des travaux de construction spécialisés
 4391Y: Travaux de maçonnerie et de pose de briques
 4399G: Location avec opérateur d’équipement de construction
 4399H: Tous les autres travaux de construction spécialisés n.c.a.
-4611Y: Activités d’intermédiaire du commerce de gros en matières premières agricoles,
+4611Y:
+  Activités d’intermédiaire du commerce de gros en matières premières agricoles,
   animaux vivants, matières premières textiles et produits semi-finis
-4612Y: Activités d’intermédiaire du commerce de gros en combustibles, minerais, métaux
+4612Y:
+  Activités d’intermédiaire du commerce de gros en combustibles, minerais, métaux
   et produits chimiques
 4613Y: Activités d’intermédiaire du commerce de gros en bois et matériaux de construction
-4614Y: Activités d’intermédiaire du commerce de gros en machines, équipements industriels,
+4614Y:
+  Activités d’intermédiaire du commerce de gros en machines, équipements industriels,
   navires et avions
-4615Y: Activités d’intermédiaire du commerce de gros en meubles, biens domestiques
+4615Y:
+  Activités d’intermédiaire du commerce de gros en meubles, biens domestiques
   et quincaillerie
-4616Y: Activités d’intermédiaire du commerce de gros en textiles, habillement, fourrures,
+4616Y:
+  Activités d’intermédiaire du commerce de gros en textiles, habillement, fourrures,
   chaussures et articles en cuir
 4617G: Activités d’intermédiation des centrales d’achat alimentaires
-4617H: Autres activités d'intermédiaire du commerce de gros en denrées, boissons et
+4617H:
+  Autres activités d'intermédiaire du commerce de gros en denrées, boissons et
   tabac
-4618Y: Activités d’intermédiaire spécialisé dans le commerce de gros d’autres produits
+4618Y:
+  Activités d’intermédiaire spécialisé dans le commerce de gros d’autres produits
   spécifiques
 4619G: Activités d’intermédiation des centrales d’achat non spécialisées
 4619H: Autres activités d'intermédiaire non spécialisé du commerce de gros
-4621Y: Commerce de gros de céréales, de tabac non manufacturé, de semences et d’aliments
+4621Y:
+  Commerce de gros de céréales, de tabac non manufacturé, de semences et d’aliments
   pour animaux
 4622Y: Commerce de gros de fleurs et de plantes
 4623Y: Commerce de gros d’animaux vivants
 4624Y: Commerce de gros de cuirs et de peaux
 4631Y: Commerce de gros de fruits et légumes
 4632G: Commerce de gros de viandes et de produits à base de viande
-4632H: Commerce de gros de poissons, crustacés et mollusques et de produits à base
+4632H:
+  Commerce de gros de poissons, crustacés et mollusques et de produits à base
   de poisson
 4633Y: Commerce de gros de produits laitiers, œufs, huiles et matières grasses comestibles
 4634Y: Commerce de gros de boissons
@@ -416,14 +439,16 @@
 4644Y: Commerce de gros de vaisselle, verrerie et produits d’entretien
 4645Y: Commerce de gros de parfumerie et de produits de beauté
 4646Y: Commerce de gros de produits pharmaceutiques et médicaux
-4647Y: Commerce de gros de meubles à usage domestique, de bureau et de magasin, de
+4647Y:
+  Commerce de gros de meubles à usage domestique, de bureau et de magasin, de
   tapis et d’appareils d’éclairage
 4648Y: Commerce de gros d’articles d’horlogerie et de bijouterie
 4649Y: Commerce de gros d’autres biens domestiques
 4650Y: Commerce de gros d’équipements de l’information et de la communication
 4661Y: Commerce de gros de matériel agricole
 4662Y: Commerce de gros de machines-outils
-4663Y: Commerce de gros de machines pour l’extraction, la construction et le génie
+4663Y:
+  Commerce de gros de machines pour l’extraction, la construction et le génie
   civil
 4664G: Commerce de gros d’autre matériel électrique
 4664H: Commerce de gros de matériels de manutention et de levage
@@ -433,7 +458,8 @@
 4671H: Commerce de gros d’autres véhicules automobiles
 4672Y: Commerce de gros de pièces et accessoires de véhicules automobiles
 4673Y: Commerce de gros de motocycles et de pièces et accessoires pour motocycles
-4681Y: Commerce de gros de combustibles solides, liquides et gazeux et de produits
+4681Y:
+  Commerce de gros de combustibles solides, liquides et gazeux et de produits
   annexes
 4682Y: Commerce de gros de minerais et de métaux
 4683G: Commerce de gros de bois et matériaux de construction
@@ -445,18 +471,24 @@
 4686Y: Commerce de gros d’autres produits intermédiaires
 4687Y: Commerce de gros de déchets et débris
 4690Y: Commerce de gros non spécialisé
-4711G: Commerce de détail non spécialisé à prédominance alimentaire en magasin de
+4711G:
+  Commerce de détail non spécialisé à prédominance alimentaire en magasin de
   moins de 120 m²
-4711H: Commerce de détail non spécialisé à prédominance alimentaire en magasin de
+4711H:
+  Commerce de détail non spécialisé à prédominance alimentaire en magasin de
   120 à 400 m² (supérette)
-4711J: Commerce de détail non spécialisé à prédominance alimentaire en magasin de
+4711J:
+  Commerce de détail non spécialisé à prédominance alimentaire en magasin de
   400 à 2500 m² (supermarché)
-4711K: Commerce de détail non spécialisé à prédominance alimentaire en magasin de
+4711K:
+  Commerce de détail non spécialisé à prédominance alimentaire en magasin de
   plus de 2500 m² (hypermarché)
 4711L: Commerce de détail non spécialisé à prédominance alimentaire hors magasin
-4712G: Autre commerce de détail non spécialisé en magasin de plus de 2500 m² (grand
+4712G:
+  Autre commerce de détail non spécialisé en magasin de plus de 2500 m² (grand
   magasin)
-4712H: Autre commerce de détail non spécialisé en magasin de moins de 2500 m² ou hors
+4712H:
+  Autre commerce de détail non spécialisé en magasin de moins de 2500 m² ou hors
   magasin
 4721Y: Commerce de détail de fruits et légumes
 4722Y: Commerce de détail de viande et de produits à base de viande
@@ -465,19 +497,23 @@
 4725Y: Commerce de détail de boissons
 4726Y: Commerce de détail de produits à base de tabac
 4727G: Commerce de détail de produits laitiers et d'œufs
-4727H: Commerce de détail spécialisé d’autres produits d’épicerie et d’autres produits
+4727H:
+  Commerce de détail spécialisé d’autres produits d’épicerie et d’autres produits
   alimentaires n.c.a.
 4730Y: Commerce de détail de carburants
 4740Y: Commerce de détail d’équipements de l’information et de la communication
 4751Y: Commerce de détail de textiles
-4752G: Commerce de détail de quincaillerie, de matériaux de construction et de bricolage,
+4752G:
+  Commerce de détail de quincaillerie, de matériaux de construction et de bricolage,
   de peinture et de verre en magasin de moins de 400 m²
-4752H: Commerce de détail de quincaillerie, de matériaux de construction et de bricolage,
+4752H:
+  Commerce de détail de quincaillerie, de matériaux de construction et de bricolage,
   de peinture et de verre en magasin de plus de 400 m² ou hors magasin
 4753Y: Commerce de détail de tapis, moquettes et revêtements de murs et de sols
 4754Y: Commerce de détail d’appareils électroménagers
 4755G: Commerce de détail de meubles
-4755H: Commerce de détail d'appareils d’éclairage, de vaisselle et d’autres équipements
+4755H:
+  Commerce de détail d'appareils d’éclairage, de vaisselle et d’autres équipements
   du foyer
 4761Y: Commerce de détail de livres
 4762Y: Commerce de détail de journaux et autres publications périodiques et de papeterie
@@ -491,7 +527,8 @@
 4774G: Commerce de détail d'optique
 4774H: Commerce de détail d’autres articles médicaux et orthopédiques
 4775Y: Commerce de détail de parfumerie et de produits de beauté
-4776Y: Commerce de détail de fleurs, plantes, engrais, animaux de compagnie et aliments
+4776Y:
+  Commerce de détail de fleurs, plantes, engrais, animaux de compagnie et aliments
   pour ces animaux
 4777Y: Commerce de détail d’articles d’horlogerie et de bijouterie
 4778G: Commerce de détail de charbons et combustibles
@@ -502,11 +539,14 @@
 4782Y: Commerce de détail de pièces et accessoires de véhicules automobiles
 4783Y: Commerce de détail de motocycles et de pièces et accessoires de motocycles
 4791Y: Activités de service d’intermédiation pour le commerce de détail non spécialisé
-4792G: Activités de service d’intermédiation pour le commerce de détail de véhicules
+4792G:
+  Activités de service d’intermédiation pour le commerce de détail de véhicules
   automobiles
-4792H: Activités de service d’intermédiation pour le commerce de détail de journaux
+4792H:
+  Activités de service d’intermédiation pour le commerce de détail de journaux
   et de produits à base de tabac
-4792J: Activités de service d'intermédiation pour le commerce de détail spécialisé
+4792J:
+  Activités de service d'intermédiation pour le commerce de détail spécialisé
   d’autres biens
 4911Y: Transport ferroviaire lourd de voyageurs
 4912Y: Autre transport ferroviaire de voyageurs
@@ -555,7 +595,8 @@
 5611J: Restauration de type rapide
 5612Y: Activités de service de restauration mobile
 5621Y: Activités de traiteur événementiel
-5622Y: Activités de service contractuel de restauration et autres activités de service
+5622Y:
+  Activités de service contractuel de restauration et autres activités de service
   de restauration
 5630Y: Activités de débit de boissons
 5640Y: Activités de service d’intermédiation pour des activités de service de restauration
@@ -569,7 +610,8 @@
 5911H: Production de films institutionnels et publicitaires
 5911J: Production de films pour le cinéma
 5911K: Production de films et programmes d'animation
-5912Y: Post-production de films cinématographiques, de vidéos et de programmes de
+5912Y:
+  Post-production de films cinématographiques, de vidéos et de programmes de
   télévision
 5913Y: Distribution de films cinématographiques et de vidéos
 5914Y: Projection de films cinématographiques
@@ -580,15 +622,18 @@
 6031Y: Activités d’agence de presse
 6039Y: Autres activités de distribution de contenu
 6110Y: Activités de télécommunications filaires, sans fil et satellitaires
-6120Y: Activités de revente de télécommunications et activités de service d’intermédiation
+6120Y:
+  Activités de revente de télécommunications et activités de service d’intermédiation
   pour les télécommunications
 6190Y: Autres activités de télécommunications
 6210Y: Activités de programmation informatique
 6220G: Conseil en systèmes et logiciels informatiques
-6220H: Gestion d'installations informatiques et maintenance de systèmes et d’applications
+6220H:
+  Gestion d'installations informatiques et maintenance de systèmes et d’applications
   informatiques
 6290Y: Autres activités de service informatique
-6310Y: Infrastructure informatique, traitement de données, hébergement et activités
+6310Y:
+  Infrastructure informatique, traitement de données, hébergement et activités
   connexes
 6391Y: Activités de portail de recherche sur le web
 6392Y: Autres activités de service d’information
@@ -600,7 +645,8 @@
 6432Y: Activités de fiducie, comptes de patrimoine et d’agence
 6491Y: Crédit-bail
 6492Y: Autre distribution de crédit
-6499Y: Autres activités des services financiers, hors assurance et fonds de pension,
+6499Y:
+  Autres activités des services financiers, hors assurance et fonds de pension,
   n.c.a.
 6511Y: Assurance vie
 6512Y: Assurances non-vie
@@ -609,7 +655,8 @@
 6611Y: Administration de marchés financiers
 6612Y: Courtage de valeurs mobilières et de matières premières
 6619G: Activités des unités non productives détentrices de patrimoine mobilier
-6619H: Autres activités auxiliaires de services financiers, hors assurance et caisses
+6619H:
+  Autres activités auxiliaires de services financiers, hors assurance et caisses
   de retraite, n.c.a.
 6621Y: Évaluation des risques et dommages
 6622Y: Activités des agents et courtiers d’assurances
@@ -651,18 +698,22 @@
 7721Y: Location et location-bail d’articles de loisirs et de sport
 7722Y: Location et location-bail d’autres biens personnels et domestiques
 7731Y: Location et location-bail de matériel agricole
-7732Y: Location et location-bail de machines et équipements pour la construction et
+7732Y:
+  Location et location-bail de machines et équipements pour la construction et
   le génie civil
 7733Y: Location et location-bail de machines et équipements de bureau et d’ordinateurs
 7734Y: Location et location-bail de matériels de transport par eau
 7735Y: Location et location-bail de matériels de transport aérien
 7739Y: Location et location-bail d’autres machines, équipements et biens n.c.a.
 7740G: Services de franchise ou de licence de marques
-7740H: Autre location-bail de propriété intellectuelle et de produits similaires,
+7740H:
+  Autre location-bail de propriété intellectuelle et de produits similaires,
   à l'exception des œuvres soumises à copyright
-7751Y: Activités de service d’intermédiation pour la location et la location-bail
+7751Y:
+  Activités de service d’intermédiation pour la location et la location-bail
   de voitures, camping-cars et caravanes
-7752Y: Activités de service d’intermédiation pour la location et la location-bail
+7752Y:
+  Activités de service d’intermédiation pour la location et la location-bail
   d’autres biens corporels et d’immobilisations incorporelles non financières
 7810Y: Activités des agences de placement de main-d’œuvre
 7820G: Activités d’agence de travail temporaire
@@ -681,15 +732,18 @@
 8210Y: Activités de service de bureau et de soutien administratif
 8220Y: Activités de centre d’appels
 8230Y: Organisation de salons professionnels et congrès
-8240Y: Activités de service d’intermédiation pour des services de soutien aux entreprises
+8240Y:
+  Activités de service d’intermédiation pour des services de soutien aux entreprises
   n.c.a.
 8291Y: Activités d’agence de recouvrement et de bureau de crédit
 8292Y: Activités de conditionnement
 8299Y: Autres activités de service de soutien aux entreprises n.c.a.
 8411Y: Activités d’administration publique générale
-8412Y: Réglementation des soins de santé, de l’enseignement, des services culturels
+8412Y:
+  Réglementation des soins de santé, de l’enseignement, des services culturels
   et des autres services sociaux
-8413Y: Réglementation et contribution à l’amélioration de l’efficacité des activités
+8413Y:
+  Réglementation et contribution à l’amélioration de l’efficacité des activités
   économiques
 8421Y: Affaires étrangères
 8422Y: Défense
@@ -710,7 +764,8 @@
 8553Y: Enseignement de la conduite
 8559G: Formation continue d'adultes
 8559H: Tous les autres enseignements n.c.a.
-8561Y: Activités de service d’intermédiation dans le domaine de l’appui scolaire et
+8561Y:
+  Activités de service d’intermédiation dans le domaine de l’appui scolaire et
   du tutorat
 8569Y: Activités de soutien à l’enseignement n.c.a.
 8610Y: Activités hospitalières
@@ -724,24 +779,29 @@
 8694H: Activités de maïeutique
 8695Y: Activités de physiothérapie
 8696Y: Activités de médecine traditionnelle, complémentaire et alternative
-8697Y: Activités de service d’intermédiation pour les services médicaux, dentaires
+8697Y:
+  Activités de service d’intermédiation pour les services médicaux, dentaires
   et autres services pour la santé humaine
 8699Y: Autres activités pour la santé humaine n.c.a.
 8710G: Activités d’hébergement médicalisé pour personnes âgées
 8710H: Activités d’hébergement médicalisé pour enfants en situation de handicap
-8710J: Activités d’hébergement médicalisé pour adultes en situation de handicap et
+8710J:
+  Activités d’hébergement médicalisé pour adultes en situation de handicap et
   autres activités d’hébergement médicalisé
 8720G: Activités d’hébergement social pour personnes souffrant de maladie mentale
 8720H: Activités d’hébergement social pour personnes souffrant de toxicomanie
 8730G: Activités d’hébergement social pour personnes âgées
 8730H: Activités d’hébergement social pour personnes en situation de handicap physique
-8791Y: Activités de service d’intermédiation pour des activités de soins en établissement
+8791Y:
+  Activités de service d’intermédiation pour des activités de soins en établissement
   résidentiel
 8799G: Activités d’hébergement social pour enfants en difficulté
-8799H: Activités d’hébergement social pour adultes et familles en difficulté et autres
+8799H:
+  Activités d’hébergement social pour adultes et familles en difficulté et autres
   activités d’hébergement social n.c.a.
 8810G: Activités d’action sociale à domicile
-8810H: Activités d’accueil ou d’accompagnement sans hébergement d’adultes en situation
+8810H:
+  Activités d’accueil ou d’accompagnement sans hébergement d’adultes en situation
   de handicap ou de personnes âgées
 8810J: Activités de réadaptation professionnelle et réinsertion, aide par le travail
 8891G: Accueil de jeunes enfants en structure collective
@@ -753,7 +813,8 @@
 9012Y: Activités de création en arts visuels
 9013Y: Autres activités de création artistique
 9020Y: Activités de spectacle
-9031G: Gestion d’installations et de lieux de production et de diffusion des arts
+9031G:
+  Gestion d’installations et de lieux de production et de diffusion des arts
   visuels
 9031H: Gestion de salles de spectacle vivant
 9039G: Activités de production et organisation d'évènements culturels
@@ -762,7 +823,8 @@
 9112Y: Activités des centres d’archives
 9121Y: Activités des musées et collections
 9122Y: Activité des monuments et sites historiques
-9130Y: Conservation, restauration et autres activités de soutien pour la préservation
+9130Y:
+  Conservation, restauration et autres activités de soutien pour la préservation
   du patrimoine culturel
 9141Y: Activités de gestion de jardins botaniques et zoologiques
 9142Y: Activités de gestion de réserves naturelles
@@ -781,18 +843,21 @@
 9499Y: Activités des organisations associatives n.c.a.
 9510Y: Réparation et entretien d’ordinateurs et d’équipements de communication
 9521Y: Réparation et entretien de produits électroniques grand public
-9522Y: Réparation et entretien d’appareils électroménagers et d’équipements pour la
+9522Y:
+  Réparation et entretien d’appareils électroménagers et d’équipements pour la
   maison et le jardin
 9523Y: Réparation et entretien de chaussures et d’articles en cuir
 9524Y: Réparation et entretien de meubles et d’équipements du foyer
 9525Y: Réparation et entretien d’articles d’horlogerie et de bijouterie
 9529G: Réparation et entretien de cycles et autres engins de la mobilité douce
-9529H: Réparation et entretien de tous les autres biens personnels ou domestiques
+9529H:
+  Réparation et entretien de tous les autres biens personnels ou domestiques
   n.c.a.
 9531G: Réparation et entretien de véhicules automobiles légers (moins de 3,5 tonnes)
 9531H: Réparation et entretien d'autres véhicules automobiles
 9532Y: Réparation et entretien de motocycles
-9540Y: Activités de service d’intermédiation pour la réparation et l’entretien d’ordinateurs,
+9540Y:
+  Activités de service d’intermédiation pour la réparation et l’entretien d’ordinateurs,
   de biens personnels et domestiques et d’automobiles et motocycles
 9610G: Blanchisserie-teinturerie de gros
 9610H: Blanchisserie-teinturerie de détail
@@ -806,8 +871,10 @@
 9699G: Services pour animaux de compagnie
 9699H: Toutes les autres activités de service aux personnes n.c.a.
 9700Y: Activités des ménages en tant qu’employeurs de personnel domestique
-9810Y: Activités indifférenciées des ménages en tant que producteurs de biens pour
+9810Y:
+  Activités indifférenciées des ménages en tant que producteurs de biens pour
   usage propre
-9820Y: Activités indifférenciées des ménages en tant que producteurs de services pour
+9820Y:
+  Activités indifférenciées des ménages en tant que producteurs de services pour
   usage propre
 9900Y: Activités des organisations et organismes extraterritoriaux

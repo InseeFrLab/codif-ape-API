@@ -1,12 +1,11 @@
 import os
 import re
-from typing import Optional
 
 import mlflow
 import numpy as np
 import pandas as pd
-from fastapi import Depends, HTTPException, Request, status
-from fastapi.security import HTTPBasic, HTTPBasicCredentials
+from fastapi import HTTPException, Request
+from fastapi.security import HTTPBasic
 
 
 def get_model(model_name: str, model_version: str) -> object:
@@ -54,34 +53,6 @@ async def optional_security(request: Request):
         return None
 
 
-def get_current_username(
-    credentials: Optional[HTTPBasicCredentials] = Depends(optional_security),
-):
-    """
-    Retrieves the current username based on the provided credentials.
-
-    Args:
-        credentials (Optional[HTTPBasicCredentials]): The credentials used for authentication.
-
-    Returns:
-        str: The username extracted from the credentials.
-
-    Raises:
-        HTTPException: If authentication fails.
-
-    """
-    if os.getenv("AUTH_API") == "True":
-        if not (credentials.username == os.getenv("API_USERNAME")) or not (
-            credentials.password == os.getenv("API_PASSWORD")
-        ):
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Authentication failed",
-                headers={"WWW-Authenticate": "Basic"},
-            )
-    return credentials.username
-
-
 def preprocess_query(
     training_names: list,
     description_activity: str,
@@ -117,8 +88,7 @@ def preprocess_query(
 
     """
     type_form, nature, surface, cj, activity_permanence_status = (
-        np.nan if v is None else v
-        for v in (type_form, nature, surface, cj, activity_permanence_status)
+        np.nan if v is None else v for v in (type_form, nature, surface, cj, activity_permanence_status)
     )
 
     list_ok = [
@@ -161,8 +131,7 @@ def preprocess_query(
     # TODO : Add check for cj and activity_permanence_status
 
     type_form, nature, surface, cj, activity_permanence_status = (
-        "NaN" if not isinstance(v, str) else v
-        for v in (type_form, nature, surface, cj, activity_permanence_status)
+        "NaN" if not isinstance(v, str) else v for v in (type_form, nature, surface, cj, activity_permanence_status)
     )
 
     query = {
@@ -202,10 +171,7 @@ def preprocess_batch(training_names: list, query: dict) -> dict:
         matches = df.index[df["description_activity"].isna()].to_list()
         raise HTTPException(
             status_code=400,
-            detail=(
-                "The description of the activity is missing for some forms. "
-                f"See line(s): {*matches,}"
-            ),
+            detail=(f"The description of the activity is missing for some forms. See line(s): {(*matches,)}"),
         )
 
     list_ok = [
@@ -330,18 +296,12 @@ def process_response(
     }
 
     try:
-        response = output_dict | {
-            "IC": output_dict["1"]["probabilite"] - float(predictions[1][liasse_nb][1])
-        }
+        response = output_dict | {"IC": output_dict["1"]["probabilite"] - float(predictions[1][liasse_nb][1])}
         return response
     except KeyError:
         raise HTTPException(
             status_code=400,
-            detail=(
-                "The minimal probability requested is "
-                "higher than the highest prediction "
-                "probability of the model."
-            ),
+            detail=("The minimal probability requested is higher than the highest prediction probability of the model."),
         )
 
 
@@ -369,18 +329,9 @@ def check_format_features(values: list, feature: str, regex: str, list_ok: list 
                 matches.append(i)
 
     errors = {
-        "type_form": (
-            "The format of type_liasse is incorrect. Accepted values are"
-            f": {list_ok}. See line(s) : {*matches,}"
-        ),
-        "nature": (
-            "The format of nature is incorrect. The nature is an "
-            f"integer between 00 and 99. See line(s): {*matches,}"
-        ),
-        "surface": (
-            "The format of surface is incorrect. Accepted values are: "
-            f"{list_ok}. See line(s): {*matches,}"
-        ),
+        "type_form": (f"The format of type_liasse is incorrect. Accepted values are: {list_ok}. See line(s) : {(*matches,)}"),
+        "nature": (f"The format of nature is incorrect. The nature is an integer between 00 and 99. See line(s): {(*matches,)}"),
+        "surface": (f"The format of surface is incorrect. Accepted values are: {list_ok}. See line(s): {(*matches,)}"),
     }
 
     if matches:

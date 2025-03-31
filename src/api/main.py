@@ -15,7 +15,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPBasicCredentials
 from pydantic import BaseModel
 
-from app.utils import (
+from utils.logging import configure_logging
+from utils.utils import (
     get_model,
     optional_security,
     preprocess_batch,
@@ -35,26 +36,24 @@ async def lifespan(app: FastAPI):
     Args:
         app (FastAPI): The FastAPI application.
     """
-    global model, libs, training_names
+    configure_logging()
+    logger = logging.getLogger(__name__)
+    logger.info("🚀 Starting API lifespan")
 
-    model_name: str = os.getenv("MLFLOW_MODEL_NAME")
-    model_version: str = os.getenv("MLFLOW_MODEL_VERSION")
     # Load the ML model
-    model = get_model(model_name, model_version)
-    libs = yaml.safe_load(Path("app/libs.yaml").read_text())
-    text_feature = [mlflow.get_run(model.metadata.run_id).data.params["text_feature"]]
+    app.state.model = get_model(os.environ["MLFLOW_MODEL_NAME"], os.environ["MLFLOW_MODEL_VERSION"])
+    logging.info(f"{os.getcwd()}")
+    app.state.libs = yaml.safe_load(Path("api/data/libs.yaml").read_text())
+    text_feature = [mlflow.get_run(app.state.model.metadata.run_id).data.params["text_feature"]]
     textual_features = [
-        v
-        for k, v in mlflow.get_run(model.metadata.run_id).data.params.items()
-        if k.startswith("textual_features")
+        v for k, v in mlflow.get_run(app.state.model.metadata.run_id).data.params.items() if k.startswith("textual_features")
     ]
     categorical_features = [
-        v
-        for k, v in mlflow.get_run(model.metadata.run_id).data.params.items()
-        if k.startswith("categorical_features")
+        v for k, v in mlflow.get_run(app.state.model.metadata.run_id).data.params.items() if k.startswith("categorical_features")
     ]
-    training_names = text_feature + textual_features + categorical_features
+    app.state.training_names = text_feature + textual_features + categorical_features
     yield
+    logger.info("🛑 Shutting down API lifespan")
 
 
 class Forms(BaseModel):
@@ -89,10 +88,7 @@ class Forms(BaseModel):
         json_schema_extra = {
             "example": {
                 "description_activity": [
-                    (
-                        "LOUEUR MEUBLE NON PROFESSIONNEL EN RESIDENCE DE "
-                        "SERVICES (CODE APE 6820A Location de logements)"
-                    )
+                    ("LOUEUR MEUBLE NON PROFESSIONNEL EN RESIDENCE DE SERVICES (CODE APE 6820A Location de logements)")
                 ],
                 "other_nature_activity": [""],
                 "precision_act_sec_agricole": [""],
@@ -105,7 +101,7 @@ class Forms(BaseModel):
         }
 
 
-codification_ape_app = FastAPI(
+app = FastAPI(
     lifespan=lifespan,
     title="Prédiction code APE",
     description="Application de prédiction pour \
@@ -115,7 +111,7 @@ codification_ape_app = FastAPI(
 )
 
 
-codification_ape_app.add_middleware(
+app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
     allow_credentials=False,
@@ -123,34 +119,22 @@ codification_ape_app.add_middleware(
     allow_headers=["*"],
 )
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(levelname)s - %(message)s",
-    handlers=[
-        logging.FileHandler("codification_ape_log_file.log"),
-        logging.StreamHandler(),
-    ],
-)
 
-
-@codification_ape_app.get("/", tags=["Welcome"])
+@app.get("/", tags=["Welcome"])
 def show_welcome_page(
     credentials: Annotated[HTTPBasicCredentials, Depends(optional_security)],
 ):
     """
     Show welcome page with model name and version.
     """
-    model_name: str = os.getenv("MLFLOW_MODEL_NAME")
-    model_version: str = os.getenv("MLFLOW_MODEL_VERSION")
-
     return {
         "Message": "Codification de l'APE",
-        "Model_name": f"{model_name}",
-        "Model_version": f"{model_version}",
+        "Model_name": f"{os.environ['MLFLOW_MODEL_NAME']}",
+        "Model_version": f"{os.environ['MLFLOW_MODEL_VERSION']}",
     }
 
 
-@codification_ape_app.get("/predict", tags=["Predict"])
+@app.get("/predict", tags=["Predict"])
 async def predict(
     credentials: Annotated[HTTPBasicCredentials, Depends(optional_security)],
     description_activity: str,
@@ -187,7 +171,7 @@ async def predict(
     """
 
     query = preprocess_query(
-        training_names,
+        app.state.training_names,
         description_activity,
         other_nature_activity,
         precision_act_sec_agricole,
@@ -199,11 +183,11 @@ async def predict(
     )
 
     if nb_echos_max != 1:
-        predictions = model.predict(query, params={"k": nb_echos_max})
+        predictions = app.state.model.predict(query, params={"k": nb_echos_max})
     else:
-        predictions = model.predict(query, params={"k": 2})
+        predictions = app.state.model.predict(query, params={"k": 2})
 
-    response = process_response(predictions, 0, nb_echos_max, prob_min, libs)
+    response = process_response(predictions, 0, nb_echos_max, prob_min, app.state.libs)
 
     # Logging
     query_to_log = {key: value[0] for key, value in query.items()}
@@ -212,7 +196,7 @@ async def predict(
     return response
 
 
-@codification_ape_app.post("/predict-batch", tags=["Predict"])
+@app.post("/predict-batch", tags=["Predict"])
 async def predict_batch(
     credentials: Annotated[HTTPBasicCredentials, Depends(optional_security)],
     forms: Forms,
@@ -231,20 +215,17 @@ async def predict_batch(
     Returns:
         list: The list of predicted responses.
     """
-    query = preprocess_batch(training_names, forms.dict())
+    query = preprocess_batch(app.state.training_names, forms.dict())
 
     if nb_echos_max != 1:
-        predictions = model.predict(query, params={"k": nb_echos_max})
+        predictions = app.state.model.predict(query, params={"k": nb_echos_max})
     else:
-        predictions = model.predict(query, params={"k": 2})
+        predictions = app.state.model.predict(query, params={"k": 2})
 
-    response = [
-        process_response(predictions, i, nb_echos_max, prob_min, libs)
-        for i in range(len(predictions[0]))
-    ]
+    response = [process_response(predictions, i, nb_echos_max, prob_min, app.state.libs) for i in range(len(predictions[0]))]
 
     # Logging
-    for line in range(len(query[training_names[0]])):
+    for line in range(len(query[app.state.training_names[0]])):
         query_line = {key: value[line] for key, value in query.items()}
         response_line = response[line]
         logging.info(f"{{'Query': {query_line}, 'Response': {response_line}}}")

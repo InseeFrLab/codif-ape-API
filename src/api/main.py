@@ -15,12 +15,12 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPBasicCredentials
 from pydantic import BaseModel
 
+from api.models.forms import BatchForms, SingleForm
 from utils.logging import configure_logging
+from utils.preprocessing import preprocess_inputs
 from utils.utils import (
+    get_credentials,
     get_model,
-    optional_security,
-    preprocess_batch,
-    preprocess_query,
     process_response,
 )
 
@@ -40,23 +40,21 @@ async def lifespan(app: FastAPI):
     logger = logging.getLogger(__name__)
     logger.info("🚀 Starting API lifespan")
 
-    # Load the ML model
     app.state.model = get_model(os.environ["MLFLOW_MODEL_NAME"], os.environ["MLFLOW_MODEL_VERSION"])
-    logging.info(f"{os.getcwd()}")
+    run_data = mlflow.get_run(app.state.model.metadata.run_id).data.params
+    app.state.training_names = [
+        run_data["text_feature"],
+        *(v for k, v in run_data.items() if k.startswith("textual_features")),
+        *(v for k, v in run_data.items() if k.startswith("categorical_features")),
+    ]
+
     app.state.libs = yaml.safe_load(Path("api/data/libs.yaml").read_text())
-    text_feature = [mlflow.get_run(app.state.model.metadata.run_id).data.params["text_feature"]]
-    textual_features = [
-        v for k, v in mlflow.get_run(app.state.model.metadata.run_id).data.params.items() if k.startswith("textual_features")
-    ]
-    categorical_features = [
-        v for k, v in mlflow.get_run(app.state.model.metadata.run_id).data.params.items() if k.startswith("categorical_features")
-    ]
-    app.state.training_names = text_feature + textual_features + categorical_features
+
     yield
     logger.info("🛑 Shutting down API lifespan")
 
 
-class Forms(BaseModel):
+class BatchPredictionRequest(BaseModel):
     """
     Pydantic BaseModel for representing the input data for the API.
 
@@ -104,9 +102,7 @@ class Forms(BaseModel):
 app = FastAPI(
     lifespan=lifespan,
     title="Prédiction code APE",
-    description="Application de prédiction pour \
-                                            l'activité principale \
-                                            de l'entreprise (APE)",
+    description="Application de prédiction pour l'activité principale de l'entreprise (APE)",
     version="0.0.1",
 )
 
@@ -122,7 +118,7 @@ app.add_middleware(
 
 @app.get("/", tags=["Welcome"])
 def show_welcome_page(
-    credentials: Annotated[HTTPBasicCredentials, Depends(optional_security)],
+    credentials: Annotated[HTTPBasicCredentials, Depends(get_credentials)],
 ):
     """
     Show welcome page with model name and version.
@@ -134,17 +130,10 @@ def show_welcome_page(
     }
 
 
-@app.get("/predict", tags=["Predict"])
+@app.post("/predict", tags=["Predict"])
 async def predict(
-    credentials: Annotated[HTTPBasicCredentials, Depends(optional_security)],
-    description_activity: str,
-    other_nature_activity: str | None = None,
-    precision_act_sec_agricole: str | None = None,
-    type_form: str | None = None,
-    nature: str | None = None,
-    surface: str | None = None,
-    cj: str | None = None,
-    activity_permanence_status: str | None = None,
+    credentials: Annotated[HTTPBasicCredentials, Depends(get_credentials)],
+    form: SingleForm,
     nb_echos_max: int = 5,
     prob_min: float = 0.01,
 ):
@@ -155,14 +144,6 @@ async def predict(
     ML model to predict the code APE based on the input data.
 
     Args:
-        description_activity (str): The text description.
-        other_nature_activity (str, optional): Other nature of the activity. Defaults to None.
-        precision_act_sec_agricole (str, optional): Precision of the activity in the agricultural sector. Defaults to None.
-        type_form (str, optional): The type of the form CERFA. Defaults to None.
-        nature (str, optional): The nature of the activity. Defaults to None.
-        surface (str, optional): The surface of activity. Defaults to None.
-        cj (str, optional): The legal category code. Defaults to None.
-        activity_permanence_status (str, optional): The activity permanence status (permanent or seasonal). Defaults to None.
         nb_echos_max (int): Maximum number of echoes to consider. Default is 5.
         prob_min (float): Minimum probability threshold. Default is 0.01.
 
@@ -170,22 +151,9 @@ async def predict(
         dict: Response containing APE codes.
     """
 
-    query = preprocess_query(
-        app.state.training_names,
-        description_activity,
-        other_nature_activity,
-        precision_act_sec_agricole,
-        type_form,
-        nature,
-        surface,
-        cj,
-        activity_permanence_status,
-    )
+    query = preprocess_inputs(app.state.training_names, [form])
 
-    if nb_echos_max != 1:
-        predictions = app.state.model.predict(query, params={"k": nb_echos_max})
-    else:
-        predictions = app.state.model.predict(query, params={"k": 2})
+    predictions = app.state.model.predict(query, params={"k": nb_echos_max})
 
     response = process_response(predictions, 0, nb_echos_max, prob_min, app.state.libs)
 
@@ -198,8 +166,8 @@ async def predict(
 
 @app.post("/predict-batch", tags=["Predict"])
 async def predict_batch(
-    credentials: Annotated[HTTPBasicCredentials, Depends(optional_security)],
-    forms: Forms,
+    credentials: Annotated[HTTPBasicCredentials, Depends(get_credentials)],
+    forms: BatchForms,
     nb_echos_max: int = 5,
     prob_min: float = 0.01,
 ):
@@ -215,12 +183,9 @@ async def predict_batch(
     Returns:
         list: The list of predicted responses.
     """
-    query = preprocess_batch(app.state.training_names, forms.dict())
+    query = preprocess_inputs(app.state.training_names, forms.forms)
 
-    if nb_echos_max != 1:
-        predictions = app.state.model.predict(query, params={"k": nb_echos_max})
-    else:
-        predictions = app.state.model.predict(query, params={"k": 2})
+    predictions = app.state.model.predict(query, params={"k": nb_echos_max})
 
     response = [process_response(predictions, i, nb_echos_max, prob_min, app.state.libs) for i in range(len(predictions[0]))]
 

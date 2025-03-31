@@ -39,7 +39,7 @@ class BatchForms(BaseModel):
 
     @model_validator(mode="after")
     def check_description_not_empty(cls, values):
-        forms = values.get("forms", [])
+        forms = values.forms
         missing_indexes = [
             idx for idx, form in enumerate(forms) if not form.description_activity or form.description_activity.strip() == ""
         ]

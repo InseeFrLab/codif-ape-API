@@ -1,25 +1,38 @@
-FROM python:3.12
+# Use Python 3.12 as the base image
+FROM python:3.12-slim
 
+# Set environment variables
 ARG API_USERNAME
 ARG API_PASSWORD
-ENV API_USERNAME ${API_USERNAME}
-ENV API_PASSWORD ${API_PASSWORD}
+ENV API_USERNAME=${API_USERNAME}
+ENV API_PASSWORD=${API_PASSWORD}
 ENV TIMEOUT=300
-# set api as the current work dir
-WORKDIR /api
 
-# copy the requirements list
-COPY requirements.txt requirements.txt
+# Set working directory inside src/
+WORKDIR /api/src
 
-# install all the requirements and import corpus
-RUN pip install --no-cache-dir --upgrade -r requirements.txt && \
-    python -m nltk.downloader stopwords
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl build-essential && \
+    rm -rf /var/lib/apt/lists/*
 
-# copy the main code of fastapi
-COPY ./app /api/app
+# Install uv package manager
+RUN pip install --no-cache-dir uv
 
-# launch the unicorn server to run the api
-# If you are running your container behind a TLS Termination Proxy (load balancer) like Nginx or Traefik,
-# add the option --proxy-headers, this will tell Uvicorn to trust the headers sent by that proxy telling it
-# that the application is running behind HTTPS, etc.
-CMD ["uvicorn", "app.main:codification_ape_app",  "--proxy-headers", "--host", "0.0.0.0", "--port", "80", "--timeout-graceful-shutdown", "300"]
+# Copy project files
+COPY pyproject.toml uv.lock ../
+
+# Install dependencies using uv
+RUN uv sync
+
+# Copy the source code
+COPY . .
+
+# Download required NLTK stopwords
+RUN uv run -m nltk.downloader stopwords
+
+# Expose the API port
+EXPOSE 80
+
+# Command to run FastAPI with Uvicorn
+CMD ["uvicorn", "api.main:codification_ape_app", "--proxy-headers", "--host", "0.0.0.0", "--port", "80", "--timeout-graceful-shutdown", "300"]

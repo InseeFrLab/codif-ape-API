@@ -1,38 +1,25 @@
-# Use Python 3.12 as the base image
-FROM python:3.12-slim
+FROM python:3.12
 
-# Set environment variables
-ARG API_USERNAME
-ARG API_PASSWORD
-ENV API_USERNAME=${API_USERNAME}
-ENV API_PASSWORD=${API_PASSWORD}
-ENV TIMEOUT=300
+# Install system dependencies, including Git
+RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
 
-# Set working directory inside src/
+# Set working directory inside `src/`
 WORKDIR /api/src
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    curl build-essential && \
-    rm -rf /var/lib/apt/lists/*
+# Copy pyproject.toml and lockfile for dependency resolution
+COPY pyproject.toml uv.lock ./
 
 # Install uv package manager
-RUN pip install --no-cache-dir uv
+RUN pip install uv
 
-# Copy project files
-COPY pyproject.toml uv.lock ../
-
-# Install dependencies using uv
+# Sync dependencies
 RUN uv sync
 
-# Copy the source code
-COPY . .
+# Copy application code
+COPY ./src /api/src
 
-# Download required NLTK stopwords
-RUN uv run -m nltk.downloader stopwords
+# Expose port 5000
+EXPOSE 5000
 
-# Expose the API port
-EXPOSE 80
-
-# Command to run FastAPI with Uvicorn
-CMD ["uvicorn", "api.main:codification_ape_app", "--proxy-headers", "--host", "0.0.0.0", "--port", "80", "--timeout-graceful-shutdown", "300"]
+# Start FastAPI application
+CMD ["uv", "run", "uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "5000"]

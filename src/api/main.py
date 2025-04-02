@@ -26,14 +26,7 @@ async def lifespan(app: FastAPI):
     logger.info("🚀 Starting API lifespan")
 
     model_uri = f"models:/{os.environ['MLFLOW_MODEL_NAME']}/{os.environ['MLFLOW_MODEL_VERSION']}"
-    app.state.model = mlflow.pyfunc.load_model(model_uri)
-    run_params = mlflow.get_run(app.state.model.metadata.run_id).data.params
-
-    app.state.training_names = [
-        run_params["text_feature"],
-        *(v for k, v in run_params.items() if k.startswith("textual_features")),
-        *(v for k, v in run_params.items() if k.startswith("categorical_features")),
-    ]
+    app.state.model = mlflow.pytorch.load_model(model_uri)
 
     libs_path = Path("api/data/libs.yaml")
     app.state.libs = yaml.safe_load(libs_path.read_text())

@@ -1,4 +1,4 @@
-FROM python:3.12
+FROM python:3.13
 
 # Install system dependencies, including Git
 RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*

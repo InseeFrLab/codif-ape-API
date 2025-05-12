@@ -13,6 +13,8 @@ from utils.prediction import process_response
 from utils.preprocessing import categorical_features, mappings, preprocess_inputs, text_feature
 from utils.security import get_credentials
 
+import time
+
 router = APIRouter(prefix="/single", tags=["Predict an activity"])
 
 APE_NIV5_MAPPING = mappings["nace2025"]
@@ -56,7 +58,9 @@ async def predict(
     dataloader = dataset.create_dataloader(batch_size=1, shuffle=False, num_workers=1)
 
     batch = next(iter(dataloader))
-    scores = request.app.state.model(batch).detach()
+    with torch.no_grad():
+        scores = request.app.state.model(batch).detach()
+
     probs = torch.nn.functional.softmax(scores, dim=1)
     sorted_probs, sorted_probs_indices = probs.sort(descending=True, axis=1)
 

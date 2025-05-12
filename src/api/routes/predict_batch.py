@@ -57,8 +57,13 @@ async def predict(
     batch_size = len(text) if len(text) < 256 else 256
     dataloader = dataset.create_dataloader(batch_size=batch_size, shuffle=False, num_workers=12)
 
-    batch = next(iter(dataloader))
-    scores = request.app.state.model(batch).detach()
+    all_scores = []
+    for batch_idx, batch in enumerate(dataloader):
+        with torch.no_grad():
+            scores = request.app.state.model(batch).detach()
+            all_scores.append(scores)
+    
+    all_scores = torch.cat(all_scores)
     probs = torch.nn.functional.softmax(scores, dim=1)
     sorted_probs, sorted_probs_indices = probs.sort(descending=True, axis=1)
 

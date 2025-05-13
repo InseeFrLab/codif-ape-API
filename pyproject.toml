@@ -39,4 +39,4 @@ line-length = 130
 default-groups = ["dev"]
 
 [tool.uv.sources]
-torchfasttext = { git = "https://github.com/InseeFrLab/torch-fastText.git", branch = "dataset-api" }
+torchfasttext = { git = "https://github.com/InseeFrLab/torch-fastText.git", branch = "main" }

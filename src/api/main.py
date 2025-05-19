@@ -5,16 +5,14 @@ Main file for the API.
 import logging
 import os
 from contextlib import asynccontextmanager
-from pathlib import Path
 from typing import Annotated
 
 import mlflow
-import yaml
 from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPBasicCredentials
 
-from api.routes import predict_batch, predict_single
+from api.routes import predict
 from utils.logging import configure_logging
 from utils.security import get_credentials
 
@@ -26,10 +24,7 @@ async def lifespan(app: FastAPI):
     logger.info("🚀 Starting API lifespan")
 
     model_uri = f"models:/{os.environ['MLFLOW_MODEL_NAME']}/{os.environ['MLFLOW_MODEL_VERSION']}"
-    app.state.model = mlflow.pytorch.load_model(model_uri)
-
-    libs_path = Path("api/data/libs.yaml")
-    app.state.libs = yaml.safe_load(libs_path.read_text())
+    app.state.model = mlflow.pyfunc.load_model(model_uri)
 
     yield
     logger.info("🛑 Shutting down API lifespan")
@@ -42,8 +37,7 @@ app = FastAPI(
     version="0.0.1",
 )
 
-app.include_router(predict_single.router)
-app.include_router(predict_batch.router)
+app.include_router(predict.router)
 
 app.add_middleware(
     CORSMiddleware,

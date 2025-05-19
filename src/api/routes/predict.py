@@ -14,7 +14,7 @@ INV_APE_NIV5_MAPPING = {v: k for k, v in APE_NIV5_MAPPING.items()}
 router = APIRouter(prefix="/predict", tags=["Predict NACE code for a list of activities"])
 
 
-@router.post("/predict", response_model=List[PredictionResponse])
+@router.post("/", response_model=List[PredictionResponse])
 async def predict(
     credentials: Annotated[HTTPBasicCredentials, Depends(get_credentials)],
     request: Request,

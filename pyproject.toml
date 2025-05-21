@@ -24,7 +24,8 @@ dependencies = [
     "uvicorn>=0.34.0",
 ]
 authors = [
-  {name="Thomas Faria", email="thomas.faria@insee.fr"}
+  {name="Thomas Faria", email="thomas.faria@insee.fr"},
+  {name="Meilame Tayebjee", email="meilame.tayebjee@insee.fr"}
 ]
 
 [dependency-groups]
@@ -41,3 +42,14 @@ default-groups = ["dev"]
 
 [tool.uv.sources]
 torchfasttext = { git = "https://github.com/InseeFrLab/torch-fastText.git", branch = "main" }
+torch = [
+  { index = "pytorch-cpu" },
+]
+torchvision = [
+  { index = "pytorch-cpu" },
+]
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true

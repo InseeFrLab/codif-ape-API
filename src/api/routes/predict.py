@@ -21,7 +21,7 @@ async def predict(
     forms: BatchForms,
     nb_echos_max: int = 5,
     prob_min: float = 0.01,
-    num_workers: int = 1,
+    num_workers: int = 0,
     batch_size: int = 1,
 ):
     """

@@ -12,8 +12,9 @@ COPY pyproject.toml uv.lock ./
 # Install uv package manager
 RUN pip install uv
 
-# Sync dependencies
+# Sync dependencies + stopwords
 RUN uv sync
+RUN uv run -m nltk.downloader stopwords
 
 # Copy application code
 COPY ./src /api/src

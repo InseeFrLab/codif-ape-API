@@ -5,11 +5,7 @@ from fastapi.security import HTTPBasicCredentials
 
 from api.models.forms import BatchForms
 from api.models.responses import PredictionResponse
-from utils.preprocessing import mappings
 from utils.security import get_credentials
-
-APE_NIV5_MAPPING = mappings["nace2025"]
-INV_APE_NIV5_MAPPING = {v: k for k, v in APE_NIV5_MAPPING.items()}
 
 router = APIRouter(prefix="/predict", tags=["Predict NACE code for a list of activities"])
 

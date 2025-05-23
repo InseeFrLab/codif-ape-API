@@ -53,10 +53,14 @@ class BatchForms(BaseModel):
     def check_description_not_empty(cls, values):
         forms = values.forms
         missing_indexes = [
-            idx for idx, form in enumerate(forms) if not form.description_activity or form.description_activity.strip() == ""
+            idx
+            for idx, form in enumerate(forms)
+            if not form.description_activity or form.description_activity.strip() == ""
         ]
 
         if missing_indexes:
-            raise ValueError(f"The description_activity is missing at indices: {tuple(missing_indexes)}")
+            raise ValueError(
+                f"The description_activity is missing at indices: {tuple(missing_indexes)}"
+            )
 
         return values

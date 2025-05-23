@@ -35,7 +35,7 @@ dev = [
 ]
 
 [tool.ruff]
-line-length = 130
+line-length = 100
 
 [tool.uv]
 default-groups = ["dev"]

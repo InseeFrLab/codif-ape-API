@@ -6,6 +6,7 @@ import logging
 import os
 from contextlib import asynccontextmanager
 from typing import Annotated
+import nltk
 
 import mlflow
 from fastapi import Depends, FastAPI
@@ -16,6 +17,7 @@ from api.routes import predict
 from utils.logging import configure_logging
 from utils.security import get_credentials
 
+nltk.data.path.append("../nltk_data/")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):

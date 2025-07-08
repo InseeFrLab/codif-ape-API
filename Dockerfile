@@ -1,5 +1,4 @@
-# Use a Python image with uv pre-installed
-FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim
+FROM python:3.13
 
 # Install system dependencies, including Git
 RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
@@ -9,13 +8,14 @@ WORKDIR /api/src
 
 # Enable bytecode compilation
 ENV UV_COMPILE_BYTECODE=1
-
 # Copy from the cache instead of linking since it's a mounted volume
 ENV UV_LINK_MODE=copy
 
 # Copy pyproject.toml and lockfile for dependency resolution
 COPY pyproject.toml uv.lock ./
 
+# Install uv package manager
+RUN pip install uv
 # Sync dependencies
 RUN uv sync --locked --no-dev
 

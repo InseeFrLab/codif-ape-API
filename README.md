@@ -15,7 +15,7 @@ export MLFLOW_MODEL_NAME=***
 export MLFLOW_MODEL_VERSION=***
 
 uv sync
-uv run pre-commit install
+uv run pre-commit install  # Not necessary, only for dev
 cd src
 uv run uvicorn api.main:app --host 0.0.0.0 --port 5000
 ```

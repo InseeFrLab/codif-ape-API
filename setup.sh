@@ -1,10 +1,8 @@
 #!/bin/bash
 git config --global credential.helper store
 
-pip install uv
 uv sync
 uv run pre-commit install
-uv run -m nltk.downloader stopwords
 
 export MLFLOW_S3_ENDPOINT_URL="https://$AWS_S3_ENDPOINT"
 export MLFLOW_TRACKING_URI=https://projet-ape-mlflow.user.lab.sspcloud.fr

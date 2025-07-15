@@ -5,7 +5,6 @@ This project provides all the code necessary to deploy the APE classification mo
 ## Prerequisites
 
 - Python 3.12
-- Python libraries: see `pyproject.toml`
 
 ## Setup
 
@@ -17,7 +16,6 @@ export MLFLOW_MODEL_VERSION=***
 
 uv sync
 uv run pre-commit install
-uv run -m nltk.downloader stopwords
 cd src
 uv run uvicorn api.main:app --host 0.0.0.0 --port 5000
 ```

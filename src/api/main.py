@@ -6,18 +6,16 @@ import logging
 import os
 from contextlib import asynccontextmanager
 from typing import Annotated
-import nltk
 
-import mlflow
 from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPBasicCredentials
 
 from api.routes import predict
+from utils.load_model import load_model
 from utils.logging import configure_logging
 from utils.security import get_credentials
 
-nltk.data.path.append("../nltk_data/")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -25,8 +23,7 @@ async def lifespan(app: FastAPI):
     logger = logging.getLogger(__name__)
     logger.info("🚀 Starting API lifespan")
 
-    model_uri = f"models:/{os.environ['MLFLOW_MODEL_NAME']}/{os.environ['MLFLOW_MODEL_VERSION']}"
-    app.state.model = mlflow.pyfunc.load_model(model_uri)
+    app.state.model = load_model()
 
     yield
     logger.info("🛑 Shutting down API lifespan")

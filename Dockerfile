@@ -21,7 +21,6 @@ RUN uv sync --locked --no-dev
 
 # Copy application code + nltk stopwords
 COPY ./src /api/src
-COPY ./nltk_data /api/nltk_data
 
 # Expose port 5000
 EXPOSE 5000

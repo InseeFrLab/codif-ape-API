@@ -10,7 +10,7 @@ from utils.security import get_credentials
 router = APIRouter(prefix="/predict", tags=["Predict NACE code for a list of activities"])
 
 
-@router.post("/", response_model=List[Dict[str, Any]])
+@router.post("/", response_model=List[PredictionResponse])
 async def predict(
     credentials: Annotated[HTTPBasicCredentials, Depends(get_credentials)],
     request: Request,
@@ -49,7 +49,7 @@ async def predict(
             "batch_size": batch_size,
         },
     }
-
+    print(params_dict)
     output = request.app.state.model.predict(input_data, params=params_dict)
     print(output)
     return [out.model_dump() for out in output]

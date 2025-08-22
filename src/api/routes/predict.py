@@ -49,7 +49,13 @@ async def predict(
             "batch_size": batch_size,
         },
     }
-    print(params_dict)
-    output = request.app.state.model.predict(input_data, params=params_dict)
-    print(output)
-    return [out.model_dump() for out in output]
+
+    model = request.app.state.model
+    
+    response = []
+    for out in model.predict(input_data, params=params_dict):
+        out_dict = out.model_dump()
+        out_dict["MLversion"] = model.metadata.run_id
+        response.append(out_dict)
+        
+    return response

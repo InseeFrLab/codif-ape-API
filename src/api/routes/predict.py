@@ -1,3 +1,5 @@
+import logging
+
 from typing import Annotated, List
 
 from fastapi import APIRouter, Depends, Request
@@ -57,5 +59,5 @@ async def predict(
         out_dict = out.model_dump()
         out_dict["MLversion"] = model.metadata.run_id
         response.append(out_dict)
-    print(response)
+    logging.info(response)
     return response

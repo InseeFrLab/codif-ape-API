@@ -4,7 +4,7 @@ This project provides all the code necessary to deploy the APE classification mo
 
 ## Prerequisites
 
-- Python 3.12
+- Python 3.13
 
 ## Setup
 

@@ -10,7 +10,7 @@ from utils.security import get_credentials
 router = APIRouter(prefix="/predict", tags=["Predict NACE code for a list of activities"])
 
 
-@router.post("/", response_model=List[PredictionResponse])
+@router.post("/", response_model=Dict[str, Any])
 async def predict(
     credentials: Annotated[HTTPBasicCredentials, Depends(get_credentials)],
     request: Request,

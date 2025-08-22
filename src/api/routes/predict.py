@@ -51,4 +51,5 @@ async def predict(
     }
 
     output = request.app.state.model.predict(input_data, params=params_dict)
+    print(output)
     return [out.model_dump() for out in output]

@@ -52,12 +52,18 @@ async def predict(
         },
     }
 
-    model = request.app.state.model
+    output = request.app.state.model.predict(input_data, params=params_dict)
 
-    response = []
-    for out in model.predict(input_data, params=params_dict):
-        out_dict = out.model_dump()
-        out_dict["MLversion"] = model.metadata.run_id
-        response.append(out_dict)
-    logging.info(response)
-    return response
+    return [out.model_dump() for out in output]
+
+    # TO ADD DIRECTLY FROM INFERENCE
+
+    # model = request.app.state.model
+
+    # response = []
+    # for out in model.predict(input_data, params=params_dict):
+    #     out_dict = out.model_dump()
+    #     out_dict["MLversion"] = model.metadata.run_id
+    #     response.append(out_dict)
+
+    # return response

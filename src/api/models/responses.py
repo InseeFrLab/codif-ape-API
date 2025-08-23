@@ -39,4 +39,4 @@ class PredictionResponse(RootModel[Dict[str, Any]]):
     - Any changes to the output schema (e.g., new fields, renaming) must be documented
       both here and in training repo (codif-ape-training) to maintain API contract clarity.
     """
-    pass
+      pass

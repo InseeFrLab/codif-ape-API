@@ -41,5 +41,5 @@ both here and in training repo (codif-ape-training) to maintain API contract cla
 """
 
 
-class PredictionResponse(RootModel[Dict[str, Union[str, float, Prediction]]]):
+class PredictionResponse(RootModel[Dict[str, Union[Prediction, float, str]]]):
     pass

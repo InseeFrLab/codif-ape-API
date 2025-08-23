@@ -53,7 +53,7 @@ async def predict(
     }
 
     model = request.app.state.model
-    
+
     response = []
     for out in model.predict(input_data, params=params_dict):
         out_dict = out.model_dump()

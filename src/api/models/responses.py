@@ -28,7 +28,7 @@ class PredictionResponse(RootModel[Dict[str, Union[Prediction, float, str]]]):
     "1": Prediction,
     "2": Prediction,
     ...,
-    "IC": float,           # required confidence score
+    "IC": float,      # required confidence score
     "MLversion": str  # required run_id as model version
     }
 

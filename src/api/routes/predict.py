@@ -1,3 +1,5 @@
+import logging
+
 from typing import Annotated, List
 
 from fastapi import APIRouter, Depends, Request
@@ -51,4 +53,17 @@ async def predict(
     }
 
     output = request.app.state.model.predict(input_data, params=params_dict)
+
     return [out.model_dump() for out in output]
+
+    # TO ADD DIRECTLY FROM INFERENCE
+
+    # model = request.app.state.model
+
+    # response = []
+    # for out in model.predict(input_data, params=params_dict):
+    #     out_dict = out.model_dump()
+    #     out_dict["MLversion"] = model.metadata.run_id
+    #     response.append(out_dict)
+
+    # return response

@@ -4,13 +4,13 @@ from fastapi import APIRouter, Depends, Request
 from fastapi.security import HTTPBasicCredentials
 
 from api.models.forms import BatchForms
-from api.models.responses import PredictionResponse
+from api.models.responses import OutputResponse
 from utils.security import get_credentials
 
 router = APIRouter(prefix="/predict", tags=["Predict NACE code for a list of activities"])
 
 
-@router.post("/", response_model=List[PredictionResponse])
+@router.post("/", response_model=List[OutputResponse])
 async def predict(
     credentials: Annotated[HTTPBasicCredentials, Depends(get_credentials)],
     request: Request,
@@ -27,12 +27,17 @@ async def predict(
         credentials (HTTPBasicCredentials): The credentials for authentication.
         forms (Forms): The input data in the form of Forms object.
         nb_echos_max (int, optional): The maximum number of predictions to return. Defaults to 5.
-        prob_min (float, optional): The minimum probability threshold for predictions. Defaults to 0.01.
-        num_workers (int, optional): Number of CPU for multiprocessing in Dataloader. Defaults to 1.
+        prob_min (float, optional): The minimum probability threshold for predictions.
+                                    Defaults to 0.01.
+        num_workers (int, optional): Number of CPU for multiprocessing in Dataloader.
+                                     Defaults to 1.
         batch_size (int, optional): Size of a batch for batch prediction.
 
-    For single predictions, we recommend keeping num_workers and batch_size to 1 for better performance.
-    For batched predictions, consider increasing these two parameters (num_workers can range from 4 to 12, batch size can be increased up to 256) to optimize performance.
+    For single predictions, we recommend keeping num_workers and batch_size to 1
+        for better performance.
+    For batched predictions, consider increasing these two parameters
+        (num_workers can range from 4 to 12, batch size can be increased up to 256)
+        to optimize performance.
 
     Returns:
         list: The list of predicted responses.
@@ -51,4 +56,7 @@ async def predict(
     }
 
     output = request.app.state.model.predict(input_data, params=params_dict)
-    return [out.model_dump() for out in output]
+    return [
+        OutputResponse({**out.model_dump(), "MLversion": request.app.state.run_id})
+        for out in output
+    ]

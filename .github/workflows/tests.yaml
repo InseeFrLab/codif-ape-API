@@ -3,21 +3,39 @@ name: Test Build
 on:
   pull_request:
     branches:
-    - main
+      - main
   workflow_dispatch:
 
 jobs:
-  test-build:
-    name: Run build check
+  test_build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - model_name: FastText‑pytorch
+            model_version: "9"
+          - model_name: FastText‑pytorch‑naf2025
+            model_version: "10"
     steps:
-        - name: Checkout
-          uses: actions/checkout@v4
-          with:
-            fetch-depth: 0
-
-        - name: Set up Docker Buildx
-          uses: docker/setup-buildx-action@v3
-
-        - name: Build Docker image
-          run: docker build -t image-test .
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Set MLflow model env
+        run: |
+          echo "MLFLOW_MODEL_NAME=${{ matrix.model_name }}" >> $GITHUB_ENV
+          echo "MLFLOW_MODEL_VERSION=${{ matrix.model_version }}" >> $GITHUB_ENV
+      - name: Run unit tests
+        run: pytest tests/unit_tests/ --tb=short --maxfail=1
+      - name: Run integration tests (2 specific models)
+        run: |
+          if [ "${{ matrix.model_name }}" = "FastText‑pytorch‑naf2025" ]; then
+              pytest tests/integration_tests/naf2025/ --tb=short --maxfail=1
+          elif [ "${{ matrix.model_name }}" = "FastText‑pytorch" ]; then
+              pytest tests/integration_tests/naf2008/ --tb=short --maxfail=1
+          fi
+      - name: Run generic integration tests
+        run: pytest tests/integration_tests/generic/ --tb=short --maxfail=1

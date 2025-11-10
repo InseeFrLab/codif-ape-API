@@ -1,3 +1,7 @@
+"""
+Main file for the /predict endpoint.
+"""
+
 from typing import Annotated, List
 
 from fastapi import APIRouter, Depends, Request
@@ -7,12 +11,14 @@ from api.models.forms import BatchForms
 from api.models.responses import OutputResponse
 from utils.security import get_credentials
 
-router = APIRouter(prefix="/predict", tags=["Predict NACE code for a list of activities"])
+router = APIRouter(
+    prefix="/predict", tags=["Predict NACE code for a list of activities"]
+)
 
 
 @router.post("/", response_model=List[OutputResponse])
 async def predict(
-    credentials: Annotated[HTTPBasicCredentials, Depends(get_credentials)],
+    _credentials: Annotated[HTTPBasicCredentials, Depends(get_credentials)],
     request: Request,
     forms: BatchForms,
     nb_echos_max: int = 5,

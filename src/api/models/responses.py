@@ -1,9 +1,17 @@
-from typing import Any, Dict, Mapping, Union
+"""
+Main file for output validation.
+"""
 
+from typing import Any, Dict, Mapping, Union
 from pydantic import BaseModel, RootModel, model_validator
 
 
 class Prediction(BaseModel):
+    """
+    Schema for a single predicted APE code/activity pair.
+
+    Represents one of the top 'n' prediction results returned by the model.
+    """
     code: str
     probabilite: float
     libelle: str
@@ -44,18 +52,20 @@ class OutputResponse(RootModel[Dict[str, Union[Prediction, float, str]]]):
         # IC (required) - accept numbers or numeric strings
         try:
             ic = float(raw["IC"])
-        except KeyError:
-            raise ValueError("OutputResponse: missing required key 'IC'")
-        except (TypeError, ValueError) as e:
-            raise ValueError(f"OutputResponse: 'IC' not convertible to float: {e}") from e
+        except KeyError as key_exc:
+            raise ValueError("OutputResponse: missing required key 'IC'") from key_exc
+        except (TypeError, ValueError) as type_exc:
+            raise ValueError(f"OutputResponse: 'IC' not convertible\
+                               to float: {type_exc}") from type_exc
 
         # MLversion (required)
         try:
             ml_version = str(raw["MLversion"])
-        except KeyError:
-            raise ValueError("OutputResponse: missing required key 'MLversion'")
-        except Exception as e:
-            raise ValueError(f"OutputResponse: 'MLversion' not convertible to str: {e}") from e
+        except KeyError as key_exc:
+            raise ValueError("OutputResponse: missing required key 'MLversion'") from key_exc
+        except Exception as type_exc:
+            raise ValueError(f"OutputResponse: 'MLversion' not convertible\
+                               to str: {type_exc}") from type_exc
 
         # allow only digit keys + IC + MLversion
         allowed = {k for k in raw.keys() if k.isdigit()} | {"IC", "MLversion"}

@@ -1,0 +1,27 @@
+name: Code Quality
+
+on:
+  pull_request:
+    branches:
+    - main
+  workflow_dispatch:
+
+jobs:
+  quality:
+    name: Run build check
+    runs-on: ubuntu-latest
+    steps:
+        - uses: actions/checkout@v4
+        - name: Set up Python
+          uses: actions/setup-python@v4
+          with:
+            # latest python minor
+            python-version: '3.x'
+        - name: Install dependencies
+          run: |
+            uv sync
+        - name: Lint
+          run: |
+            pylint src --fail-under=6
+        - name: Test Python code
+          run: python src/main.py

@@ -1,3 +1,7 @@
+"""
+Main file for constants management.
+"""
+
 VALID_TYPE_FORM = {
     "A",
     "B",

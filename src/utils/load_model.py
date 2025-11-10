@@ -1,3 +1,7 @@
+"""
+Main file for loading model util function.
+"""
+
 import os
 
 import mlflow
@@ -5,6 +9,14 @@ import nltk
 
 
 def load_model():
+    """
+    Downloads the specified MLflow model, configures the NLTK data path
+    for necessary dependencies, and then safely loads the model with MLflow
+    method pyfunc.
+
+    Returns:
+        mlflow.pyfunc.PyFuncModel: The loaded model instance ready for inference.
+    """
     model_uri = f"models:/{os.environ['MLFLOW_MODEL_NAME']}/{os.environ['MLFLOW_MODEL_VERSION']}"
 
     # Step 1: Set the destination path for the model artifacts

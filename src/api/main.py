@@ -19,6 +19,13 @@ from utils.security import get_credentials
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    """
+    Handles FastAPI application lifespan (startup and shutdown).
+
+    On startup, configures logging and loads the machine learning model
+    into `app.state.model` and version into `app.state.run_id`
+    for immediate use by prediction endpoints.
+    """
     configure_logging()
     logger = logging.getLogger(__name__)
     logger.info("🚀 Starting API lifespan")
@@ -50,10 +57,13 @@ app.add_middleware(
 
 @app.get("/", tags=["Welcome"])
 def root(
-    credentials: Annotated[HTTPBasicCredentials, Depends(get_credentials)],
+    _credentials: Annotated[HTTPBasicCredentials, Depends(get_credentials)],
 ):
     """
     Show welcome page with model name and version.
+
+    Returns the application title along with the current ML model's
+    name and version, fetched from environment variables.
     """
     return {
         "Message": "Codification de l'APE",

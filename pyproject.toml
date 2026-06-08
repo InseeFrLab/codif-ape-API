@@ -6,8 +6,8 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "fastapi>=0.115.12",
-    "mlflow>=2.21.2",
-    "nltk>=3.9.1",
+    "mlflow>=3.11.1",
+    "nltk>=3.9.4",
     "numpy>=2.2.4",
     "omegaconf>=2.3.0",
     "pandas>=2.2.3",

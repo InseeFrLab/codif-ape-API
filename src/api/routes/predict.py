@@ -57,6 +57,6 @@ async def predict(
 
     output = request.app.state.model.predict(input_data, params=params_dict)
     return [
-        OutputResponse({**out.model_dump(), "MLversion": request.app.state.run_id})
+        OutputResponse({**out.model_dump(), "MLversion": request.app.state.model_id})
         for out in output
     ]

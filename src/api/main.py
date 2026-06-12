@@ -24,7 +24,7 @@ async def lifespan(app: FastAPI):
     logger.info("🚀 Starting API lifespan")
 
     app.state.model = load_model()
-    app.state.run_id = app.state.model.metadata.run_id
+    app.state.model_id = app.state.model.metadata.model_id
 
     yield
     logger.info("🛑 Shutting down API lifespan")

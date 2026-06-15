@@ -11,6 +11,7 @@ def configure_logging():
             logging.StreamHandler(),
         ],
     )
+    logging.getLogger("mlflow").setLevel(logging.ERROR)
 
 
 def log_prediction(query: dict, response: OutputResponse, index: int = 0):

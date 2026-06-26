@@ -5,10 +5,11 @@ import nltk
 
 
 def load_model():
+    # mlflow.set_tracking_uri(os.environ["MLFLOW_TRACKING_URI"])
     model_uri = f"models:/{os.environ['MLFLOW_MODEL_NAME']}/{os.environ['MLFLOW_MODEL_VERSION']}"
 
     # Step 1: Set the destination path for the model artifacts
-    dst_path = "/tmp/my_model"
+    dst_path = "/tmp/my_model/artifacts/pyfunc_model"
 
     # Step 2: Download/extract the model here *without loading it yet*
     mlflow.artifacts.download_artifacts(artifact_uri=model_uri, dst_path=dst_path)

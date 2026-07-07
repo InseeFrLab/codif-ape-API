@@ -17,7 +17,7 @@ dependencies = [
     "requests>=2.34.2",
     "s3fs>=2026.4.0",
     "torch>=2.12.1",
-    "torchfasttext",
+    "torchtextclassifiers[huggingface]>=0.0.0.dev0",
     "tqdm>=4.68.3",
     "unidecode>=1.4.0",
     "uvicorn>=0.34.0",
@@ -40,7 +40,7 @@ line-length = 100
 default-groups = ["dev"]
 
 [tool.uv.sources]
-torchfasttext = { git = "https://github.com/InseeFrLab/torch-fastText.git", branch = "main" }
+torchtextclassifiers = { git = "https://github.com/InseeFrLab/torchTextClassifiers.git" }
 torch = [
   { index = "pytorch-cpu" },
 ]

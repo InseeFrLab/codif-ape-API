@@ -3,7 +3,7 @@ from typing import Optional
 
 from pydantic import BaseModel, model_validator, validator
 
-from api.constants.models import VALID_ACTIV_PERM, VALID_SURFACE, VALID_TYPE_FORM
+from api.constants.models import VALID_ACTIV_PERM, VALID_TYPE_FORM
 
 
 class SingleForm(BaseModel):
@@ -27,12 +27,6 @@ class SingleForm(BaseModel):
         if v is not None:
             if (not re.fullmatch(r"\d+", v)) or (len(v) != 2):
                 raise ValueError("nature must be a two-digit number (e.g., '01')")
-        return v
-
-    @validator("surface")
-    def validate_surface(cls, v: str) -> str:
-        if (v is not None) and (v not in VALID_SURFACE):
-            raise ValueError(f"Invalid surface '{v}', must be one of {VALID_SURFACE}")
         return v
 
     @validator("cj")

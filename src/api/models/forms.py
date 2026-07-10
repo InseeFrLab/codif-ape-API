@@ -12,7 +12,7 @@ class SingleForm(BaseModel):
     precision_act_sec_agricole: Optional[str] = None
     type_form: Optional[str] = None
     nature: Optional[str] = None
-    surface: Optional[str] = None
+    surface: Optional[float] = None
     cj: Optional[str] = None
     activity_permanence_status: Optional[str] = None
 
@@ -39,7 +39,7 @@ class SingleForm(BaseModel):
     @validator("activity_permanence_status")
     def validate_activity_permanence_status(cls, v: str) -> str:
         if (v is not None) and (v not in VALID_ACTIV_PERM):
-            raise ValueError(f"Invalid surface '{v}', must be one of {VALID_ACTIV_PERM}")
+            raise ValueError(f"Invalid permanence status '{v}', must be one of {VALID_ACTIV_PERM}")
         return v
 
 
